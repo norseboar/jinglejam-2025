@@ -1,0 +1,95 @@
+---
+description: "Docs layout and planning workflow"
+globs: docs/**
+alwaysApply: false
+---
+
+# Docs Workflow Guide
+
+Use this guide to locate reference docs, project plans, and working notes. It also outlines the naming conventions and plan format used across the project.
+
+## Directory Layout
+
+- `docs/index.md` – Entry point with a quick map of high-priority docs (vision, projects, plans).
+- `docs/long-term/` – Durable reference material such as `gdd.md`, design notes, tech stack decisions.
+- `docs/projects/` – One folder per project-scale effort (`project-name/`) containing the project plan and supporting artifacts.
+- `docs/plans/` – Implementation plans for standalone features or work that doesn't belong to a specific project. Use dated filenames (`YYYY-MM-DD-feature-name.md`).
+- `docs/archive/` _(optional)_ – Completed projects or retired notes kept for historical reference.
+
+## Naming Conventions
+
+- Use lowercase kebab-case for files and directories (`tech-stack.md`, `2025-11-08-ui-refactor.md`, `project-alpha/plan.md`).
+- Stable references: locate them in `docs/long-term/` with concise descriptive names.
+- Implementation plans:
+  - **For existing projects**: Save to `docs/projects/project-name/plan.md`
+  - **For standalone work**: Save to `docs/plans/YYYY-MM-DD-feature-name.md`
+- Projects: `docs/projects/project-name/plan.md` serves as the primary plan file; supporting files are named by purpose (`tasks.md`, `bugs.md`, `2025-11-10-research.md`).
+
+## Plan Format
+
+All plans follow this structure:
+
+```markdown
+# [Name] Plan
+
+**Goal:** One sentence.
+
+---
+
+## Status
+
+- [ ] Task/Milestone 1
+- [ ] Task/Milestone 2
+
+---
+
+## Summary
+
+**Task 1:** One-line description.
+**Task 2:** One-line description.
+
+---
+
+## Tasks (or Milestones)
+
+[Detailed breakdown]
+
+---
+
+## Exit Criteria
+
+- [ ] Criterion 1
+- [ ] Criterion 2
+```
+
+**Two plan types:**
+
+- **Project plans** — High-level orchestration (milestones, deliverables). See `write-project-plan` command.
+- **Code plans** — Detailed LLM execution (step-by-step). See `write-code-plan` command.
+
+## Plan Creation Checklist
+
+1. Create the file in `docs/projects/` or `docs/plans/` using the naming rules above.
+2. Start with **Goal** (one sentence) and **Status** (checkbox list at top).
+3. Add **Summary** section with one-line descriptions of each task/milestone.
+4. Add **Tasks** or **Milestones** section with detailed breakdown.
+5. Add **Exit Criteria** with checkbox list of validation gates.
+6. Update checkboxes as work progresses; add inline status notes when helpful (`- [x] migrate layout (done 2025-11-08)`).
+7. Cross-link related long-term docs, projects, or plans for context.
+8. Surface the plan in `docs/index.md` so other contributors can find it quickly.
+9. When complete, mark the status, consider moving to `docs/archive/`, and promote any enduring lessons into `docs/long-term/`.
+
+## Testing and Debugging Guidance
+
+- Verify changes manually by running the game and testing the relevant functionality
+- Use print statements and the debugger to understand behavior
+- When running into issues, ask the user to test specific scenarios and report results
+- Focus on manual verification through gameplay, not automated tests (see `tests.mdc`)
+
+## Quick Reference
+
+- Long-term references → `docs/long-term/`
+- Project plans → `docs/projects/project-name/plan.md`
+- Standalone plans → `docs/plans/`
+- Archive → `docs/archive/`
+- Execution → `execute-plan` command + `core-rules.mdc`

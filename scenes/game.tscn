@@ -1,0 +1,81 @@
+[gd_scene load_steps=4 format=3 uid="uid://cg53b4gbp6rni"]
+
+[ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://c32mmfww0adcn" path="res://scenes/unit.tscn" id="2_lnu2h"]
+[ext_resource type="Texture2D" uid="uid://6v0l0ja3i2tc" path="res://assets/sprites/placeholder-fortress.png" id="3_lnu2h"]
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_yqjtg")
+unit_scene = ExtResource("2_lnu2h")
+
+[node name="Fortress" type="Sprite2D" parent="."]
+position = Vector2(50, 180)
+texture = ExtResource("3_lnu2h")
+
+[node name="EnemySpawnSlots" type="Node2D" parent="."]
+
+[node name="Marker2D3" type="Marker2D" parent="EnemySpawnSlots"]
+position = Vector2(443, 184)
+
+[node name="Marker2D2" type="Marker2D" parent="EnemySpawnSlots"]
+position = Vector2(500, 201)
+
+[node name="Marker2D" type="Marker2D" parent="EnemySpawnSlots"]
+position = Vector2(536, 173)
+
+[node name="PlayerSpawnSlots" type="Node2D" parent="."]
+
+[node name="Marker2D3" type="Marker2D" parent="PlayerSpawnSlots"]
+position = Vector2(171, 177)
+
+[node name="Marker2D2" type="Marker2D" parent="PlayerSpawnSlots"]
+position = Vector2(143, 206)
+
+[node name="Marker2D5" type="Marker2D" parent="PlayerSpawnSlots"]
+position = Vector2(198, 204)
+
+[node name="Marker2D4" type="Marker2D" parent="PlayerSpawnSlots"]
+position = Vector2(218, 178)
+
+[node name="Marker2D" type="Marker2D" parent="PlayerSpawnSlots"]
+position = Vector2(108, 180)
+
+[node name="PlayerUnits" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="EnemyUnits" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="SpawnButton" type="Button" parent="UI"]
+offset_left = 21.0
+offset_top = 309.0
+offset_right = 97.0
+offset_bottom = 340.0
+text = "Add Unit"
+metadata/_edit_use_anchors_ = true
+
+[node name="StartButton" type="Button" parent="UI"]
+offset_left = 109.0
+offset_top = 309.0
+offset_right = 160.0
+offset_bottom = 340.0
+text = "Fight!"
+metadata/_edit_use_anchors_ = true
+
+[node name="RestartButton" type="Button" parent="UI"]
+visible = false
+offset_left = 170.0
+offset_top = 309.0
+offset_right = 235.0
+offset_bottom = 340.0
+text = "Restart"
+metadata/_edit_use_anchors_ = true
+
+[node name="HpLabel" type="Label" parent="UI"]
+offset_left = 20.0
+offset_top = 16.0
+offset_right = 69.0
+offset_bottom = 39.0
+text = "HP: 10"

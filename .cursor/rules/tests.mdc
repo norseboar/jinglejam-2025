@@ -1,0 +1,19 @@
+---
+alwaysApply: true
+---
+
+# Testing Policy
+
+**We are not writing or maintaining tests in this project.**
+
+We are moving very fast and tests won't provide much value in this environment. Focus on rapid development and iteration instead of test coverage.
+
+IT IS STILL VERY IMPORTANT TO VERIFY THAT CHANGES WORK AS EXPECTED. To do this, stop and ask the user to verify changes. Describe the behavior to test.
+
+## What This Means
+
+- Do not write new tests
+- Do not fix existing tests
+- Do not run tests as part of development workflow
+- Focus on manual testing and rapid iteration
+- When something should be verified, stop and ask the user to verify

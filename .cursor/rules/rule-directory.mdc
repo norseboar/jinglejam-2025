@@ -1,0 +1,73 @@
+---
+description: "Directory of all cursor rules"
+globs: "*"
+alwaysApply: true
+---
+
+# Cursor Rules Directory
+
+**IMPORTANT:** Whenever a new rule is added to `.cursor-rules` or `.cursor/rules`, this directory file MUST be updated. This is the most important thing to do when creating a new rule file.
+
+This document explains what each rules file in the `.cursor-rules` and `.cursor/rules` directories is useful for.
+
+**Note:** Purpose descriptions should be short - just enough information for Cursor to know when to look at the detailed rule file. The detailed information is in the rule files themselves.
+
+## docs-workflow.mdc
+
+**Location:** `.cursor/rules/docs-workflow.mdc`
+
+**Purpose:**  
+Reference for the docs layout and planning workflow, including where long-term references, project plans, and implementation plans live. Defines directory structure, naming conventions, and plan format.
+
+**Usage:**  
+Consult this file when you need to locate specs, project plans, or implementation plans, or when you're creating new planning documents. Use this to understand where to save plans (projects vs. plans directory).
+
+## core-rules.mdc
+
+**Location:** `.cursor/rules/core-rules.mdc`
+
+**Purpose:**  
+The three non-negotiable rules for plan execution: follow the plan exactly, stop after each step, don't guess.
+
+**Usage:**  
+Reference when executing any plan. These rules are mandatory. Also referenced by the `execute-plan` command.
+
+## tests.mdc
+
+**Location:** `.cursor/rules/tests.mdc`
+
+**Purpose:**  
+Testing policy for this project - explains that we are not writing or maintaining tests.
+
+**Usage:**  
+Reference this file to understand the project's testing policy. We are moving fast and tests won't provide much value in this environment.
+
+## superpowers/receiving-code-review.mdc
+
+**Location:** `.cursor/rules/superpowers/receiving-code-review.mdc`
+
+**Purpose:**  
+Guidelines for handling code review feedback. Emphasizes verifying before implementing, asking before assuming, and technical correctness over social comfort.
+
+**Usage:**  
+Reference when receiving code review feedback to ensure proper evaluation and implementation of suggestions.
+
+## superpowers/root-cause-tracing.mdc
+
+**Location:** `.cursor/rules/superpowers/root-cause-tracing.mdc`
+
+**Purpose:**  
+Debugging technique for tracing bugs back to their source. Emphasizes never fixing just where the error appears, but tracing backward to find the original trigger.
+
+**Usage:**  
+Reference when debugging issues that manifest deep in the call stack or when the source of bad data is unclear.
+
+## superpowers/systematic-debugging.mdc
+
+**Location:** `.cursor/rules/superpowers/systematic-debugging.mdc`
+
+**Purpose:**  
+Systematic debugging methodology. Emphasizes finding root cause before attempting fixes, avoiding random fixes and quick patches.
+
+**Usage:**  
+Reference when debugging any technical issue. Use especially when under time pressure or when previous fixes haven't worked.

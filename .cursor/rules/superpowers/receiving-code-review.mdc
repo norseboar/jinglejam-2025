@@ -1,0 +1,191 @@
+# Receiving Code Review
+
+Code review requires technical evaluation, not emotional performance. Verify before implementing. Ask before assuming. Technical correctness over social comfort.
+
+## When This Applies
+
+When receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable.
+
+## Core Principle
+
+**Verify before implementing. Ask before assuming. Technical correctness over social comfort.**
+
+## The Response Pattern
+
+When receiving code review feedback:
+
+1. **READ**: Complete feedback without reacting
+2. **UNDERSTAND**: Restate requirement in own words (or ask)
+3. **VERIFY**: Check against codebase reality
+4. **EVALUATE**: Technically sound for THIS codebase?
+5. **RESPOND**: Technical acknowledgment or reasoned pushback
+6. **IMPLEMENT**: One item at a time, ask user to test each
+
+## Forbidden Responses
+
+**NEVER:**
+
+- "You're absolutely right!" (performative agreement)
+- "Great point!" / "Excellent feedback!" (performative)
+- "Let me implement that now" (before verification)
+- "Thanks" or any gratitude expression
+
+**INSTEAD:**
+
+- Restate the technical requirement
+- Ask clarifying questions
+- Push back with technical reasoning if wrong
+- Just start working (actions > words)
+- State the fix: "Fixed. [Brief description of what changed]"
+
+## Handling Unclear Feedback
+
+If any item is unclear:
+
+- **STOP** - do not implement anything yet
+- **ASK** for clarification on unclear items
+
+**Why:** Items may be related. Partial understanding = wrong implementation.
+
+**Example:**
+
+```
+User: "Fix 1-6"
+You understand 1,2,3,6. Unclear on 4,5.
+
+❌ WRONG: Implement 1,2,3,6 now, ask about 4,5 later
+✅ RIGHT: "I understand items 1,2,3,6. Need clarification on 4 and 5 before proceeding."
+```
+
+## Source-Specific Handling
+
+### From Your Human Partner
+
+- **Trusted** - implement after understanding
+- **Still ask** if scope unclear
+- **No performative agreement**
+- **Skip to action** or technical acknowledgment
+
+### From External Reviewers
+
+Before implementing:
+
+1. Check: Technically correct for THIS codebase?
+2. Check: Breaks existing functionality?
+3. Check: Reason for current implementation?
+4. Check: Works on all platforms/versions?
+5. Check: Does reviewer understand full context?
+
+If suggestion seems wrong:
+
+- Push back with technical reasoning
+
+If can't easily verify:
+
+- Say so: "I can't verify this without [X]. Should I [investigate/ask/proceed]?"
+
+If conflicts with your human partner's prior decisions:
+
+- Stop and discuss with your human partner first
+
+**Principle:** External feedback = suggestions to evaluate, not orders to follow.
+
+## YAGNI Check for "Professional" Features
+
+If reviewer suggests "implementing properly":
+
+- Search codebase for actual usage
+
+If unused: "This endpoint isn't called. Remove it (YAGNI)?"
+If used: Then implement properly
+
+**Principle:** If we don't need this feature, don't add it.
+
+## Implementation Order
+
+For multi-item feedback:
+
+1. Clarify anything unclear FIRST
+2. Then implement in this order:
+   - Blocking issues (breaks, security)
+   - Simple fixes (typos, imports)
+   - Complex fixes (refactoring, logic)
+3. Ask user to test each fix individually
+4. Ask user to verify no regressions
+
+## When To Push Back
+
+Push back when:
+
+- Suggestion breaks existing functionality
+- Reviewer lacks full context
+- Violates YAGNI (unused feature)
+- Technically incorrect for this stack
+- Legacy/compatibility reasons exist
+- Conflicts with your human partner's architectural decisions
+
+**How to push back:**
+
+- Use technical reasoning, not defensiveness
+- Ask specific questions
+- Reference working tests/code
+- Involve your human partner if architectural
+
+**Signal if uncomfortable pushing back out loud:** "Strange things are afoot at the Circle K"
+
+## Acknowledging Correct Feedback
+
+When feedback IS correct:
+
+- ✅ "Fixed. [Brief description of what changed]"
+- ✅ "Good catch - [specific issue]. Fixed in [location]."
+- ✅ [Just fix it and show in the code]
+
+**Why no thanks:** Actions speak. Just fix it. The code itself shows you heard the feedback.
+
+**If you catch yourself about to write "Thanks":** DELETE IT. State the fix instead.
+
+## Gracefully Correcting Your Pushback
+
+If you pushed back and were wrong:
+
+- ✅ "You were right - I checked [X] and it does [Y]. Implementing now."
+- ✅ "Verified this and you're correct. My initial understanding was wrong because [reason]. Fixing."
+
+- ❌ Long apology
+- ❌ Defending why you pushed back
+- ❌ Over-explaining
+
+State the correction factually and move on.
+
+## Common Mistakes
+
+| Mistake                      | Fix                                  |
+| ---------------------------- | ------------------------------------ |
+| Performative agreement       | State requirement or just act        |
+| Blind implementation         | Verify against codebase first        |
+| Batch without testing        | One at a time, ask user to test each |
+| Assuming reviewer is right   | Check if breaks things               |
+| Avoiding pushback            | Technical correctness > comfort      |
+| Partial implementation       | Clarify all items first              |
+| Can't verify, proceed anyway | State limitation, ask for direction  |
+
+## Rationalizations to Avoid
+
+- "The reviewer is always right" → WRONG. Verify first.
+- "I should agree to be polite" → WRONG. Technical correctness over social comfort.
+- "I'll implement it all at once" → WRONG. One at a time, test each.
+- "I understand most of it, I'll ask about the rest later" → WRONG. Clarify all unclear items first.
+- "I can't verify this, but I'll proceed anyway" → WRONG. State limitation, ask for direction.
+
+## The Bottom Line
+
+**External feedback = suggestions to evaluate, not orders to follow.**
+
+Verify. Question. Then implement.
+
+No performative agreement. Technical rigor always.
+
+## Related Command
+
+For detailed workflows when processing a code review document, use the `.cursor/commands/superpowers/address-code-review.md` command.

@@ -1,0 +1,97 @@
+# Root Cause Tracing
+
+Bugs often manifest deep in the call stack. Your instinct is to fix where the error appears, but that's treating a symptom. Trace backward through the call chain until you find the original trigger, then fix at the source.
+
+## When This Applies
+
+**Use when:**
+- Error happens deep in execution (not at entry point)
+- Stack trace shows long call chain
+- Unclear where invalid data originated
+- Need to find which code triggers the problem
+
+## Principles
+
+- **NEVER fix just where the error appears** - Trace back to find the original trigger
+- **Observe the symptom** - What error message/behavior do you see?
+- **Find immediate cause** - What code directly causes this?
+- **Ask: What called this?** - Trace up the call stack
+- **Keep tracing up** - What value was passed? Where did it come from?
+- **Find original trigger** - Where did the bad value originate?
+- **Fix at source** - Address the root cause, not the symptom
+- **Add validation at each layer** - After fixing, add defense-in-depth validation
+
+## The Tracing Process
+
+1. **Observe the Symptom** - Note the error message and location
+2. **Find Immediate Cause** - Identify the code that directly causes the error
+3. **Ask: What Called This?** - Trace up the call stack
+4. **Keep Tracing Up** - What value was passed? Where did it come from?
+5. **Find Original Trigger** - Identify where the bad value originated
+6. **Fix at Source** - Address the root cause
+7. **Add Defense-in-Depth** - Add validation at each layer data passes through
+
+## Adding Stack Traces
+
+When you can't trace manually, add instrumentation:
+
+```gdscript
+# Before the problematic operation
+func process_target(target):
+    var stack = get_stack()
+    print("DEBUG process_target: ", {
+        "target": target,
+        "caller": stack[1] if stack.size() > 1 else "unknown",
+    })
+    
+    # ... rest of function
+```
+
+**Stop and ask the user to:**
+1. Add this instrumentation
+2. Run the game and trigger the issue
+3. Provide the output
+
+**Analyze stack traces:**
+- Look for the function names in the call chain
+- Find the line number triggering the call
+- Identify the pattern (same caller? same parameter?)
+
+## Key Principle
+
+```dot
+digraph principle {
+    "Found immediate cause" [shape=ellipse];
+    "Can trace one level up?" [shape=diamond];
+    "Trace backwards" [shape=box];
+    "Is this the source?" [shape=diamond];
+    "Fix at source" [shape=box];
+    "Add validation at each layer" [shape=box];
+    "Bug impossible" [shape=doublecircle];
+    "NEVER fix just the symptom" [shape=octagon, style=filled, fillcolor=red, fontcolor=white];
+
+    "Found immediate cause" -> "Can trace one level up?";
+    "Can trace one level up?" -> "Trace backwards" [label="yes"];
+    "Can trace one level up?" -> "NEVER fix just the symptom" [label="no"];
+    "Trace backwards" -> "Is this the source?";
+    "Is this the source?" -> "Trace backwards" [label="no - keeps going"];
+    "Is this the source?" -> "Fix at source" [label="yes"];
+    "Fix at source" -> "Add validation at each layer";
+    "Add validation at each layer" -> "Bug impossible";
+}
+```
+
+**NEVER fix just where the error appears.** Trace back to find the original trigger.
+
+## Stack Trace Tips
+
+- **Use print()** - Simple and always works
+- **Before operation:** Log before the dangerous operation, not after it fails
+- **Include context:** Parameters, current state, relevant variables
+- **Capture stack:** `get_stack()` shows complete call chain in GDScript
+
+## Integration
+
+This rule is REQUIRED when using systematic-debugging for errors deep in call stack. After tracing and fixing, use defense-in-depth to add validation at each layer.
+
+For detailed workflows, use the `.cursor/commands/debug.md` command.
