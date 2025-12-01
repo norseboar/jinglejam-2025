@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=7 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://bghtokhkny88a" path="res://scenes/units/swordsman.tscn" id="2_iywne"]
 [ext_resource type="Texture2D" uid="uid://6v0l0ja3i2tc" path="res://assets/sprites/placeholder-fortress.png" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cpp8nrk1v2n70" path="res://scenes/units/archer.tscn" id="3_p57ef"]
 [ext_resource type="PackedScene" uid="uid://xmwvmvin0jlw" path="res://scenes/units/enemy.tscn" id="4_u5sy4"]
+[ext_resource type="Texture2D" uid="uid://dt0cvswfre046" path="res://assets/IMG_4586.jpg" id="6_p57ef"]
 
 [node name="Game" type="Node2D" node_paths=PackedStringArray("swordsman_button", "archer_button", "start_button", "restart_button", "hp_label")]
 script = ExtResource("1_yqjtg")
@@ -17,11 +18,17 @@ start_button = NodePath("UI/HBoxContainer/StartButton")
 restart_button = NodePath("UI/HBoxContainer/RestartButton")
 hp_label = NodePath("UI/HpLabel")
 
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(698, 23)
+scale = Vector2(0.51058203, 0.51058203)
+texture = ExtResource("6_p57ef")
+
 [node name="Fortress" type="Sprite2D" parent="."]
 position = Vector2(50, 180)
 texture = ExtResource("3_lnu2h")
 
 [node name="EnemySpawnSlots" type="Node2D" parent="."]
+position = Vector2(73, 108)
 
 [node name="Marker2D3" type="Marker2D" parent="EnemySpawnSlots"]
 position = Vector2(443, 184)
@@ -33,6 +40,7 @@ position = Vector2(500, 201)
 position = Vector2(536, 173)
 
 [node name="PlayerSpawnSlots" type="Node2D" parent="."]
+position = Vector2(-5, 102)
 
 [node name="Marker2D3" type="Marker2D" parent="PlayerSpawnSlots"]
 position = Vector2(171, 177)
