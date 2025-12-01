@@ -1,0 +1,68 @@
+[gd_scene load_steps=10 format=3 uid="uid://cpp8nrk1v2n70"]
+
+[ext_resource type="Script" uid="uid://c36sx2wogsgew" path="res://scripts/archer.gd" id="1_p10bi"]
+[ext_resource type="Texture2D" uid="uid://c3w3jfyltqdlv" path="res://assets/sprites/placeholder-archer.png" id="2_p10bi"]
+[ext_resource type="PackedScene" uid="uid://bfpx6jiop0s3q" path="res://scenes/projectile.tscn" id="2_qwrx5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qwrx5"]
+atlas = ExtResource("2_p10bi")
+region = Rect2(64, 16, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vr8h0"]
+atlas = ExtResource("2_p10bi")
+region = Rect2(128, 16, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cljpu"]
+atlas = ExtResource("2_p10bi")
+region = Rect2(192, 16, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sti30"]
+atlas = ExtResource("2_p10bi")
+region = Rect2(0, 16, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xbl27"]
+atlas = ExtResource("2_p10bi")
+region = Rect2(0, 16, 64, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jlpio"]
+animations = [{
+"frames": [{
+"duration": 8.0,
+"texture": SubResource("AtlasTexture_qwrx5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vr8h0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cljpu")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sti30")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xbl27")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[node name="Archer" type="Node2D"]
+script = ExtResource("1_p10bi")
+projectile_scene = ExtResource("2_qwrx5")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_jlpio")
+animation = &"attack"
+frame = 2
+frame_progress = 1.0

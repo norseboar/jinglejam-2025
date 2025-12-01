@@ -15,25 +15,25 @@ Quick instructions for dumping the tail of the Godot log from any shell session.
 
 ## Steps
 
-1. Run the helper script and pass the number of lines you want to see:
+1. Run PowerShell's built-in `Get-Content` command with the `-Tail` parameter:
 
    ```
-   pwsh -File .\tools\godot-log-tail.ps1 200
+   Get-Content "$env:APPDATA\Godot\app_userdata\jinglejam-2025\logs\godot.log" -Tail 200
    ```
 
-   - Omit the final argument to default to 100 lines.
-   - Pass any positive integer to change the tail size.
+   - Replace `200` with any positive integer to change the number of lines.
+   - Default to 100 lines if you omit the `-Tail` parameter (shows entire file).
 
 2. Review the log output printed to the console. Errors or warnings near the bottom usually matter most.
 
 3. (Optional) Pipe or redirect the command output if you need to save it:
 
    ```
-   pwsh -File .\tools\godot-log-tail.ps1 500 > .\tmp\godot-log-snippet.txt
+   Get-Content "$env:APPDATA\Godot\app_userdata\jinglejam-2025\logs\godot.log" -Tail 500 > .\tmp\godot-log-snippet.txt
    ```
 
 ## Notes
 
-- The script reads `%APPDATA%\Godot\app_userdata\jinglejam-2025\logs\godot.log`. Launch the game at least once so the file exists.
-- The command will fail fast with a helpful error message if the log is missing or if the line count argument is invalid.
+- The command reads `%APPDATA%\Godot\app_userdata\jinglejam-2025\logs\godot.log`. Launch the game at least once so the file exists.
+- `Get-Content -Tail` is a built-in PowerShell cmdlet, so no custom script is needed.
 

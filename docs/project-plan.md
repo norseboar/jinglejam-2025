@@ -21,13 +21,13 @@
 **Task 2:** Build `game.tscn` — the battlefield with UI buttons and unit containers.  
 **Task 3:** ✅ Implement placement phase — click button to spawn player units. (Completed via `docs/plans/2025-12-01-placement-phase.md`)  
 **Task 4:** ✅ Implement battle phase — units move toward each other, fight on contact. (Completed via `docs/plans/2025-12-01-battle-phase.md`)  
-**Task 5:** Implement end phase — survivors damage fortress, restart button appears.
+**Task 5:** ✅ Implement end phase — survivors damage fortress, restart button appears. (Completed via `docs/plans/2025-12-01-end-phase.md`)
 
 ---
 
 ## Tooling
 
-- Added `tools/godot-log-tail.ps1` for quickly tailing the Godot log: `pwsh -File .\tools\godot-log-tail.ps1 15`
+- Use `Get-Content` with `-Tail` to view Godot logs: `Get-Content "$env:APPDATA\Godot\app_userdata\jinglejam-2025\logs\godot.log" -Tail 15`
 
 ---
 
@@ -153,7 +153,9 @@ var current_slot := 0
 - `get_tree().get_nodes_in_group("enemies")` or pass reference to enemy container
 - Check distance to each, target closest within range
 
-### Task 5: End Phase
+### ✅ Task 5: End Phase
+
+**Status:** Completed via `docs/plans/2025-12-01-end-phase.md`
 
 **`_end_battle()` logic:**
 
@@ -181,8 +183,8 @@ var current_slot := 0
 - [ ] Units stop and fight when in range
 - [ ] Units die when HP reaches 0
 - [ ] Battle ends when one side is eliminated
-- [ ] Surviving enemies reduce fortress HP
-- [ ] Can restart and play again
+- [x] Surviving enemies reduce fortress HP
+- [x] Can restart and play again
 
 ---
 

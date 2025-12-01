@@ -65,6 +65,7 @@ Create a high-level orchestration plan for a project or milestone. For human coo
 - Review existing docs in `docs/projects/` and `docs/long-term/`
 - Look at related code to understand current state
 - Note any existing patterns or conventions
+- Verify naming conventions: filenames use snake_case, class/node names use PascalCase
 
 ### Step 2: Break Into Milestones
 
@@ -128,8 +129,14 @@ Milestone 3: Password reset
 ### Step 5: Write and Save
 
 - Use the output format above
-- Save to `docs/projects/[project-name]/plan.md`
+- Save to `docs/projects/[project-name]/plan.md` (use kebab-case for project-name)
 - If updating an existing project, update the existing plan file
+
+**Note on naming conventions:**
+
+When referencing code files in deliverables or scope boundaries:
+- Use snake_case for filenames (e.g., `unit.gd`, `combat_manager.gd`)
+- Use PascalCase for class and node names (e.g., `Unit`, `CombatManager`)
 
 ## Key Principles
 
@@ -137,3 +144,4 @@ Milestone 3: Password reset
 - **Testable increments** — Each milestone should be independently verifiable
 - **Clear boundaries** — Explicit scope prevents creep
 - **No code examples** — This is coordination, not implementation
+- **Naming conventions** — When referencing code files, use snake_case for filenames (e.g., `unit.gd`) and PascalCase for class/node names (e.g., `Unit`)

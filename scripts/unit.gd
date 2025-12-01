@@ -2,12 +2,12 @@ extends Node2D
 class_name Unit
 
 # Stats
-var max_hp := 3
-var current_hp := 3
-var damage := 1
-var speed := 100.0           # pixels per second
-var attack_range := 50.0     # radius to detect enemies
-var attack_cooldown := 1.0   # seconds between attacks
+@export var max_hp := 3
+@export var current_hp := 3
+@export var damage := 1
+@export var speed := 100.0           # pixels per second
+@export var attack_range := 50.0     # radius to detect enemies
+@export var attack_cooldown := 1.0   # seconds between attacks
 
 # State
 var is_enemy := false        # true = moves left (enemy), false = moves right (player)
@@ -84,9 +84,13 @@ func _check_for_targets() -> void:
 	for enemy in enemy_container.get_children():
 		if not is_instance_valid(enemy):
 			continue
-		if enemy is Unit:
-			if enemy.current_hp <= 0 or enemy.state == "dying":
-				continue  # Skip dead or dying units
+		# Only consider Unit nodes as valid targets
+		if not enemy is Unit:
+			continue
+		
+		var unit_enemy := enemy as Unit
+		if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+			continue  # Skip dead or dying units
 
 		var distance := position.distance_to(enemy.position)
 		if distance < attack_range and distance < closest_distance:
@@ -100,14 +104,14 @@ func _check_for_targets() -> void:
 
 
 func _do_fighting(delta: float) -> void:
-	# Check if target is still valid
-	if not is_instance_valid(target) or target.current_hp <= 0:
+	# Check if target is still valid and is a Unit
+	if not is_instance_valid(target) or not target is Unit:
 		target = null
 		set_state("moving")
 		return
 	
-	# Check if target is dying
-	if target is Unit and target.state == "dying":
+	var target_unit := target as Unit
+	if target_unit.current_hp <= 0 or target_unit.state == "dying":
 		target = null
 		set_state("moving")
 		return
@@ -133,48 +137,67 @@ func _attack_target() -> void:
 
 	# Set attacking flag and play animation
 	is_attacking = true
+	
+	# Calculate animation speed to match attack cooldown
+	var anim_speed_scale := _calculate_attack_animation_speed()
+	animated_sprite.speed_scale = anim_speed_scale
 	animated_sprite.play("attack")
 
-	# Get animation duration from sprite frames (accounting for custom frame durations)
-	var sprite_frames := animated_sprite.sprite_frames
-	if sprite_frames and sprite_frames.has_animation("attack"):
-		var frame_count := sprite_frames.get_frame_count("attack")
-		var anim_speed := sprite_frames.get_animation_speed("attack")
-		var anim_duration := 0.0
-		
-		print("Attack animation: frame_count = ", frame_count, ", speed = ", anim_speed, " FPS")
-		
-		# Sum up individual frame durations to account for custom frame durations
-		# get_frame_duration() returns duration in frames, so convert to seconds by dividing by FPS
-		for i in range(frame_count):
-			var frame_duration_frames := sprite_frames.get_frame_duration("attack", i)
-			var frame_duration_seconds := frame_duration_frames / anim_speed
-			anim_duration += frame_duration_seconds
-			print("  Frame %d duration: %f frames (%f seconds)" % [i, frame_duration_frames, frame_duration_seconds])
-		
-		print("Total animation duration: %f seconds" % anim_duration)
-		
-		if anim_duration > 0:
-			# Deal damage at the end of the animation
-			get_tree().create_timer(anim_duration).timeout.connect(_on_attack_animation_finished)
-		else:
-			# Fallback if duration is 0 - deal damage immediately
-			_on_attack_animation_finished()
+	# Get animation duration (accounting for speed scale)
+	var anim_duration := _get_attack_animation_duration() / anim_speed_scale
+	
+	if anim_duration > 0:
+		get_tree().create_timer(anim_duration).timeout.connect(_on_attack_animation_finished)
 	else:
-		# Fallback if sprite_frames or animation not found - deal damage immediately
 		_on_attack_animation_finished()
+
+
+func _calculate_attack_animation_speed() -> float:
+	var base_duration := _get_attack_animation_duration()
+	if base_duration <= 0 or attack_cooldown <= 0:
+		return 1.0
+	# Scale animation to fit within attack cooldown
+	# Leave a small buffer so animation completes before next attack
+	var target_duration := attack_cooldown * 0.9
+	return base_duration / target_duration
+
+
+func _get_attack_animation_duration() -> float:
+	var sprite_frames := animated_sprite.sprite_frames
+	if sprite_frames == null or not sprite_frames.has_animation("attack"):
+		return 0.0
+	
+	var frame_count := sprite_frames.get_frame_count("attack")
+	var anim_speed := sprite_frames.get_animation_speed("attack")
+	var anim_duration := 0.0
+	
+	for i in range(frame_count):
+		var frame_duration_frames := sprite_frames.get_frame_duration("attack", i)
+		var frame_duration_seconds := frame_duration_frames / anim_speed
+		anim_duration += frame_duration_seconds
+	
+	return anim_duration
 
 
 func _on_attack_animation_finished() -> void:
 	is_attacking = false
 	
-	# Deal damage when animation finishes
-	if target != null and is_instance_valid(target) and target.has_method("take_damage"):
-		target.take_damage(damage)
+	# Reset animation speed scale
+	animated_sprite.speed_scale = 1.0
+	
+	# Call virtual method for actual attack effect (subclasses override this)
+	_apply_attack_damage()
 	
 	# Switch back to idle animation while waiting for next attack
 	if state == "fighting" and animated_sprite:
 		animated_sprite.play("idle")
+
+
+## Virtual method - subclasses override this to implement their attack type
+func _apply_attack_damage() -> void:
+	# Default melee behavior - deal damage directly to target
+	if target != null and is_instance_valid(target) and target.has_method("take_damage"):
+		target.take_damage(damage)
 
 
 func take_damage(amount: int) -> void:

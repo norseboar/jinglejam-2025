@@ -34,7 +34,7 @@ _(Include this line if this plan is part of a larger project. Remove if standalo
 
 ### Task 1: [Name]
 
-**Files:** `path/to/file.gd`
+**Files:** `path/to/file.gd` (use snake_case for filenames)
 
 - [ ] **Step 1:** Description of what to do
 
@@ -88,6 +88,7 @@ _(Include this line if this plan is part of a larger project. Remove if standalo
 - [ ] Found similar existing code to use as reference
 - [ ] Checked relevant rules in `.cursor/rules/`
 - [ ] Understood the data flow
+- [ ] Verified naming conventions: filenames use snake_case, class/node names use PascalCase
 
 ### Step 3: Break Into Tasks
 
@@ -127,16 +128,16 @@ If the same change needs to be made to multiple files, consolidate into a single
 ````
 Task 1: Add on_click handler to unit scenes
 
-**Files:** `scenes/units/Warrior.tscn`, `scenes/units/Archer.tscn`, `scenes/units/Mage.tscn`
+**Files:** `scenes/units/warrior.tscn`, `scenes/units/archer.tscn`, `scenes/units/mage.tscn` (note: snake_case filenames)
 
-- [ ] **Step 1:** Add on_click handler to `Warrior.gd` as an example:
+- [ ] **Step 1:** Add on_click handler to `scripts/warrior.gd` as an example (note: snake_case filename):
 
 ```gdscript
 func _on_click():
     unit_clicked.emit(self)
 ````
 
-- [ ] **Step 2:** Apply the same pattern to `Archer.gd` and `Mage.gd`
+- [ ] **Step 2:** Apply the same pattern to `scripts/archer.gd` and `scripts/mage.gd` (note: snake_case filenames)
 
 ```
 
@@ -146,17 +147,19 @@ func _on_click():
 
 Task 1: Add on_click handler to Warrior
 
-- Add on_click handler to Warrior.gd
+- Add on_click handler to warrior.gd
 
 Task 2: Add on_click handler to Archer
 
-- Add on_click handler to Archer.gd
+- Add on_click handler to archer.gd
 
 Task 3: Add on_click handler to Mage
 
-- Add on_click handler to Mage.gd
+- Add on_click handler to mage.gd
 
 `````
+
+(Note: Even in bad examples, filenames should use snake_case for consistency.)
 
 **Rule of thumb:** If the work is substantially duplicated across multiple files (same pattern, same change), create one task with an example and then say "apply to all these files" rather than creating separate tasks for each file.
 
@@ -166,9 +169,17 @@ Task 3: Add on_click handler to Mage
 
 **Good steps:**
 
-- ✅ "Create `scripts/targeting/TargetSelector.gd` with the following structure:"
+- ✅ "Create `scripts/targeting/target_selector.gd` with the following structure:" (note: snake_case filename)
 - ✅ "Add `target_type` field to the `UnitData` resource"
-- ✅ "**Godot Editor:** Link `scripts/CombatManager.gd` to the CombatManager node in `scenes/Game.tscn`"
+- ✅ "**Godot Editor:** Link `scripts/combat_manager.gd` to the CombatManager node in `scenes/game.tscn`" (note: snake_case filename, PascalCase node name)
+
+**Naming Conventions:**
+
+- **Filenames:** Always use snake_case (e.g., `unit.gd`, `combat_manager.gd`, `target_selector.gd`)
+- **Class names:** Always use PascalCase (e.g., `class_name Unit`, `class_name CombatManager`, `class_name TargetSelector`)
+- **Node names:** Always use PascalCase (e.g., `Unit`, `CombatManager`, `TargetSelector`)
+
+When writing steps, ensure file paths use snake_case and class/node names use PascalCase.
 
 **Bad steps:**
 
@@ -197,11 +208,11 @@ When a step requires work in the Godot editor, clearly mark it with **"Godot Edi
 ```markdown
 - [ ] **Step X:** **Godot Editor:** [Clear instruction of what to do]
 
-Example: Link `scripts/Unit.gd` to the Unit node in `scenes/Unit.tscn`:
-1. Open `scenes/Unit.tscn` in the Godot editor
+Example: Link `scripts/unit.gd` (snake_case filename) to the Unit node (PascalCase node name) in `scenes/unit.tscn` (snake_case filename):
+1. Open `scenes/unit.tscn` in the Godot editor
 2. Select the Unit node (root node)
 3. In the Inspector, click the script icon next to the node name
-4. Select `scripts/Unit.gd` from the file dialog
+4. Select `scripts/unit.gd` from the file dialog
 ```
 
 ### Step 5: Add Code Examples
@@ -215,7 +226,7 @@ Example: Link `scripts/Unit.gd` to the Unit node in `scenes/Unit.tscn`:
 **Code example format:**
 
 ````markdown
-- [ ] **Step 1:** Create the target type enum in `scripts/data/enums.gd`
+- [ ] **Step 1:** Create the target type enum in `scripts/data/enums.gd` (note: snake_case filename)
 
 Add this after the existing enums:
 
@@ -228,6 +239,12 @@ enum TargetType {
     ALL_ALLIES
 }
 `````
+
+**Naming in code examples:**
+
+- File paths in steps: Use snake_case (e.g., `scripts/target_selector.gd`)
+- Class names in code: Use PascalCase (e.g., `class_name TargetSelector`)
+- Node names in steps: Use PascalCase (e.g., "the TargetSelector node")
 
 ````
 
@@ -297,4 +314,5 @@ After each task's steps:
 - **Follow existing patterns** — Check `.cursor/rules/` for coding standards
 - **Include reminders** — The executor needs to be reminded to stop and verify
 - **Mark Godot editor actions** — Clearly identify steps that require Godot editor work so the executor knows to ask the user
+- **Naming conventions** — Filenames must be snake_case (e.g., `unit.gd`), class and node names must be PascalCase (e.g., `class_name Unit`)
 ````

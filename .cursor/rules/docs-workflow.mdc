@@ -18,12 +18,20 @@ Use this guide to locate reference docs, project plans, and working notes. It al
 
 ## Naming Conventions
 
+**Documentation files:**
 - Use lowercase kebab-case for files and directories (`tech-stack.md`, `2025-11-08-ui-refactor.md`, `project-alpha/plan.md`).
 - Stable references: locate them in `docs/long-term/` with concise descriptive names.
 - Implementation plans:
   - **For existing projects**: Save to `docs/projects/project-name/plan.md`
   - **For standalone work**: Save to `docs/plans/YYYY-MM-DD-feature-name.md`
 - Projects: `docs/projects/project-name/plan.md` serves as the primary plan file; supporting files are named by purpose (`tasks.md`, `bugs.md`, `2025-11-10-research.md`).
+
+**Code files and classes:**
+- **Filenames:** Always use snake_case (e.g., `unit.gd`, `combat_manager.gd`, `target_selector.gd`)
+- **Class names:** Always use PascalCase (e.g., `class_name Unit`, `class_name CombatManager`)
+- **Node names:** Always use PascalCase (e.g., `Unit`, `CombatManager`, `TargetSelector`)
+
+When writing plans or referencing code, ensure filenames use snake_case and class/node names use PascalCase.
 
 ## Plan Format
 

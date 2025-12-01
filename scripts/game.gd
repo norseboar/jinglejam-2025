@@ -6,7 +6,9 @@ var player_hp := 10
 var phase := "placement"  # "placement" | "battle" | "end"
 
 # Scene references
-@export var unit_scene: PackedScene
+@export var swordsman_scene: PackedScene
+@export var archer_scene: PackedScene
+@export var enemy_scene: PackedScene
 
 # Node references
 @onready var fortress: Sprite2D = $Fortress
@@ -14,13 +16,17 @@ var phase := "placement"  # "placement" | "battle" | "end"
 @onready var enemy_units: Node2D = $EnemyUnits
 @onready var player_spawn_slots: Node2D = $PlayerSpawnSlots
 @onready var enemy_spawn_slots: Node2D = $EnemySpawnSlots
-@onready var spawn_button: Button = $UI/SpawnButton
-@onready var start_button: Button = $UI/StartButton
-@onready var restart_button: Button = $UI/RestartButton
-@onready var hp_label: Label = $UI/HpLabel
+
+# UI references (assign in inspector for flexibility)
+@export var swordsman_button: Button
+@export var archer_button: Button
+@export var start_button: Button
+@export var restart_button: Button
+@export var hp_label: Label
 
 
 func _ready() -> void:
+	_validate_ui_references()
 	_setup_ui()
 	_update_hp_display()
 	_validate_spawn_slots()
@@ -42,31 +48,32 @@ func _process(_delta: float) -> void:
 
 
 func _setup_ui() -> void:
-	# Connect button signals
-	spawn_button.pressed.connect(_on_spawn_button_pressed)
-	start_button.pressed.connect(_on_start_button_pressed)
-	restart_button.pressed.connect(_on_restart_button_pressed)
-
-	# Set initial button text
-	spawn_button.text = "Add Unit"
-	start_button.text = "Fight!"
-	restart_button.text = "Restart"
-
-	# Hide restart button initially
-	restart_button.visible = false
-	
-	# Disable start button initially (no units yet)
-	start_button.disabled = true
+	# Connect button signals (with null checks)
+	if swordsman_button:
+		swordsman_button.pressed.connect(_on_swordsman_button_pressed)
+		swordsman_button.text = "Add Swordsman"
+	if archer_button:
+		archer_button.pressed.connect(_on_archer_button_pressed)
+		archer_button.text = "Add Archer"
+	if start_button:
+		start_button.pressed.connect(_on_start_button_pressed)
+		start_button.text = "Fight!"
+		start_button.disabled = true  # Disable initially (no units yet)
+	if restart_button:
+		restart_button.pressed.connect(_on_restart_button_pressed)
+		restart_button.text = "Restart"
+		restart_button.visible = false  # Hide initially
 
 
 func _update_hp_display() -> void:
-	hp_label.text = "HP: %d" % player_hp
+	if hp_label:
+		hp_label.text = "HP: %d" % player_hp
 
 
 func _spawn_enemies() -> void:
 	# Check if unit_scene is assigned
-	if unit_scene == null:
-		push_error("unit_scene is not assigned in Game!")
+	if enemy_scene == null:
+		push_error("enemy_scene is not assigned in Game!")
 		return
 
 	# Get enemy spawn positions from Marker2D nodes
@@ -77,7 +84,7 @@ func _spawn_enemies() -> void:
 
 	# Spawn an enemy at each position
 	for pos in enemy_positions:
-		var enemy: Unit = unit_scene.instantiate() as Unit
+		var enemy: Unit = enemy_scene.instantiate() as Unit
 		if enemy == null:
 			push_error("Failed to instantiate enemy unit!")
 			continue
@@ -124,10 +131,25 @@ func _end_battle(player_won: bool) -> void:
 			print("Fortress took %d damage! %d enemies survived." % [surviving_enemies, surviving_enemies])
 	
 	# Show restart button
-	restart_button.visible = true
-	restart_button.disabled = false
+	if restart_button:
+		restart_button.visible = true
+		restart_button.disabled = false
 	
 	print("Battle ended! Player won: ", player_won)
+
+
+func _validate_ui_references() -> void:
+	# Warn if UI references are not assigned
+	if swordsman_button == null:
+		push_warning("swordsman_button is not assigned! Assign it in the inspector.")
+	if archer_button == null:
+		push_warning("archer_button is not assigned! Assign it in the inspector.")
+	if start_button == null:
+		push_warning("start_button is not assigned! Assign it in the inspector.")
+	if restart_button == null:
+		push_warning("restart_button is not assigned! Assign it in the inspector.")
+	if hp_label == null:
+		push_warning("hp_label is not assigned! Assign it in the inspector.")
 
 
 func _validate_spawn_slots() -> void:
@@ -195,7 +217,15 @@ func _get_next_available_slot() -> Vector2:
 	return Vector2.ZERO
 
 
-func _on_spawn_button_pressed() -> void:
+func _on_swordsman_button_pressed() -> void:
+	_spawn_player_unit(swordsman_scene)
+
+
+func _on_archer_button_pressed() -> void:
+	_spawn_player_unit(archer_scene)
+
+
+func _spawn_player_unit(unit_scene: PackedScene) -> void:
 	# Only allow spawning during placement phase
 	if phase != "placement":
 		return
@@ -204,12 +234,15 @@ func _on_spawn_button_pressed() -> void:
 	var spawn_pos := _get_next_available_slot()
 	if spawn_pos == Vector2.ZERO:
 		# All slots are filled
-		spawn_button.disabled = true
+		if swordsman_button:
+			swordsman_button.disabled = true
+		if archer_button:
+			archer_button.disabled = true
 		return
 
 	# Check if unit_scene is assigned
 	if unit_scene == null:
-		push_error("unit_scene is not assigned in Game!")
+		push_error("unit_scene is not assigned!")
 		return
 
 	# Instantiate the unit
@@ -227,13 +260,17 @@ func _on_spawn_button_pressed() -> void:
 	# Convert global spawn position to local position relative to player_units
 	unit.global_position = spawn_pos
 
-	# Disable button if all slots filled
+	# Disable buttons if all slots filled
 	var spawn_positions := _get_player_spawn_positions()
 	if player_units.get_child_count() >= spawn_positions.size():
-		spawn_button.disabled = true
+		if swordsman_button:
+			swordsman_button.disabled = true
+		if archer_button:
+			archer_button.disabled = true
 	
 	# Enable start button now that we have at least one unit
-	start_button.disabled = false
+	if start_button:
+		start_button.disabled = false
 
 
 func _count_living_units(container: Node2D) -> int:
@@ -270,9 +307,14 @@ func _on_start_button_pressed() -> void:
 			child.set_state("moving")
 	
 	# Update UI
-	spawn_button.visible = false
-	spawn_button.disabled = true
-	start_button.disabled = true
+	if swordsman_button:
+		swordsman_button.visible = false
+		swordsman_button.disabled = true
+	if archer_button:
+		archer_button.visible = false
+		archer_button.disabled = true
+	if start_button:
+		start_button.disabled = true
 
 
 func _on_restart_button_pressed() -> void:
@@ -290,12 +332,18 @@ func _on_restart_button_pressed() -> void:
 	_spawn_enemies()
 	
 	# Reset UI to placement phase state
-	spawn_button.visible = true
-	spawn_button.disabled = false
+	if swordsman_button:
+		swordsman_button.visible = true
+		swordsman_button.disabled = false
+	if archer_button:
+		archer_button.visible = true
+		archer_button.disabled = false
 	# Disable start button if no units (will be enabled when units are spawned)
-	start_button.disabled = (player_units.get_child_count() == 0)
-	restart_button.visible = false
-	restart_button.disabled = true
+	if start_button:
+		start_button.disabled = (player_units.get_child_count() == 0)
+	if restart_button:
+		restart_button.visible = false
+		restart_button.disabled = true
 	
 	# Reset game phase
 	phase = "placement"

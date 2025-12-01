@@ -37,6 +37,7 @@ Execute a code plan step-by-step. Follow the plan exactly, stop after each task,
 - Don't skip steps
 - Don't combine steps
 - Don't "improve" on the plan
+- **Verify naming conventions:** When creating files, use snake_case (e.g., `unit.gd`). When creating classes or nodes, use PascalCase (e.g., `class_name Unit`)
 
 **STOP if:**
 
@@ -78,14 +79,23 @@ Execute a code plan step-by-step. Follow the plan exactly, stop after each task,
 ```
 Step requires Godot editor action:
 
-I need you to link the script `scripts/Unit.gd` to the Unit node in `scenes/Unit.tscn`:
-1. Open `scenes/Unit.tscn` in the Godot editor
+I need you to link the script `scripts/unit.gd` (snake_case filename) to the Unit node (PascalCase node name) in `scenes/unit.tscn` (snake_case filename):
+1. Open `scenes/unit.tscn` in the Godot editor
 2. Select the Unit node (root node)
 3. In the Inspector, click the script icon next to the node name
-4. Select `scripts/Unit.gd` from the file dialog
+4. Select `scripts/unit.gd` from the file dialog
 
 Please confirm when this is done, and I'll continue with the next step.
 ```
+
+**Naming Conventions:**
+
+When executing steps, ensure:
+- **Filenames:** Always use snake_case (e.g., `unit.gd`, `combat_manager.gd`)
+- **Class names:** Always use PascalCase (e.g., `class_name Unit`, `class_name CombatManager`)
+- **Node names:** Always use PascalCase (e.g., `Unit`, `CombatManager`)
+
+If a step uses incorrect naming, follow the plan exactly but note the naming convention for future reference.
 
 ### 2c. After Completing the Task
 
@@ -147,6 +157,16 @@ Please confirm when this is done, and I'll continue with the next step.
 **2. Stop after each task.** Report. Wait. Don't continue automatically.
 
 **3. Don't guess.** If uncertain about anything—especially product behavior—ask.
+
+## Naming Conventions (Reminder)
+
+**Filenames:** Always use snake_case (e.g., `unit.gd`, `combat_manager.gd`, `target_selector.gd`)
+
+**Class names:** Always use PascalCase (e.g., `class_name Unit`, `class_name CombatManager`)
+
+**Node names:** Always use PascalCase (e.g., `Unit`, `CombatManager`, `TargetSelector`)
+
+When creating files or classes, verify the naming matches these conventions.
 
 ---
 

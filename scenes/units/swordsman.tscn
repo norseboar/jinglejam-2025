@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=3 uid="uid://bghtokhkny88a"]
+
+[ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_8w6po"]
+[ext_resource type="Texture2D" uid="uid://cmubdg4opnl25" path="res://assets/sprites/placeholder-unit.png" id="2_gqhlb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqhlb"]
+atlas = ExtResource("2_gqhlb")
+region = Rect2(16, 16, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2rbse"]
+atlas = ExtResource("2_gqhlb")
+region = Rect2(80, 16, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t8i60"]
+atlas = ExtResource("2_gqhlb")
+region = Rect2(16, 16, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dfw1p"]
+atlas = ExtResource("2_gqhlb")
+region = Rect2(16, 16, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jlpio"]
+animations = [{
+"frames": [{
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_gqhlb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2rbse")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t8i60")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dfw1p")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[node name="Swordsman" type="Node2D"]
+script = ExtResource("1_8w6po")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_jlpio")
+animation = &"attack"
