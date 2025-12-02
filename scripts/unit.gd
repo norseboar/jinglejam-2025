@@ -16,6 +16,9 @@ var target: Node2D = null    # current attack target
 var time_since_attack := 0.0 # timer for attack cooldown
 var is_attacking := false    # true when attack animation is playing
 
+# Upgrades
+var upgrades: Dictionary = {}  # e.g., { "hp": 2, "damage": 1 }
+
 # Reference to the container holding enemies (set by Game.gd when spawning)
 var enemy_container: Node2D = null
 
@@ -24,20 +27,12 @@ var enemy_container: Node2D = null
 
 
 func _ready() -> void:
-	print("Unit._ready() START")
 	current_hp = max_hp
-	print("Unit._ready() - is_enemy: ", is_enemy)
-	print("Unit._ready() - animated_sprite: ", animated_sprite)
 	# Flip sprite to face correct direction based on team
+	# This must happen in _ready() so enemies face the correct direction immediately
 	if animated_sprite:
-		print("Unit._ready() - Setting flip_h to: ", is_enemy)
 		animated_sprite.flip_h = is_enemy
-		print("Unit._ready() - flip_h is now: ", animated_sprite.flip_h)
-		animated_sprite.play("idle")
-		print("Unit._ready() - Called play('idle')")
-	else:
-		print("ERROR: animated_sprite is null in Unit._ready()!")
-	print("Unit._ready() END")
+		_safe_play_animation("idle")
 
 
 func _process(delta: float) -> void:
@@ -63,13 +58,13 @@ func set_state(new_state: String) -> void:
 	state = new_state
 	match state:
 		"idle":
-			animated_sprite.play("idle")
+			_safe_play_animation("idle")
 		"moving":
-			animated_sprite.play("walk")
+			_safe_play_animation("walk")
 		"fighting":
 			pass  # Attack animation played per attack
 		"dying":
-			animated_sprite.play("idle")  # Play idle animation while dying
+			_safe_play_animation("idle")  # Play idle animation while dying
 
 
 func _do_movement(delta: float) -> void:
@@ -153,7 +148,7 @@ func _attack_target() -> void:
 	# Calculate animation speed to match attack cooldown
 	var anim_speed_scale := _calculate_attack_animation_speed()
 	animated_sprite.speed_scale = anim_speed_scale
-	animated_sprite.play("attack")
+	_safe_play_animation("attack")
 
 	# Get animation duration (accounting for speed scale)
 	var anim_duration := _get_attack_animation_duration() / anim_speed_scale
@@ -202,7 +197,7 @@ func _on_attack_animation_finished() -> void:
 	
 	# Switch back to idle animation while waiting for next attack
 	if state == "fighting" and animated_sprite:
-		animated_sprite.play("idle")
+		_safe_play_animation("idle")
 
 
 ## Virtual method - subclasses override this to implement their attack type
@@ -243,3 +238,46 @@ func die() -> void:
 		tween.tween_callback(queue_free)
 	else:
 		queue_free()
+
+
+func apply_upgrades() -> void:
+	"""Apply upgrade bonuses to base stats and update visual markers."""
+	for upgrade_type in upgrades:
+		var count: int = upgrades[upgrade_type]
+		match upgrade_type:
+			"hp":
+				max_hp += count
+				current_hp = max_hp  # Refresh to new max
+			"damage":
+				damage += count
+	
+	_update_upgrade_markers()
+
+
+func _safe_play_animation(anim_name: String) -> void:
+	"""Safely play an animation, checking if it exists first."""
+	if animated_sprite and animated_sprite.sprite_frames:
+		if animated_sprite.sprite_frames.has_animation(anim_name):
+			animated_sprite.play(anim_name)
+
+
+func _update_upgrade_markers() -> void:
+	"""Show the appropriate upgrade marker based on total upgrade count."""
+	var upgrade_markers := get_node_or_null("UpgradeMarkers")
+	if upgrade_markers == null:
+		return
+	
+	var marker_1 := upgrade_markers.get_node_or_null("Marker1") as Sprite2D
+	var marker_2 := upgrade_markers.get_node_or_null("Marker2") as Sprite2D
+	var marker_3 := upgrade_markers.get_node_or_null("Marker3") as Sprite2D
+	
+	if marker_1 == null or marker_2 == null or marker_3 == null:
+		return
+	
+	var total := 0
+	for count in upgrades.values():
+		total += count
+	
+	marker_1.visible = (total == 1)
+	marker_2.visible = (total == 2)
+	marker_3.visible = (total >= 3)

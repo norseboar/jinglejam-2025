@@ -10,6 +10,7 @@ class ArmyUnit:
 	var unit_type: String = ""
 	var unit_scene: PackedScene = null
 	var placed: bool = false
+	var upgrades: Dictionary = {}  # NEW
 
 # Game state
 var phase := "preparation"  # "preparation" | "battle" | "upgrade"
@@ -106,8 +107,13 @@ func load_level(index: int) -> void:
 		push_error("Level scene at index %d is null! Make sure all entries in level_scenes array are assigned." % index)
 		return
 	
-	# Initialize/reset army from starting scenes
-	_init_army()
+	# Only initialize army on first level or after it was cleared (defeat)
+	if army.size() == 0:
+		_init_army()
+	else:
+		# Reset placed status for new level (units can be placed again)
+		for army_unit in army:
+			army_unit.placed = false
 	
 	# Clear all units
 	_clear_all_units()
@@ -184,8 +190,10 @@ func _spawn_enemies_from_level() -> void:
 		enemy.is_enemy = true
 		enemy.enemy_container = player_units
 		enemy.global_position = enemy_marker.global_position
+		enemy.upgrades = enemy_marker.upgrades.duplicate()  # Copy upgrades
 		
 		enemy_units.add_child(enemy)
+		enemy.apply_upgrades()  # Apply after added to tree
 
 
 func _set_spawn_slots_visible(should_show: bool) -> void:
@@ -241,6 +249,8 @@ func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
 	unit.is_enemy = false
 	unit.enemy_container = enemy_units
 	unit.global_position = slot.get_slot_center()
+	unit.upgrades = army_unit.upgrades.duplicate()  # Copy upgrades
+	unit.apply_upgrades()  # Apply after positioning
 
 	slot.set_occupied(true)
 	
@@ -292,8 +302,10 @@ func _on_upgrade_confirmed(victory: bool) -> void:
 		else:
 			# Completed all levels - restart at level 1
 			current_level_index = 0
+			army.clear()  # Reset army for new run
 	else:
-		# On defeat, always restart at level 1
+		# On defeat, reset everything
+		army.clear()  # Clear army so it reinitializes
 		current_level_index = 0
 
 	load_level(current_level_index)

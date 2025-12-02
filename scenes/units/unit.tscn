@@ -1,57 +1,26 @@
-[gd_scene load_steps=8 format=3 uid="uid://b6ra1cx32f7ve"]
+[gd_scene load_steps=5 format=3 uid="uid://b6ra1cx32f7ve"]
 
-[ext_resource type="Script" uid="uid://bwvnqebjgqrsx" path="res://scripts/unit.gd" id="1_6e3tn"]
-[ext_resource type="Texture2D" uid="uid://cmubdg4opnl25" path="res://assets/sprites/placeholder-unit.png" id="2_cx6aj"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_h85lg"]
-atlas = ExtResource("2_cx6aj")
-region = Rect2(16, 16, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fqlnf"]
-atlas = ExtResource("2_cx6aj")
-region = Rect2(80, 16, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_aa524"]
-atlas = ExtResource("2_cx6aj")
-region = Rect2(16, 16, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_nqku5"]
-atlas = ExtResource("2_cx6aj")
-region = Rect2(16, 16, 32, 32)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_appqu"]
-animations = [{
-"frames": [{
-"duration": 2.0,
-"texture": SubResource("AtlasTexture_h85lg")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fqlnf")
-}],
-"loop": false,
-"name": &"attack",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_aa524")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_nqku5")
-}],
-"loop": true,
-"name": &"walk",
-"speed": 5.0
-}]
+[ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/spriteframes/knight.tres" id="1_6k8ya"]
+[ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="1_cx6aj"]
+[ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="2_6k8ya"]
+[ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="3_mgebg"]
 
 [node name="Unit" type="Node2D"]
-script = ExtResource("1_6e3tn")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_appqu")
+sprite_frames = ExtResource("1_6k8ya")
 animation = &"attack"
+
+[node name="UpgradeMarkers" type="Node2D" parent="."]
+
+[node name="Marker1" type="Sprite2D" parent="UpgradeMarkers"]
+position = Vector2(0, -11)
+texture = ExtResource("1_cx6aj")
+
+[node name="Marker2" type="Sprite2D" parent="UpgradeMarkers"]
+position = Vector2(0, -11)
+texture = ExtResource("2_6k8ya")
+
+[node name="Marker3" type="Sprite2D" parent="UpgradeMarkers"]
+position = Vector2(0, -11)
+texture = ExtResource("3_mgebg")

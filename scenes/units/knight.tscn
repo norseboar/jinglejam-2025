@@ -1,12 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://bbp51u1lohgx"]
 
+[ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://scenes/units/unit.tscn" id="1_8k1n4"]
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_8w6po"]
-[ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/spriteframes/knight.tres" id="2_8w6po"]
 
-[node name="Knight" type="Node2D"]
+[node name="Knight" instance=ExtResource("1_8k1n4")]
 script = ExtResource("1_8w6po")
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = ExtResource("2_8w6po")
-animation = &"walk"
-frame_progress = 0.027827827
+max_hp = 5
+current_hp = 5
+speed = 50.0
+attack_range = 25.0
+attack_cooldown = 2.0

@@ -118,11 +118,7 @@ offset_bottom = 281.0
 [node name="EnemyMarker" parent="EnemyMarkers" instance=ExtResource("4_qdh5e")]
 position = Vector2(520, 226)
 unit_scene = ExtResource("5_50wog")
-
-[node name="EnemyMarker2" parent="EnemyMarkers" instance=ExtResource("4_qdh5e")]
-position = Vector2(566, 229)
-unit_scene = ExtResource("5_50wog")
-
-[node name="EnemyMarker3" parent="EnemyMarkers" instance=ExtResource("4_qdh5e")]
-position = Vector2(539, 241)
-unit_scene = ExtResource("5_50wog")
+upgrades = {
+"damage": 2,
+"hp": 1
+}

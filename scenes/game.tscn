@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://dux2mgenh42lt" path="res://scenes/levels/level_01.tscn" id="2_0tnpc"]
-[ext_resource type="PackedScene" path="res://scenes/units/squire.tscn" id="4_p57ef"]
+[ext_resource type="PackedScene" uid="uid://bklaap88dmjbp" path="res://scenes/units/squire.tscn" id="4_p57ef"]
 [ext_resource type="Texture2D" uid="uid://qguwsk400gqy" path="res://assets/backgrounds/chess_table.jpg" id="5_p57ef"]
 [ext_resource type="PackedScene" uid="uid://c0d47vd87vlmt" path="res://scenes/ui/hud.tscn" id="6_p57ef"]
 [ext_resource type="PackedScene" uid="uid://bbev3r4fqct55" path="res://scenes/units/ballista.tscn" id="7_vtaks"]
