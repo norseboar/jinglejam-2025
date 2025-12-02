@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://bbp51u1lohgx"]
+[gd_scene load_steps=3 format=3 uid="uid://c4xybkqwqki52"]
 
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_8w6po"]
 [ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/spriteframes/knight.tres" id="2_8w6po"]
 
-[node name="Knight" type="Node2D"]
+[node name="Swordsman" type="Node2D"]
 script = ExtResource("1_8w6po")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

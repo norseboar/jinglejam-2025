@@ -213,21 +213,29 @@ func _on_army_unit_placed(slot_index: int) -> void:
 		hud.clear_tray_slot(slot_index)
 
 
-func place_unit_on_slot(unit_type: String, slot: SpawnSlot, army_unit_index: int = -1) -> void:
+func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
+	"""Place a unit from the army array onto a spawn slot."""
 	if slot.is_occupied:
 		return
-
-	var unit_scene: PackedScene
-	match unit_type:
-		"swordsman":
-			unit_scene = swordsman_scene
-		"archer":
-			unit_scene = archer_scene
-		_:
-			push_error("Unknown unit type: " + unit_type)
-			return
-
-	var unit: Unit = unit_scene.instantiate() as Unit
+	
+	if army_index < 0 or army_index >= army.size():
+		push_error("Invalid army index: %d (army size: %d)" % [army_index, army.size()])
+		return
+	
+	var army_unit: ArmyUnit = army[army_index]
+	if army_unit.placed:
+		push_warning("Army unit at index %d already placed" % army_index)
+		return
+	
+	if army_unit.unit_scene == null:
+		push_error("Army unit at index %d has no unit_scene" % army_index)
+		return
+	
+	var unit: Unit = army_unit.unit_scene.instantiate() as Unit
+	if unit == null:
+		push_error("Failed to instantiate unit from scene at army index %d" % army_index)
+		return
+	
 	player_units.add_child(unit)
 	unit.is_enemy = false
 	unit.enemy_container = enemy_units
@@ -236,12 +244,11 @@ func place_unit_on_slot(unit_type: String, slot: SpawnSlot, army_unit_index: int
 	slot.set_occupied(true)
 	
 	# Mark army slot as placed
-	if army_unit_index >= 0 and army_unit_index < army.size():
-		army[army_unit_index].placed = true
-		army_unit_placed.emit(army_unit_index)
+	army_unit.placed = true
+	army_unit_placed.emit(army_index)
 	
 	# Notify HUD that a unit was placed
-	unit_placed.emit(unit_type)
+	unit_placed.emit(army_unit.unit_type)
 
 
 func _count_living_units(container: Node2D) -> int:

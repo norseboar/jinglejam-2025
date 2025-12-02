@@ -12,9 +12,9 @@ func set_unit_texture(texture: Texture2D) -> void:
 
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
-	# Get unit type from metadata
-	var unit_type: String = get_meta("unit_type", "")
-	if unit_type == "":
+	# Get army index from metadata (this is the index into the army array)
+	var army_index: int = get_meta("slot_index", -1)
+	if army_index < 0:
 		return null
 	
 	# Find HUD by traversing up the tree
@@ -64,7 +64,6 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	set_drag_preview(preview_container)
 	
 	return {
-		"unit_type": unit_type,
-		"slot_index": get_meta("slot_index", -1),
+		"army_index": army_index,
 		"unit_texture": unit_texture
 	}

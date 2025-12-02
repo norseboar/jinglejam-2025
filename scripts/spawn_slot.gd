@@ -35,7 +35,7 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	
 	if not data is Dictionary:
 		return false
-	if not data.has("unit_type"):
+	if not data.has("army_index"):
 		return false
 	if is_occupied:
 		return false
@@ -43,11 +43,11 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 
 
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
-	if data is Dictionary and data.has("unit_type"):
+	if data is Dictionary and data.has("army_index"):
 		var game := get_tree().get_first_node_in_group("game") as Game
 		if game:
-			var slot_index: int = data.get("slot_index", -1)
-			game.place_unit_on_slot(data["unit_type"], self, slot_index)
+			var army_index: int = data.get("army_index", -1)
+			game.place_unit_from_army(army_index, self)
 
 
 func _on_mouse_entered() -> void:
