@@ -24,8 +24,20 @@ var enemy_container: Node2D = null
 
 
 func _ready() -> void:
+	print("Unit._ready() START")
 	current_hp = max_hp
-	animated_sprite.play("idle")
+	print("Unit._ready() - is_enemy: ", is_enemy)
+	print("Unit._ready() - animated_sprite: ", animated_sprite)
+	# Flip sprite to face correct direction based on team
+	if animated_sprite:
+		print("Unit._ready() - Setting flip_h to: ", is_enemy)
+		animated_sprite.flip_h = is_enemy
+		print("Unit._ready() - flip_h is now: ", animated_sprite.flip_h)
+		animated_sprite.play("idle")
+		print("Unit._ready() - Called play('idle')")
+	else:
+		print("ERROR: animated_sprite is null in Unit._ready()!")
+	print("Unit._ready() END")
 
 
 func _process(delta: float) -> void:

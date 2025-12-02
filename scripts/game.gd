@@ -23,9 +23,7 @@ var current_level_index := 0
 var current_level: LevelRoot = null
 
 # Scene references
-@export var swordsman_scene: PackedScene
-@export var archer_scene: PackedScene
-@export var enemy_scene: PackedScene
+# (Removed unused swordsman_scene and archer_scene - units come from starting_unit_scenes and EnemyMarker.unit_scene)
 
 # Starting units for the tray (can have duplicates)
 @export var starting_unit_scenes: Array[PackedScene] = []
@@ -162,29 +160,32 @@ func _spawn_enemies_from_level() -> void:
 	if current_level == null:
 		push_warning("current_level is null in _spawn_enemies_from_level")
 		return
-	
-	if enemy_scene == null:
-		push_warning("enemy_scene is not assigned in Game!")
-		return
 
 	var enemy_markers := current_level.get_node_or_null("EnemyMarkers")
 	if enemy_markers == null:
 		push_warning("No EnemyMarkers node in level")
 		return
 
-	var marker_count := 0
 	for marker in enemy_markers.get_children():
-		if marker is Marker2D:
-			marker_count += 1
-			var enemy: Unit = enemy_scene.instantiate() as Unit
-			if enemy == null:
-				push_error("Failed to instantiate enemy unit!")
-				continue
-			
-			enemy_units.add_child(enemy)
-			enemy.is_enemy = true
-			enemy.enemy_container = player_units
-			enemy.global_position = marker.global_position
+		if not marker is EnemyMarker:
+			continue
+		
+		var enemy_marker := marker as EnemyMarker
+		if enemy_marker.unit_scene == null:
+			push_error("EnemyMarker at position %s has no unit_scene assigned!" % enemy_marker.global_position)
+			return  # Stop spawning if any marker is misconfigured
+		
+		var enemy: Unit = enemy_marker.unit_scene.instantiate() as Unit
+		if enemy == null:
+			push_error("Failed to instantiate enemy unit from scene at marker %s!" % enemy_marker.global_position)
+			return  # Stop spawning on instantiation failure
+		
+		# Configure enemy properties BEFORE adding to scene tree (so _ready() sees correct values)
+		enemy.is_enemy = true
+		enemy.enemy_container = player_units
+		enemy.global_position = enemy_marker.global_position
+		
+		enemy_units.add_child(enemy)
 
 
 func _set_spawn_slots_visible(should_show: bool) -> void:
