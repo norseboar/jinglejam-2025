@@ -284,6 +284,8 @@ func _on_upgrade_confirmed(victory: bool) -> void:
 		else:
 			# Completed all levels - restart at level 1
 			current_level_index = 0
-	# else: reload same level (current_level_index unchanged)
+	else:
+		# On defeat, always restart at level 1
+		current_level_index = 0
 
 	load_level(current_level_index)
