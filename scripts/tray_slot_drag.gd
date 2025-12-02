@@ -5,41 +5,16 @@ extends Control
 @export var texture_rect: TextureRect  # Assign in inspector
 
 
-func _ready() -> void:
-	print("[TraySlot] _ready: ", name, " mouse_filter: ", mouse_filter)
-	mouse_entered.connect(_on_mouse_entered)
-	mouse_exited.connect(_on_mouse_exited)
-
-
 func set_unit_texture(texture: Texture2D) -> void:
 	"""Set the unit texture to display in this slot."""
 	if texture_rect:
 		texture_rect.texture = texture
 
 
-func _on_mouse_entered() -> void:
-	print("[TraySlot] mouse_entered: ", name)
-
-
-func _on_mouse_exited() -> void:
-	print("[TraySlot] mouse_exited: ", name)
-
-
-func _gui_input(event: InputEvent) -> void:
-	print("[TraySlot] _gui_input: ", name, " event: ", event)
-	if event is InputEventMouseButton:
-		var mb := event as InputEventMouseButton
-		if mb.button_index == MOUSE_BUTTON_LEFT and mb.pressed:
-			print("[TraySlot] Mouse click on: ", name)
-
-
 func _get_drag_data(_at_position: Vector2) -> Variant:
-	print("[TraySlot] _get_drag_data called on: ", name)
 	# Get unit type from metadata
 	var unit_type: String = get_meta("unit_type", "")
-	print("[TraySlot] unit_type: ", unit_type)
 	if unit_type == "":
-		print("[TraySlot] No unit_type, returning null")
 		return null
 	
 	# Find HUD by traversing up the tree
@@ -52,13 +27,10 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		current = current.get_parent()
 	
 	if not hud:
-		print("[TraySlot] No HUD found, returning null")
 		return null
 	
 	# Check if we're in preparation phase
-	print("[TraySlot] HUD phase: ", hud.current_phase)
 	if hud.current_phase != "preparation":
-		print("[TraySlot] Not preparation phase, returning null")
 		return null
 	
 	# Create preview with sprite texture
@@ -91,10 +63,8 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	preview_container.add_child(preview)
 	set_drag_preview(preview_container)
 	
-	var data := {
+	return {
 		"unit_type": unit_type,
 		"slot_index": get_meta("slot_index", -1),
 		"unit_texture": unit_texture
 	}
-	print("[TraySlot] Returning drag data: ", data)
-	return data

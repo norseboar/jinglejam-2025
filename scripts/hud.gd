@@ -13,7 +13,6 @@ signal upgrade_confirmed(victory: bool)
 @export var upgrade_modal: ColorRect
 @export var upgrade_label: Label
 @export var upgrade_confirm_button: Button
-@export var spawn_slots_container: Control
 
 # State
 var current_phase: String = ""
@@ -21,11 +20,8 @@ var current_level: int = 0
 var tray_slots: Array[Control] = []
 var placed_unit_count: int = 0
 var max_units: int = 10
-var tray_unit_scenes: Array[PackedScene] = []
-var tray_unit_types: Array[String] = []
 
 func _ready() -> void:
-	print("[HUD] _ready, mouse_filter: ", mouse_filter)
 	# Connect Go button
 	if go_button:
 		go_button.pressed.connect(_on_go_button_pressed)
@@ -71,8 +67,6 @@ func set_phase(phase: String, level: int) -> void:
 
 func set_tray_unit_scenes(unit_scenes: Array[PackedScene]) -> void:
 	"""Populate the tray with unit scenes. Extracts sprite textures from units."""
-	tray_unit_scenes = unit_scenes
-	tray_unit_types.clear()
 	placed_unit_count = 0
 	
 	if not unit_tray:
@@ -88,14 +82,11 @@ func set_tray_unit_scenes(unit_scenes: Array[PackedScene]) -> void:
 		if i < unit_scenes.size():
 			var unit_scene: PackedScene = unit_scenes[i]
 			if unit_scene == null:
-				tray_unit_types.append("")
 				continue
 			
 			# Extract unit type from scene path (e.g., "res://scenes/units/swordsman.tscn" -> "swordsman")
 			var scene_path: String = unit_scene.resource_path
 			var unit_type: String = scene_path.get_file().get_basename()
-			tray_unit_types.append(unit_type)
-			
 			# Store metadata for drag-and-drop on the slot itself
 			slot.set_meta("unit_type", unit_type)
 			slot.set_meta("slot_index", i)
@@ -105,7 +96,6 @@ func set_tray_unit_scenes(unit_scenes: Array[PackedScene]) -> void:
 			if slot.has_method("set_unit_texture"):
 				slot.set_unit_texture(texture)
 		else:
-			tray_unit_types.append("")
 			slot.set_meta("unit_type", "")
 			if slot.has_method("set_unit_texture"):
 				slot.set_unit_texture(null)
