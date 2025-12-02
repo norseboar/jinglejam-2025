@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=26 format=3 uid="uid://vhcoqd31eji"]
+[gd_resource type="SpriteFrames" load_steps=31 format=3 uid="uid://vhcoqd31eji"]
 
 [ext_resource type="Texture2D" uid="uid://bduybapepv747" path="res://assets/sprites/Knight.png" id="1_wybpm"]
 
@@ -41,6 +41,26 @@ region = Rect2(512, 128, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_drh71"]
 atlas = ExtResource("1_wybpm")
 region = Rect2(576, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wybpm"]
+atlas = ExtResource("1_wybpm")
+region = Rect2(0, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ddj3"]
+atlas = ExtResource("1_wybpm")
+region = Rect2(64, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hqw46"]
+atlas = ExtResource("1_wybpm")
+region = Rect2(128, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_05aup"]
+atlas = ExtResource("1_wybpm")
+region = Rect2(192, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tb1cu"]
+atlas = ExtResource("1_wybpm")
+region = Rect2(256, 192, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_klymb"]
 atlas = ExtResource("1_wybpm")
@@ -133,6 +153,26 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wybpm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4ddj3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hqw46")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_05aup")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tb1cu")
+}],
+"loop": true,
+"name": &"death",
 "speed": 12.0
 }, {
 "frames": [{
