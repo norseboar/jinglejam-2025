@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
-[ext_resource type="PackedScene" uid="uid://bghtokhkny88a" path="res://scenes/units/swordsman.tscn" id="2_iywne"]
+[ext_resource type="PackedScene" uid="uid://bghtokhkny88a" path="res://scenes/units/knight.tscn" id="2_iywne"]
 [ext_resource type="PackedScene" uid="uid://cpp8nrk1v2n70" path="res://scenes/units/archer.tscn" id="3_p57ef"]
 [ext_resource type="PackedScene" uid="uid://xmwvmvin0jlw" path="res://scenes/units/enemy.tscn" id="4_u5sy4"]
 [ext_resource type="Texture2D" uid="uid://qguwsk400gqy" path="res://assets/backgrounds/chess_table.jpg" id="5_p57ef"]
