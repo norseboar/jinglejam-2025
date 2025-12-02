@@ -3,25 +3,29 @@ class_name HUD
 
 # Signals
 signal start_battle_requested
-signal unit_drag_started(unit_type: String)
 signal upgrade_confirmed(victory: bool)
 
-# Node references
-@onready var phase_label: Label = $PhaseLabel
-@onready var tray_panel: Panel = $TrayPanel
-@onready var unit_tray: GridContainer = $TrayPanel/UnitTray
-@onready var go_button: Button = $TrayPanel/GoButton
-@onready var upgrade_modal: ColorRect = $UpgradeModal
-@onready var upgrade_label: Label = $UpgradeModal/Panel/VBoxContainer/UpgradeLabel
-@onready var upgrade_confirm_button: Button = $UpgradeModal/Panel/VBoxContainer/UpgradeConfirmButton
+# Node references (assign in inspector)
+@export var phase_label: Label
+@export var tray_panel: Panel
+@export var unit_tray: GridContainer
+@export var go_button: Button
+@export var upgrade_modal: ColorRect
+@export var upgrade_label: Label
+@export var upgrade_confirm_button: Button
+@export var spawn_slots_container: Control
 
 # State
 var current_phase: String = ""
 var current_level: int = 0
 var tray_slots: Array[Control] = []
-var unit_definitions: Array[Dictionary] = []  # Array of {type: String, texture: Texture2D}
+var placed_unit_count: int = 0
+var max_units: int = 10
+var tray_unit_scenes: Array[PackedScene] = []
+var tray_unit_types: Array[String] = []
 
 func _ready() -> void:
+	print("[HUD] _ready, mouse_filter: ", mouse_filter)
 	# Connect Go button
 	if go_button:
 		go_button.pressed.connect(_on_go_button_pressed)
@@ -40,8 +44,6 @@ func _ready() -> void:
 			if child is Control:
 				tray_slots.append(child)
 				child.set_meta("slot_index", tray_slots.size() - 1)
-				# Make slots draggable by setting mouse filter
-				child.mouse_filter = Control.MOUSE_FILTER_PASS  # Allow mouse events to pass through to children
 
 
 func set_phase(phase: String, level: int) -> void:
@@ -67,47 +69,68 @@ func set_phase(phase: String, level: int) -> void:
 		go_button.disabled = (phase != "preparation")
 
 
-func set_tray_units(unit_defs: Array) -> void:
-	# unit_defs should be an array of dictionaries: [{type: "swordsman", texture: Texture2D}, ...]
-	unit_definitions = unit_defs
+func set_tray_unit_scenes(unit_scenes: Array[PackedScene]) -> void:
+	"""Populate the tray with unit scenes. Extracts sprite textures from units."""
+	tray_unit_scenes = unit_scenes
+	tray_unit_types.clear()
+	placed_unit_count = 0
 	
 	if not unit_tray:
 		return
 	
-	# Clear existing children (except the slot Controls themselves)
+	# Set up each slot
 	for i in range(tray_slots.size()):
 		var slot := tray_slots[i] as Control
 		if not slot:
 			continue
 		
-		# Remove any existing icon children
-		for child in slot.get_children():
-			child.queue_free()
-		
-		# Add icon if we have a unit definition for this slot
-		if i < unit_defs.size():
-			var unit_def := unit_defs[i] as Dictionary
-			var unit_type: String = unit_def.get("type", "")
-			var unit_texture: Texture2D = unit_def.get("texture", null)
+		# Configure slot for this unit
+		if i < unit_scenes.size():
+			var unit_scene: PackedScene = unit_scenes[i]
+			if unit_scene == null:
+				tray_unit_types.append("")
+				continue
 			
-			if unit_texture:
-				# Create a TextureRect for the icon
-				var icon := TextureRect.new()
-				icon.texture = unit_texture
-				icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
-				icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-				icon.custom_minimum_size = Vector2(32, 32)
-				icon.mouse_filter = Control.MOUSE_FILTER_STOP
-				
-				# Store unit type as metadata
-				icon.set_meta("unit_type", unit_type)
-				
-				slot.add_child(icon)
-				
-				# Make the slot handle drag (we'll override _get_drag_data on slot)
-				# For now, connect mouse input to handle drag start
-				if not slot.gui_input.is_connected(_on_slot_gui_input):
-					slot.gui_input.connect(_on_slot_gui_input.bind(slot))
+			# Extract unit type from scene path (e.g., "res://scenes/units/swordsman.tscn" -> "swordsman")
+			var scene_path: String = unit_scene.resource_path
+			var unit_type: String = scene_path.get_file().get_basename()
+			tray_unit_types.append(unit_type)
+			
+			# Store metadata for drag-and-drop on the slot itself
+			slot.set_meta("unit_type", unit_type)
+			slot.set_meta("slot_index", i)
+			
+			# Try to extract texture from the unit scene
+			var texture: Texture2D = _get_texture_from_scene(unit_scene)
+			if slot.has_method("set_unit_texture"):
+				slot.set_unit_texture(texture)
+		else:
+			tray_unit_types.append("")
+			slot.set_meta("unit_type", "")
+			if slot.has_method("set_unit_texture"):
+				slot.set_unit_texture(null)
+
+
+func _get_texture_from_scene(scene: PackedScene) -> Texture2D:
+	"""Extract the first frame texture from a unit scene's AnimatedSprite2D."""
+	var instance := scene.instantiate()
+	var texture: Texture2D = null
+	
+	# Look for AnimatedSprite2D
+	var sprite: AnimatedSprite2D = null
+	if instance is AnimatedSprite2D:
+		sprite = instance
+	elif instance.has_node("AnimatedSprite2D"):
+		sprite = instance.get_node("AnimatedSprite2D")
+	
+	if sprite and sprite.sprite_frames:
+		# Get the first frame of the "idle" animation, or default animation
+		var anim_name := "idle" if sprite.sprite_frames.has_animation("idle") else "default"
+		if sprite.sprite_frames.has_animation(anim_name) and sprite.sprite_frames.get_frame_count(anim_name) > 0:
+			texture = sprite.sprite_frames.get_frame_texture(anim_name, 0)
+	
+	instance.queue_free()
+	return texture
 
 
 func show_upgrade_modal(victory: bool, level: int) -> void:
@@ -139,28 +162,17 @@ func _on_upgrade_confirm_button_pressed() -> void:
 	upgrade_confirmed.emit(victory)
 
 
-func _on_slot_gui_input(event: InputEvent, slot: Control) -> void:
-	# Handle drag start from slot
-	# Check if this slot has an icon and mouse is pressed
-	if event is InputEventMouseButton:
-		var mouse_event := event as InputEventMouseButton
-		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
-			# Find icon in this slot
-			for child in slot.get_children():
-				if child is TextureRect:
-					var unit_type: String = child.get_meta("unit_type", "")
-					if unit_type != "":
-						# Emit signal
-						unit_drag_started.emit(unit_type)
-						break
 
-
-func _create_drag_preview(icon: Control) -> Control:
-	# Create a preview Control for dragging
-	var preview := TextureRect.new()
-	if icon is TextureRect:
-		var source_icon := icon as TextureRect
-		preview.texture = source_icon.texture
-		preview.custom_minimum_size = Vector2(32, 32)
-		preview.modulate = Color(1, 1, 1, 0.7)
-	return preview
+func update_placed_count(count: int) -> void:
+	placed_unit_count = count
+	# Disable/enable slots when max units reached
+	if placed_unit_count >= max_units:
+		for slot in tray_slots:
+			if slot:
+				slot.modulate = Color(0.5, 0.5, 0.5, 0.5)  # Gray out
+				slot.mouse_filter = Control.MOUSE_FILTER_IGNORE  # Disable interaction
+	else:
+		for slot in tray_slots:
+			if slot:
+				slot.modulate = Color(1, 1, 1, 1)  # Normal color
+				slot.mouse_filter = Control.MOUSE_FILTER_STOP  # Enable interaction

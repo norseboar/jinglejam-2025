@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://cc687hbuntfu2"]
+
+[ext_resource type="Script" uid="uid://c4lx1b3l3si7b" path="res://scripts/spawn_slot.gd" id="1_bxigs"]
+
+[node name="SpawnSlot" type="Control" groups=["spawn_slots"]]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
+script = ExtResource("1_bxigs")
+
+[node name="Visual" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.36078432)

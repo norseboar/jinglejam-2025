@@ -4,7 +4,7 @@ Execute a code plan step-by-step. Follow the plan exactly, stop after each task,
 
 ## Before Starting
 
-1. Read `.cursor/rules/core-rules.mdc` — The three rules are non-negotiable
+1. Read `.cursor/rules/core-rules.mdc` — The four rules are non-negotiable
 2. Read the plan thoroughly — Note the Status, Summary, Tasks, and Exit Criteria sections
 3. Check if the plan references a parent project plan — You'll need to update that when done
 4. Raise any concerns BEFORE starting — If anything is unclear or seems wrong, STOP and ask
@@ -73,6 +73,52 @@ Execute a code plan step-by-step. Follow the plan exactly, stop after each task,
 3. **Provide specific instructions** (which scene, which node, what to connect, etc.)
 4. **Wait for user confirmation** that the editor action is complete
 5. **Continue** only after the user confirms the editor work is done
+
+### Don't Programmatically Fix Godot Configuration
+
+**CRITICAL:** Never add code to programmatically "fix" or enforce things that should be configured in the Godot editor.
+
+**What NOT to do:**
+
+- Don't add `_ready()` code to set mouse filters, focus modes, or other Control properties
+- Don't programmatically modify scene structure that should be set in the editor
+- Don't add runtime checks that "correct" misconfigured inspector values
+- Don't write code that overwrites export variable defaults
+
+**If you notice something is misconfigured:**
+
+1. **STOP** — Don't write code to fix it
+2. **Ask the user** to fix it in the Godot editor
+3. **Explain what needs to change** (which node, which property, what value)
+4. **Wait for confirmation** before continuing
+
+**Why this matters:**
+
+- Programmatic fixes hide the real problem
+- They make code harder to understand ("why is this setting mouse_filter in code?")
+- They create hidden dependencies between code and scenes
+- The correct configuration should be visible in the Godot editor
+
+**Example — WRONG:**
+
+```gdscript
+func _ready():
+    # "Fix" the mouse filter that should be set in the editor
+    mouse_filter = Control.MOUSE_FILTER_PASS
+```
+
+**Example — RIGHT:**
+
+```
+I noticed the TraySlot node has mouse_filter set incorrectly.
+
+Please update in Godot editor:
+1. Open `scenes/ui/tray_slot.tscn`
+2. Select the TraySlot root node
+3. In Inspector > Mouse > Filter, set to "Pass"
+
+Let me know when this is done.
+```
 
 **Example:**
 
@@ -150,13 +196,15 @@ If a step uses incorrect naming, follow the plan exactly but note the naming con
 
 ---
 
-## The Three Rules (Reminder)
+## The Four Rules (Reminder)
 
 **1. Follow the plan exactly.** Don't deviate. Don't improve. Don't "fix" things.
 
 **2. Stop after each task.** Report. Wait. Don't continue automatically.
 
 **3. Don't guess.** If uncertain about anything—especially product behavior—ask.
+
+**4. Don't programmatically fix Godot configuration.** If you notice a scene property is wrong, ask the user to fix it in the Godot editor—don't write code to set it.
 
 ## Naming Conventions (Reminder)
 

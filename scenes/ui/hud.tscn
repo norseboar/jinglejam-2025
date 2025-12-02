@@ -1,11 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://c0d47vd87vlmt"]
+[gd_scene load_steps=5 format=3 uid="uid://c0d47vd87vlmt"]
 
-[ext_resource type="PackedScene" uid="uid://ccty86slv7qqy" path="res://scenes/ui/unit_slot.tscn" id="1_0mwgc"]
+[ext_resource type="PackedScene" uid="uid://ccty86slv7qqy" path="res://scenes/ui/unit_tray_slot.tscn" id="1_0mwgc"]
 [ext_resource type="Script" uid="uid://b4vx32mrylism" path="res://scripts/hud.gd" id="1_hqnrr"]
+[ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="2_bo48s"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0mwgc"]
 
-[node name="HUD" type="Control"]
+[node name="HUD" type="Control" node_paths=PackedStringArray("phase_label", "tray_panel", "unit_tray", "go_button", "upgrade_modal", "upgrade_label", "upgrade_confirm_button", "spawn_slots_container")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,6 +16,14 @@ offset_bottom = -360.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_hqnrr")
+phase_label = NodePath("Panel/PhaseLabel")
+tray_panel = NodePath("TrayPanel")
+unit_tray = NodePath("TrayPanel/UnitTray")
+go_button = NodePath("TrayPanel/GoButton")
+upgrade_modal = NodePath("UpgradeModal")
+upgrade_label = NodePath("UpgradeModal/Panel/PanelContainer/VBoxContainer/UpgradeLabel")
+upgrade_confirm_button = NodePath("UpgradeModal/Panel/PanelContainer/VBoxContainer/UpgradeConfirmButton")
+spawn_slots_container = NodePath("SpawnSlotsContainer")
 
 [node name="Panel" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -32,6 +41,7 @@ theme_type_variation = &"HeaderSmall"
 text = "Level 1 -- Preparation Phase"
 
 [node name="TrayPanel" type="Panel" parent="."]
+modulate = Color(1, 1, 1, 0.99607843)
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.75
@@ -39,6 +49,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
+
+[node name="ColorRect" type="ColorRect" parent="TrayPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5019608)
 
 [node name="UnitTray" type="GridContainer" parent="TrayPanel"]
 layout_mode = 0
@@ -78,6 +97,13 @@ layout_mode = 2
 [node name="UnitSlot10" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
 layout_mode = 2
 
+[node name="SpawnSlot" parent="TrayPanel" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 332.0
+offset_top = 28.0
+offset_right = 364.0
+offset_bottom = 60.0
+
 [node name="GoButton" type="Button" parent="TrayPanel"]
 layout_mode = 0
 offset_left = 246.0
@@ -85,6 +111,101 @@ offset_top = 31.0
 offset_right = 297.0
 offset_bottom = 62.0
 text = "Fight!"
+
+[node name="SpawnSlotsContainer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -640.0
+offset_bottom = -360.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SpawnSlot" parent="SpawnSlotsContainer" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 79.0
+offset_top = 196.0
+offset_right = 111.0
+offset_bottom = 228.0
+
+[node name="SpawnSlot2" parent="SpawnSlotsContainer" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 141.0
+offset_top = 197.0
+offset_right = 173.0
+offset_bottom = 229.0
+
+[node name="SpawnSlot3" parent="SpawnSlotsContainer" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 211.0
+offset_top = 197.0
+offset_right = 243.0
+offset_bottom = 229.0
+
+[node name="SpawnSlot4" parent="SpawnSlotsContainer" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 279.0
+offset_top = 198.0
+offset_right = 311.0
+offset_bottom = 230.0
+
+[node name="SpawnSlot5" parent="SpawnSlotsContainer" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 225.0
+offset_right = 72.0
+offset_bottom = 257.0
+
+[node name="SpawnSlot6" parent="SpawnSlotsContainer" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 111.0
+offset_top = 226.0
+offset_right = 143.0
+offset_bottom = 258.0
+
+[node name="SpawnSlot7" parent="SpawnSlotsContainer" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 178.0
+offset_top = 227.0
+offset_right = 210.0
+offset_bottom = 259.0
+
+[node name="SpawnSlot8" parent="SpawnSlotsContainer" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 247.0
+offset_top = 228.0
+offset_right = 279.0
+offset_bottom = 260.0
+
+[node name="SpawnSlot9" parent="SpawnSlotsContainer" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 75.0
+offset_top = 245.0
+offset_right = 107.0
+offset_bottom = 277.0
+
+[node name="SpawnSlot10" parent="SpawnSlotsContainer" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 247.0
+offset_right = 176.0
+offset_bottom = 279.0
+
+[node name="SpawnSlot11" parent="SpawnSlotsContainer" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 215.0
+offset_top = 248.0
+offset_right = 247.0
+offset_bottom = 280.0
+
+[node name="SpawnSlot12" parent="SpawnSlotsContainer" instance=ExtResource("2_bo48s")]
+layout_mode = 0
+offset_left = 283.0
+offset_top = 249.0
+offset_right = 315.0
+offset_bottom = 281.0
 
 [node name="UpgradeModal" type="ColorRect" parent="."]
 visible = false

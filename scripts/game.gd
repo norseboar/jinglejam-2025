@@ -1,44 +1,59 @@
 extends Control
 class_name Game
 
+# Signals
+signal unit_placed(unit_type: String)
+
 # Game state
-var phase := "placement"  # "placement" | "battle" | "end"
+var phase := "preparation"  # "preparation" | "battle" | "upgrade"
+
+# Level management
+var level_paths: Array[String] = [
+	"res://scenes/levels/level_01.tscn",
+	"res://scenes/levels/level_02.tscn",
+	"res://scenes/levels/level_03.tscn",
+]
+var current_level_index := 0
+
+# Current level references (set when level loads)
+var current_level: LevelRoot = null
 
 # Scene references
 @export var swordsman_scene: PackedScene
 @export var archer_scene: PackedScene
 @export var enemy_scene: PackedScene
 
-# Node references
-@onready var background_rect: TextureRect = $BackgroundRect
-@onready var gameplay: Node2D = $SubViewportContainer/SubViewport/Gameplay
-@onready var level_container: Node2D = $SubViewportContainer/SubViewport/Gameplay/LevelContainer
-@onready var player_units: Node2D = $SubViewportContainer/SubViewport/Gameplay/PlayerUnits
-@onready var enemy_units: Node2D = $SubViewportContainer/SubViewport/Gameplay/EnemyUnits
+# Starting units for the tray (can have duplicates)
+@export var starting_unit_scenes: Array[PackedScene] = []
 
-# UI references
-@onready var hud: Control = $SubViewportContainer/SubViewport/UI/HUD
+# Node references (assign in inspector)
+@export var background_rect: TextureRect
+@export var gameplay: Node2D
+@export var player_units: Node2D
+@export var enemy_units: Node2D
+
+# UI references (assign in inspector)
+@export var hud: Control
 
 
 func _ready() -> void:
-	# HUD handles its own setup
-	# _validate_spawn_slots()  # Stubbed - spawn slots come from level scenes
-	# _spawn_enemies()  # Temporarily commented out - enemies spawn from level scenes in Task 4
-	pass
+	hud.start_battle_requested.connect(_on_start_battle_requested)
+	hud.upgrade_confirmed.connect(_on_upgrade_confirmed)
+	unit_placed.connect(_on_unit_placed)
+	load_level(current_level_index)
 
 
 func _process(_delta: float) -> void:
-	# Only check battle end during battle phase
 	if phase != "battle":
 		return
-	
-	# Check if battle is over
+
 	var player_count := _count_living_units(player_units)
 	var enemy_count := _count_living_units(enemy_units)
-	
-	# Battle ends when one side is eliminated
-	if player_count == 0 or enemy_count == 0:
-		_end_battle(player_count > 0)
+
+	if enemy_count == 0:
+		_end_battle(true)  # Player wins
+	elif player_count == 0:
+		_end_battle(false)  # Player loses
 
 
 # func _setup_ui() -> void:  # Removed - HUD handles its own setup
@@ -100,25 +115,19 @@ func _clear_all_units() -> void:
 		child.queue_free()
 
 
-func _end_battle(player_won: bool) -> void:
-	phase = "end"
-	
-	# Stop all units from moving
+func _end_battle(victory: bool) -> void:
+	phase = "upgrade"
+
+	# Stop all units
 	for child in player_units.get_children():
 		if child is Unit:
 			child.set_state("idle")
-	
 	for child in enemy_units.get_children():
 		if child is Unit:
 			child.set_state("idle")
-	
-	# Victory/defeat determined by which side has survivors (fortress logic removed)
-	# Show restart button (will be handled by HUD modal in Task 4)
-	# if restart_button:
-	# 	restart_button.visible = true
-	# 	restart_button.disabled = false
-	
-	print("Battle ended! Player won: ", player_won)
+
+	# Show upgrade modal
+	hud.show_upgrade_modal(victory, current_level_index + 1)
 
 
 # func _validate_ui_references() -> void:  # Removed - HUD handles its own setup
@@ -197,65 +206,100 @@ func _end_battle(player_won: bool) -> void:
 # 	# All slots are occupied
 # 	return Vector2.ZERO
 
-func _get_next_available_slot() -> Vector2:
-	# Stub - spawn slots come from level scenes
-	return Vector2.ZERO
+func load_level(index: int) -> void:
+	# Clear all units
+	_clear_all_units()
+
+	# Wait a frame for cleanup
+	await get_tree().process_frame
+
+	# Reset all spawn slots to unoccupied
+	_reset_spawn_slots()
+
+	# Update HUD
+	phase = "preparation"
+	hud.set_phase(phase, index + 1)
+	_set_spawn_slots_visible(true)
+	
+	# Populate tray with starting unit scenes
+	if starting_unit_scenes.size() > 0:
+		hud.set_tray_unit_scenes(starting_unit_scenes)
 
 
-func _on_swordsman_button_pressed() -> void:
-	_spawn_player_unit(swordsman_scene)
-
-
-func _on_archer_button_pressed() -> void:
-	_spawn_player_unit(archer_scene)
-
-
-func _spawn_player_unit(unit_scene: PackedScene) -> void:
-	# Only allow spawning during placement phase
-	if phase != "placement":
+func _spawn_enemies_from_level() -> void:
+	if current_level == null:
+		push_warning("current_level is null in _spawn_enemies_from_level")
+		return
+	
+	if enemy_scene == null:
+		push_warning("enemy_scene is not assigned in Game!")
 		return
 
-	# Find next available spawn position
-	var spawn_pos := _get_next_available_slot()
-	if spawn_pos == Vector2.ZERO:
-		# All slots are filled (will be handled by HUD in Task 4)
-		# if swordsman_button:
-		# 	swordsman_button.disabled = true
-		# if archer_button:
-		# 	archer_button.disabled = true
+	var enemy_markers := current_level.get_node_or_null("EnemyMarkers")
+	if enemy_markers == null:
+		push_warning("No EnemyMarkers node in level")
 		return
 
-	# Check if unit_scene is assigned
-	if unit_scene == null:
-		push_error("unit_scene is not assigned!")
+	var marker_count := 0
+	for marker in enemy_markers.get_children():
+		if marker is Marker2D:
+			marker_count += 1
+			var enemy: Unit = enemy_scene.instantiate() as Unit
+			if enemy == null:
+				push_error("Failed to instantiate enemy unit!")
+				continue
+			
+			enemy_units.add_child(enemy)
+			enemy.is_enemy = true
+			enemy.enemy_container = player_units
+			enemy.global_position = marker.global_position
+			print("Spawned enemy at global position: ", marker.global_position)
+	
+	print("Spawned %d enemies from %d markers" % [marker_count, enemy_markers.get_child_count()])
+
+
+func _set_spawn_slots_visible(should_show: bool) -> void:
+	if hud and hud.spawn_slots_container:
+		hud.spawn_slots_container.visible = should_show
+
+
+func _reset_spawn_slots() -> void:
+	for slot in get_tree().get_nodes_in_group("spawn_slots"):
+		if slot is SpawnSlot:
+			slot.set_occupied(false)
+			slot.set_highlighted(false)
+
+
+func _on_unit_placed(_unit_type: String) -> void:
+	# Update HUD to reflect placed unit count
+	if hud:
+		hud.update_placed_count(player_units.get_child_count())
+
+
+func place_unit_on_slot(unit_type: String, slot: SpawnSlot) -> void:
+	if slot.is_occupied:
 		return
 
-	# Instantiate the unit
+	var unit_scene: PackedScene
+	match unit_type:
+		"swordsman":
+			unit_scene = swordsman_scene
+		"archer":
+			unit_scene = archer_scene
+		_:
+			push_error("Unknown unit type: " + unit_type)
+			return
+
 	var unit: Unit = unit_scene.instantiate() as Unit
-	if unit == null:
-		push_error("Failed to instantiate unit scene!")
-		return
-
-	# Add to player units container first (needed for coordinate conversion)
 	player_units.add_child(unit)
-	
-	# Configure the unit as a player unit
 	unit.is_enemy = false
-	unit.enemy_container = enemy_units  # Player units target enemies
-	# Convert global spawn position to local position relative to player_units
-	unit.global_position = spawn_pos
+	unit.enemy_container = enemy_units
+	unit.global_position = slot.get_slot_center()
 
-	# Disable buttons if all slots filled
-	# var spawn_positions := _get_player_spawn_positions()  # Stubbed - spawn slots come from level scenes
-	# if player_units.get_child_count() >= spawn_positions.size():
-	# 	if swordsman_button:
-	# 		swordsman_button.disabled = true
-	# 	if archer_button:
-	# 		archer_button.disabled = true
+	slot.set_occupied(true)
 	
-	# Enable start button now that we have at least one unit (will be handled by HUD in Task 4)
-	# if start_button:
-	# 	start_button.disabled = false
+	# Notify HUD that a unit was placed
+	unit_placed.emit(unit_type)
 
 
 func _count_living_units(container: Node2D) -> int:
@@ -269,68 +313,31 @@ func _count_living_units(container: Node2D) -> int:
 	return count
 
 
-func _on_start_button_pressed() -> void:
-	# Only allow starting battle during placement phase
-	if phase != "placement":
+func _on_start_battle_requested() -> void:
+	if phase != "preparation":
 		return
-	
-	# Don't start if no player units spawned
+
 	if player_units.get_child_count() == 0:
 		push_warning("Cannot start battle with no units!")
 		return
-	
-	# Transition to battle phase
+
 	phase = "battle"
-	
-	# Set all units to moving state
+	hud.set_phase(phase, current_level_index + 1)
+	_set_spawn_slots_visible(false)
+
+	# Set all units to moving
 	for child in player_units.get_children():
 		if child is Unit:
 			child.set_state("moving")
-	
 	for child in enemy_units.get_children():
 		if child is Unit:
 			child.set_state("moving")
-	
-	# Update UI (will be handled by HUD in Task 4)
-	# if swordsman_button:
-	# 	swordsman_button.visible = false
-	# 	swordsman_button.disabled = true
-	# if archer_button:
-	# 	archer_button.visible = false
-	# 	archer_button.disabled = true
-	# if start_button:
-	# 	start_button.disabled = true
 
 
-func _on_restart_button_pressed() -> void:
-	# Only allow restart during end phase
-	if phase != "end":
-		return
-	
-	# Clear all units
-	_clear_all_units()
-	
-	# Wait a frame for units to be fully removed (queue_free needs time)
-	await get_tree().process_frame
-	
-	# Re-spawn enemies
-	# _spawn_enemies()  # Temporarily commented out - enemies spawn from level scenes in Task 4
-	
-	# Reset UI to placement phase state (will be handled by HUD in Task 4)
-	# if swordsman_button:
-	# 	swordsman_button.visible = true
-	# 	swordsman_button.disabled = false
-	# if archer_button:
-	# 	archer_button.visible = true
-	# 	archer_button.disabled = false
-	# Disable start button if no units (will be enabled when units are spawned)
-	# if start_button:
-	# 	start_button.disabled = (player_units.get_child_count() == 0)
-	# if restart_button:
-	# 	restart_button.visible = false
-	# 	restart_button.disabled = true
-	
-	# Reset game phase
-	phase = "placement"
-	
-	print("Game restarted!")
+func _on_upgrade_confirmed(victory: bool) -> void:
+	if victory:
+		# Advance to next level (clamp to last)
+		current_level_index = mini(current_level_index + 1, level_paths.size() - 1)
+	# else: reload same level (current_level_index unchanged)
+
+	load_level(current_level_index)

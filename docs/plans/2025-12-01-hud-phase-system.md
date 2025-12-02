@@ -11,9 +11,9 @@
 - [x] Task 0: Scene restructure
 - [x] Task 1: HUD scene & script
 - [x] Task 2: SpawnSlot scene
-- [ ] Task 3: Level scenes setup
-- [ ] Task 4: Game phase/level logic
-- [ ] Task 5: Drag-drop wiring
+- [x] Task 3: Level scenes setup
+- [x] Task 4: Game phase/level logic
+- [x] Task 5: Drag-drop wiring
 
 ---
 
@@ -203,7 +203,7 @@ func get_slot_center() -> Vector2:
 
 ---
 
-### Task 3: Level scenes setup
+### ✅ Task 3: Level scenes setup
 
 **Files:** `levels/level_01.tscn`, `levels/level_02.tscn`, `levels/level_03.tscn`, `scripts/level_root.gd`
 
@@ -220,7 +220,7 @@ LevelRoot (Node2D) - with level_root.gd attached
 
 The level exports a `background_texture` that Game.gd uses to update the global BackgroundRect at runtime. The EditorBackground is for visual reference when editing the level scene but is hidden when the level loads.
 
-- [ ] **Step 1:** Create `scripts/level_root.gd`:
+- [x] **Step 1:** Create `scripts/level_root.gd`:
 
 ```gdscript
 extends Node2D
@@ -237,9 +237,9 @@ func _ready() -> void:
 		editor_background.visible = false
 ```
 
-- [ ] **Step 2:** **Godot Editor:** Create folder `levels/` if it doesn't exist.
+- [x] **Step 2:** **Godot Editor:** Create folder `levels/` if it doesn't exist.
 
-- [ ] **Step 3:** **Godot Editor:** Create `levels/level_01.tscn` with a `Node2D` root named `LevelRoot`. Add:
+- [x] **Step 3:** **Godot Editor:** Create `levels/level_01.tscn` with a `Node2D` root named `LevelRoot`. Add:
 
   - Attach `scripts/level_root.gd` to the root
   - `EditorBackground` (Sprite2D) - assign the chess_table.jpg texture, position at (320, 180) to center in 640×360 viewport. This is for editor visibility only.
@@ -247,16 +247,16 @@ func _ready() -> void:
   - `EnemyMarkers` (Node2D)
   - In the Inspector, set `background_texture` export to `res://assets/backgrounds/chess_table.jpg`
 
-- [ ] **Step 4:** **Godot Editor:** Under `PlayerSpawnSlots`, instance 10 `SpawnSlot` scenes (from `scenes/spawn_slot.tscn`) arranged in a 2×5 grid. Position them in the left portion of the play area. Suggested layout (adjust based on viewport size 640×360):
+- [x] **Step 4:** **Godot Editor:** Under `PlayerSpawnSlots`, instance 10 `SpawnSlot` scenes (from `scenes/spawn_slot.tscn`) arranged in a 2×5 grid. Position them in the left portion of the play area. Suggested layout (adjust based on viewport size 640×360):
 
   - Row 1 (y ~200): x positions at 100, 140, 180, 220, 260
   - Row 2 (y ~240): x positions at 100, 140, 180, 220, 260
 
-- [ ] **Step 5:** **Godot Editor:** Under `EnemyMarkers`, add 3 `Marker2D` nodes positioned on the right side of the play area (e.g., x ~450-550, y ~180-220). These mark where enemies will spawn.
+- [x] **Step 5:** **Godot Editor:** Under `EnemyMarkers`, add 3 `Marker2D` nodes positioned on the right side of the play area (e.g., x ~450-550, y ~180-220). These mark where enemies will spawn.
 
-- [ ] **Step 6:** **Godot Editor:** Duplicate `levels/level_01.tscn` to create `levels/level_02.tscn` and `levels/level_03.tscn`.
+- [x] **Step 6:** **Godot Editor:** Duplicate `levels/level_01.tscn` to create `levels/level_02.tscn` and `levels/level_03.tscn`.
 
-- [ ] **Step 7:** **Godot Editor:** Customize each level:
+- [x] **Step 7:** **Godot Editor:** Customize each level:
   - `level_01.tscn`: 3 enemy markers (easy), set `background_texture` to chess_table.jpg (or a unique texture)
   - `level_02.tscn`: 4 enemy markers (medium), optionally use a different background
   - `level_03.tscn`: 5 enemy markers (hard), optionally use a different background
@@ -269,13 +269,13 @@ func _ready() -> void:
 
 ---
 
-### Task 4: Game phase/level logic
+### ✅ Task 4: Game phase/level logic
 
 **Files:** `scripts/game.gd`
 
 At this point, Task 0 has removed fortress logic, Task 1 set up HUD, Task 2 created SpawnSlot, and Task 3 created level scenes. This task wires everything together.
 
-- [ ] **Step 1:** Add level tracking variables at the top of `scripts/game.gd`:
+- [x] **Step 1:** Add level tracking variables at the top of `scripts/game.gd`:
 
 ```gdscript
 # Level management
@@ -291,7 +291,7 @@ var current_level: Node2D = null
 var player_spawn_slots: Node2D = null
 ```
 
-- [ ] **Step 2:** Connect HUD signals in `_ready()`:
+- [x] **Step 2:** Connect HUD signals in `_ready()`:
 
 ```gdscript
 func _ready() -> void:
@@ -300,7 +300,7 @@ func _ready() -> void:
 	load_level(current_level_index)
 ```
 
-- [ ] **Step 3:** Implement `load_level(index: int)`:
+- [x] **Step 3:** Implement `load_level(index: int)`:
 
 ```gdscript
 func load_level(index: int) -> void:
@@ -339,7 +339,7 @@ func load_level(index: int) -> void:
 	_set_spawn_slots_visible(true)
 ```
 
-- [ ] **Step 4:** Implement `_spawn_enemies_from_level()` to read enemy markers from the loaded level and spawn enemy units:
+- [x] **Step 4:** Implement `_spawn_enemies_from_level()` to read enemy markers from the loaded level and spawn enemy units:
 
 ```gdscript
 func _spawn_enemies_from_level() -> void:
@@ -360,7 +360,7 @@ func _spawn_enemies_from_level() -> void:
 			enemy.global_position = marker.global_position
 ```
 
-- [ ] **Step 5:** Implement helper functions for spawn slots:
+- [x] **Step 5:** Implement helper functions for spawn slots:
 
 ```gdscript
 func _set_spawn_slots_visible(visible: bool) -> void:
@@ -376,7 +376,7 @@ func _reset_spawn_slots() -> void:
 			child.set_highlighted(false)
 ```
 
-- [ ] **Step 6:** Implement `_on_start_battle_requested()` handler:
+- [x] **Step 6:** Implement `_on_start_battle_requested()` handler:
 
 ```gdscript
 func _on_start_battle_requested() -> void:
@@ -400,7 +400,7 @@ func _on_start_battle_requested() -> void:
 			child.set_state("moving")
 ```
 
-- [ ] **Step 7:** Update `_process()` to check battle end and call `_end_battle(victory: bool)`:
+- [x] **Step 7:** Update `_process()` to check battle end and call `_end_battle(victory: bool)`:
 
 ```gdscript
 func _process(_delta: float) -> void:
@@ -416,7 +416,7 @@ func _process(_delta: float) -> void:
 		_end_battle(false)  # Player loses
 ```
 
-- [ ] **Step 8:** Update `_end_battle(victory: bool)`:
+- [x] **Step 8:** Update `_end_battle(victory: bool)`:
 
 ```gdscript
 func _end_battle(victory: bool) -> void:
@@ -434,7 +434,7 @@ func _end_battle(victory: bool) -> void:
 	hud.show_upgrade_modal(victory, current_level_index + 1)
 ```
 
-- [ ] **Step 9:** Implement `_on_upgrade_confirmed(victory: bool)`:
+- [x] **Step 9:** Implement `_on_upgrade_confirmed(victory: bool)`:
 
 ```gdscript
 func _on_upgrade_confirmed(victory: bool) -> void:
@@ -446,7 +446,7 @@ func _on_upgrade_confirmed(victory: bool) -> void:
 	load_level(current_level_index)
 ```
 
-- [ ] **Step 10:** Remove old functions that are no longer needed: `_on_swordsman_button_pressed`, `_on_archer_button_pressed`, `_on_start_button_pressed`, `_on_restart_button_pressed`, `_get_next_available_slot`, `_spawn_player_unit`. (Unit spawning will be handled via drag-drop in Task 5.)
+- [x] **Step 10:** Remove old functions that are no longer needed: `_on_swordsman_button_pressed`, `_on_archer_button_pressed`, `_on_start_button_pressed`, `_on_restart_button_pressed`, `_get_next_available_slot`, `_spawn_player_unit`. (Unit spawning will be handled via drag-drop in Task 5.)
 
 **Verify:**
 
@@ -460,13 +460,13 @@ func _on_upgrade_confirmed(victory: bool) -> void:
 
 ---
 
-### Task 5: Drag-drop wiring
+### ✅ Task 5: Drag-drop wiring
 
 **Files:** `scripts/hud.gd`, `scripts/game.gd`
 
 This task connects the HUD tray drag to actual unit placement on spawn slots.
 
-- [ ] **Step 1:** In `scripts/hud.gd`, implement drag data for unit icons. Each tray slot needs to support Godot's drag-and-drop:
+- [x] **Step 1:** In `scripts/hud.gd`, implement drag data for unit icons. Each tray slot needs to support Godot's drag-and-drop:
 
 ```gdscript
 # In hud.gd, for each unit icon in the tray
@@ -481,7 +481,7 @@ func _get_drag_data_for_unit(unit_type: String, icon_texture: Texture2D) -> Vari
 	return {"unit_type": unit_type}
 ```
 
-- [ ] **Step 2:** In `scripts/game.gd`, add a function to handle unit placement on a slot:
+- [x] **Step 2:** In `scripts/game.gd`, add a function to handle unit placement on a slot:
 
 ```gdscript
 func place_unit_on_slot(unit_type: String, slot: SpawnSlot) -> void:
@@ -507,7 +507,7 @@ func place_unit_on_slot(unit_type: String, slot: SpawnSlot) -> void:
 	slot.set_occupied(true)
 ```
 
-- [ ] **Step 3:** In `scripts/spawn_slot.gd`, implement `_can_drop_data` and `_drop_data` to receive dragged units:
+- [x] **Step 3:** In `scripts/spawn_slot.gd`, implement `_can_drop_data` and `_drop_data` to receive dragged units:
 
 ```gdscript
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
@@ -525,9 +525,9 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 			game.place_unit_on_slot(data["unit_type"], self)
 ```
 
-- [ ] **Step 4:** **Godot Editor:** Add the Game node to a group called `game` so SpawnSlot can find it.
+- [x] **Step 4:** **Godot Editor:** Add the Game node to a group called `game` so SpawnSlot can find it.
 
-- [ ] **Step 5:** In `scripts/spawn_slot.gd`, add visual feedback for drag hover:
+- [x] **Step 5:** In `scripts/spawn_slot.gd`, add visual feedback for drag hover:
 
 ```gdscript
 func _ready() -> void:
@@ -542,9 +542,9 @@ func _on_mouse_exited() -> void:
 	set_highlighted(false)
 ```
 
-- [ ] **Step 6:** In `scripts/hud.gd`, update the tray to disable/hide icons when units are placed (track placed count vs max of 10).
+- [x] **Step 6:** In `scripts/hud.gd`, update the tray to disable/hide icons when units are placed (track placed count vs max of 10).
 
-- [ ] **Step 7:** Ensure drag-drop only works during preparation phase by checking `phase` in `_can_drop_data`.
+- [x] **Step 7:** Ensure drag-drop only works during preparation phase by checking `phase` in `_can_drop_data`.
 
 **Verify:**
 

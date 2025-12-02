@@ -215,6 +215,23 @@ Example: Link `scripts/unit.gd` (snake_case filename) to the Unit node (PascalCa
 4. Select `scripts/unit.gd` from the file dialog
 ```
 
+**NEVER plan programmatic fixes for Godot configuration:**
+
+Do NOT write steps that programmatically set properties that should be configured in the Godot editor. These are anti-patterns:
+
+- ❌ "In `_ready()`, set `mouse_filter = MOUSE_FILTER_PASS`" — This should be set in the inspector
+- ❌ "Add code to ensure the node has correct z_index" — Set it in the scene
+- ❌ "Programmatically set the focus mode" — Configure in inspector
+- ❌ "Add a check to fix the visibility if wrong" — Fix the scene instead
+
+**Instead, write Godot editor steps:**
+
+- ✅ "**Godot Editor:** Set mouse_filter to Pass on the TraySlot node"
+- ✅ "**Godot Editor:** Configure z_index to 10 in the inspector"
+- ✅ "**Godot Editor:** Set focus_mode to All on the Button node"
+
+**Why:** Programmatic fixes hide misconfigurations, make code harder to understand, and create hidden dependencies. The correct configuration should be visible in the Godot editor.
+
 ### Step 5: Add Code Examples
 
 **Include code examples when:**
@@ -314,5 +331,6 @@ After each task's steps:
 - **Follow existing patterns** — Check `.cursor/rules/` for coding standards
 - **Include reminders** — The executor needs to be reminded to stop and verify
 - **Mark Godot editor actions** — Clearly identify steps that require Godot editor work so the executor knows to ask the user
+- **No programmatic config fixes** — Never plan code that "fixes" things that should be configured in the Godot editor; use Godot editor steps instead
 - **Naming conventions** — Filenames must be snake_case (e.g., `unit.gd`), class and node names must be PascalCase (e.g., `class_name Unit`)
 ````

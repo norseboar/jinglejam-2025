@@ -19,6 +19,7 @@ Use this guide to locate reference docs, project plans, and working notes. It al
 ## Naming Conventions
 
 **Documentation files:**
+
 - Use lowercase kebab-case for files and directories (`tech-stack.md`, `2025-11-08-ui-refactor.md`, `project-alpha/plan.md`).
 - Stable references: locate them in `docs/long-term/` with concise descriptive names.
 - Implementation plans:
@@ -27,6 +28,7 @@ Use this guide to locate reference docs, project plans, and working notes. It al
 - Projects: `docs/projects/project-name/plan.md` serves as the primary plan file; supporting files are named by purpose (`tasks.md`, `bugs.md`, `2025-11-10-research.md`).
 
 **Code files and classes:**
+
 - **Filenames:** Always use snake_case (e.g., `unit.gd`, `combat_manager.gd`, `target_selector.gd`)
 - **Class names:** Always use PascalCase (e.g., `class_name Unit`, `class_name CombatManager`)
 - **Node names:** Always use PascalCase (e.g., `Unit`, `CombatManager`, `TargetSelector`)
@@ -93,6 +95,18 @@ All plans follow this structure:
 - Use print statements and the debugger to understand behavior
 - When running into issues, ask the user to test specific scenarios and report results
 - Focus on manual verification through gameplay, not automated tests (see `tests.mdc`)
+
+## Godot Configuration Changes
+
+**Never programmatically fix Godot editor configuration.** If something needs to be changed in a scene, node property, or inspector setting:
+
+1. **STOP** — Don't write code to fix it
+2. **Ask the user** to make the change in the Godot editor
+3. **Explain specifically** what needs to change (scene, node, property, value)
+
+This includes: mouse filters, focus modes, z-index, visibility, scene structure, export variable defaults, and any other inspector-configurable property.
+
+**Why:** The correct configuration should be visible in the Godot editor, not hidden in code.
 
 ## Quick Reference
 
