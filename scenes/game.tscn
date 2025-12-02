@@ -1,11 +1,21 @@
-[gd_scene load_steps=7 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=13 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://dux2mgenh42lt" path="res://scenes/levels/level_01.tscn" id="2_0tnpc"]
+[ext_resource type="PackedScene" uid="uid://c6vhu77lnu7a" path="res://scenes/levels/level_02.tscn" id="3_vtaks"]
 [ext_resource type="PackedScene" uid="uid://bklaap88dmjbp" path="res://scenes/units/squire.tscn" id="4_p57ef"]
 [ext_resource type="Texture2D" uid="uid://qguwsk400gqy" path="res://assets/backgrounds/chess_table.jpg" id="5_p57ef"]
 [ext_resource type="PackedScene" uid="uid://c0d47vd87vlmt" path="res://scenes/ui/hud.tscn" id="6_p57ef"]
+[ext_resource type="Script" uid="uid://bwkdnef87rpc7" path="res://scripts/upgrade_screen.gd" id="7_0tnpc"]
+[ext_resource type="Texture2D" uid="uid://cv4fsh4q3oll" path="res://assets/backgrounds/reward_bg.jpg" id="7_gee14"]
 [ext_resource type="PackedScene" uid="uid://bbev3r4fqct55" path="res://scenes/units/ballista.tscn" id="7_vtaks"]
+[ext_resource type="PackedScene" uid="uid://duydnmoyvdugl" path="res://scenes/ui/unit_upgrade_slot.tscn" id="8_0tnpc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vtaks"]
+bg_color = Color(0.23874435, 0.23874438, 0.23874423, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvpfn"]
+bg_color = Color(0.2051174, 0.20511746, 0.20511732, 1)
 
 [node name="Game" type="Control" node_paths=PackedStringArray("background_rect", "gameplay", "player_units", "enemy_units", "hud", "ui_layer") groups=["game"]]
 layout_mode = 3
@@ -15,7 +25,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_yqjtg")
-level_scenes = Array[PackedScene]([ExtResource("2_0tnpc")])
+level_scenes = Array[PackedScene]([ExtResource("2_0tnpc"), ExtResource("3_vtaks")])
+upgrade_background = ExtResource("7_gee14")
 starting_unit_scenes = Array[PackedScene]([ExtResource("7_vtaks"), ExtResource("7_vtaks"), ExtResource("4_p57ef"), ExtResource("4_p57ef")])
 background_rect = NodePath("BackgroundRect")
 gameplay = NodePath("SubViewportContainer/SubViewport/Gameplay")
@@ -54,9 +65,161 @@ render_target_update_mode = 4
 
 [node name="UI" type="CanvasLayer" parent="SubViewportContainer/SubViewport"]
 
-[node name="HUD" parent="SubViewportContainer/SubViewport/UI" instance=ExtResource("6_p57ef")]
+[node name="HUD" parent="SubViewportContainer/SubViewport/UI" node_paths=PackedStringArray("upgrade_screen") instance=ExtResource("6_p57ef")]
 offset_right = 0.0
 offset_bottom = 0.0
+upgrade_screen = NodePath("UpgradeScreen")
+
+[node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("your_army_tray", "enemies_faced_tray", "continue_button", "editor_background")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("7_0tnpc")
+your_army_tray = NodePath("PlayerArmy/GridContainer")
+enemies_faced_tray = NodePath("EnemyArmy/GridContainer")
+continue_button = NodePath("Button")
+editor_background = NodePath("DebugBackground")
+
+[node name="DebugBackground" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("7_gee14")
+expand_mode = 3
+
+[node name="PlayerArmy" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+layout_mode = 0
+offset_left = 33.75
+offset_top = 212.75
+offset_right = 233.75
+offset_bottom = 332.75
+theme_override_styles/panel = SubResource("StyleBoxFlat_vtaks")
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -88.0
+offset_right = 88.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Upgrade your army"
+horizontal_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy"]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 33.0
+offset_right = 189.0
+offset_bottom = 101.0
+columns = 5
+
+[node name="UnitTraySlot" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot2" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot3" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot4" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot5" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot6" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot7" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot8" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot9" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot10" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="EnemyArmy" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+layout_mode = 0
+offset_left = 399.25
+offset_top = 215.75
+offset_right = 599.25
+offset_bottom = 335.75
+theme_override_styles/panel = SubResource("StyleBoxFlat_vtaks")
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -88.0
+offset_right = 88.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Recruit their army"
+horizontal_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy"]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 33.0
+offset_right = 189.0
+offset_bottom = 101.0
+columns = 5
+
+[node name="UnitTraySlot" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot2" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot3" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot4" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot5" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot6" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot7" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot8" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot9" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="UnitTraySlot10" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy/GridContainer" instance=ExtResource("8_0tnpc")]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+layout_mode = 0
+offset_left = 268.0
+offset_top = 307.0
+offset_right = 364.0
+offset_bottom = 338.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_kvpfn")
+text = "Next Battle"
 
 [node name="Gameplay" type="Node2D" parent="SubViewportContainer/SubViewport"]
 

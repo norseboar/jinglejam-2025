@@ -20,6 +20,10 @@ var army: Array = []  # Array of ArmyUnit
 @export var level_scenes: Array[PackedScene] = []
 var current_level_index := 0
 
+# Upgrade screen
+@export var upgrade_background: Texture2D
+var enemies_faced: Array = []  # Captured at end of battle for upgrade screen
+
 # Current level references (set when level loads)
 var current_level: LevelRoot = null
 
@@ -43,6 +47,7 @@ var current_level: LevelRoot = null
 func _ready() -> void:
 	hud.start_battle_requested.connect(_on_start_battle_requested)
 	hud.upgrade_confirmed.connect(_on_upgrade_confirmed)
+	hud.show_upgrade_screen_requested.connect(_on_show_upgrade_screen_requested)
 	unit_placed.connect(_on_unit_placed)
 	army_unit_placed.connect(_on_army_unit_placed)
 	load_level(current_level_index)
@@ -92,8 +97,12 @@ func _end_battle(victory: bool) -> void:
 		if child is Unit:
 			child.set_state("idle")
 
-	# Show upgrade modal
-	hud.show_upgrade_modal(victory, current_level_index + 1, level_scenes.size())
+	# Capture enemy data for upgrade screen (only if victory and not last level, defeat will restart)
+	if victory and current_level_index < level_scenes.size() - 1:
+		_capture_enemies_faced()
+	
+	# Show battle end modal (which leads to upgrade screen on victory, or restart on defeat/last level)
+	hud.show_battle_end_modal(victory, current_level_index + 1, level_scenes.size())
 
 
 func load_level(index: int) -> void:
@@ -196,6 +205,44 @@ func _spawn_enemies_from_level() -> void:
 		enemy.apply_upgrades()  # Apply after added to tree
 
 
+func _capture_enemies_faced() -> void:
+	"""Capture unique enemy types from current level for the upgrade screen."""
+	enemies_faced.clear()
+	
+	if current_level == null:
+		return
+	
+	var enemy_markers := current_level.get_node_or_null("EnemyMarkers")
+	if enemy_markers == null:
+		return
+	
+	# Track seen combinations to deduplicate
+	var seen: Dictionary = {}  # key: "unit_type|upgrades_hash" -> bool
+	
+	for marker in enemy_markers.get_children():
+		if not marker is EnemyMarker:
+			continue
+		
+		var enemy_marker := marker as EnemyMarker
+		if enemy_marker.unit_scene == null:
+			continue
+		
+		# Create a unique key from unit type and upgrades
+		var unit_type: String = enemy_marker.unit_scene.resource_path.get_file().get_basename()
+		var upgrades_str: String = str(enemy_marker.upgrades)
+		var key: String = unit_type + "|" + upgrades_str
+		
+		if seen.has(key):
+			continue
+		
+		seen[key] = true
+		enemies_faced.append({
+			"unit_type": unit_type,
+			"unit_scene": enemy_marker.unit_scene,
+			"upgrades": enemy_marker.upgrades.duplicate()
+		})
+
+
 func _set_spawn_slots_visible(should_show: bool) -> void:
 	# Spawn slots are now part of the level scene
 	if current_level:
@@ -294,7 +341,20 @@ func _on_start_battle_requested() -> void:
 			child.set_state("moving")
 
 
+func _on_show_upgrade_screen_requested() -> void:
+	"""Handle request to show upgrade screen (after battle end modal button clicked on victory)."""
+	# Swap to upgrade background
+	if background_rect and upgrade_background:
+		background_rect.texture = upgrade_background
+	
+	# Show upgrade screen with army and enemy data
+	hud.show_upgrade_screen(true, army, enemies_faced)  # Only called on victory
+
+
 func _on_upgrade_confirmed(victory: bool) -> void:
+	# Hide upgrade screen
+	hud.hide_upgrade_screen()
+	
 	if victory:
 		# Advance to next level if not already at the last level
 		if current_level_index < level_scenes.size() - 1:

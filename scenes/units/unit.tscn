@@ -12,6 +12,7 @@ sprite_frames = ExtResource("1_6k8ya")
 animation = &"attack"
 
 [node name="UpgradeMarkers" type="Node2D" parent="."]
+position = Vector2(0, 2)
 
 [node name="Marker1" type="Sprite2D" parent="UpgradeMarkers"]
 position = Vector2(0, -11)

@@ -1,12 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://c0d47vd87vlmt"]
+[gd_scene load_steps=4 format=3 uid="uid://c0d47vd87vlmt"]
 
 [ext_resource type="PackedScene" uid="uid://ccty86slv7qqy" path="res://scenes/ui/unit_tray_slot.tscn" id="1_0mwgc"]
 [ext_resource type="Script" uid="uid://b4vx32mrylism" path="res://scripts/hud.gd" id="1_hqnrr"]
-[ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="2_bo48s"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0mwgc"]
 
-[node name="HUD" type="Control" node_paths=PackedStringArray("phase_label", "tray_panel", "unit_tray", "go_button", "upgrade_modal", "upgrade_label", "upgrade_confirm_button", "spawn_slots_container")]
+[node name="HUD" type="Control" node_paths=PackedStringArray("phase_label", "tray_panel", "unit_tray", "go_button", "battle_end_modal", "battle_end_label", "battle_end_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,10 +20,9 @@ phase_label = NodePath("Panel/PhaseLabel")
 tray_panel = NodePath("TrayPanel")
 unit_tray = NodePath("TrayPanel/UnitTray")
 go_button = NodePath("TrayPanel/GoButton")
-upgrade_modal = NodePath("UpgradeModal")
-upgrade_label = NodePath("UpgradeModal/Panel/PanelContainer/VBoxContainer/UpgradeLabel")
-upgrade_confirm_button = NodePath("UpgradeModal/Panel/PanelContainer/VBoxContainer/UpgradeConfirmButton")
-spawn_slots_container = NodePath("")
+battle_end_modal = NodePath("BattleEndModal")
+battle_end_label = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/BattleEndLabel")
+battle_end_button = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/ConfirmButton")
 
 [node name="Panel" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -98,13 +96,6 @@ layout_mode = 2
 [node name="UnitSlot10" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
 layout_mode = 2
 
-[node name="SpawnSlot" parent="TrayPanel" instance=ExtResource("2_bo48s")]
-layout_mode = 0
-offset_left = 332.0
-offset_top = 28.0
-offset_right = 364.0
-offset_bottom = 60.0
-
 [node name="GoButton" type="Button" parent="TrayPanel"]
 layout_mode = 0
 offset_left = 246.0
@@ -113,7 +104,7 @@ offset_right = 297.0
 offset_bottom = 62.0
 text = "Fight!"
 
-[node name="UpgradeModal" type="ColorRect" parent="."]
+[node name="BattleEndModal" type="ColorRect" parent="."]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -123,7 +114,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.2509804)
 
-[node name="Panel" type="Panel" parent="UpgradeModal"]
+[node name="Panel" type="Panel" parent="BattleEndModal"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -137,7 +128,7 @@ offset_bottom = 90.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="UpgradeModal/Panel"]
+[node name="PanelContainer" type="PanelContainer" parent="BattleEndModal/Panel"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -150,14 +141,14 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_0mwgc")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UpgradeModal/Panel/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="BattleEndModal/Panel/PanelContainer"]
 layout_mode = 2
 
-[node name="UpgradeLabel" type="Label" parent="UpgradeModal/Panel/PanelContainer/VBoxContainer"]
+[node name="BattleEndLabel" type="Label" parent="BattleEndModal/Panel/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "Example text"
 
-[node name="UpgradeConfirmButton" type="Button" parent="UpgradeModal/Panel/PanelContainer/VBoxContainer"]
+[node name="ConfirmButton" type="Button" parent="BattleEndModal/Panel/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Confirm"

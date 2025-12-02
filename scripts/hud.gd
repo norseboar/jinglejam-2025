@@ -4,15 +4,21 @@ class_name HUD
 # Signals
 signal start_battle_requested
 signal upgrade_confirmed(victory: bool)
+signal show_upgrade_screen_requested  # Emitted when battle end button is clicked (victory)
 
 # Node references (assign in inspector)
 @export var phase_label: Label
 @export var tray_panel: Panel
 @export var unit_tray: GridContainer
 @export var go_button: Button
-@export var upgrade_modal: ColorRect
-@export var upgrade_label: Label
-@export var upgrade_confirm_button: Button
+
+# Battle end modal (shown first, then leads to upgrade screen)
+@export var battle_end_modal: ColorRect
+@export var battle_end_label: Label
+@export var battle_end_button: Button
+
+# Upgrade screen reference (assign in inspector)
+@export var upgrade_screen: UpgradeScreen
 
 # State
 var current_phase: String = ""
@@ -20,20 +26,25 @@ var current_level: int = 0
 var tray_slots: Array[Control] = []
 var placed_unit_count: int = 0
 var max_units: int = 10
-var last_victory_state: bool = false  # Store victory state for upgrade confirmation
+var last_victory_state: bool = false  # Store victory state for upgrade screen
+var is_last_level: bool = false  # Track if current battle was the last level
 
 func _ready() -> void:
 	# Connect Go button
 	if go_button:
 		go_button.pressed.connect(_on_go_button_pressed)
 	
-	# Connect upgrade confirm button
-	if upgrade_confirm_button:
-		upgrade_confirm_button.pressed.connect(_on_upgrade_confirm_button_pressed)
+	# Connect battle end button
+	if battle_end_button:
+		battle_end_button.pressed.connect(_on_battle_end_button_pressed)
+	
+	# Connect upgrade screen continue signal
+	if upgrade_screen:
+		upgrade_screen.continue_pressed.connect(_on_upgrade_screen_continue_pressed)
 	
 	# Ensure modal is hidden initially
-	if upgrade_modal:
-		upgrade_modal.visible = false
+	if battle_end_modal:
+		battle_end_modal.visible = false
 	
 	# Get all tray slot Controls and set them up for dragging
 	if unit_tray:
@@ -158,24 +169,43 @@ func _get_texture_from_scene(scene: PackedScene) -> Texture2D:
 	return texture
 
 
-func show_upgrade_modal(victory: bool, level: int, total_levels: int) -> void:
-	if not upgrade_modal or not upgrade_label or not upgrade_confirm_button:
+func show_battle_end_modal(victory: bool, level: int, total_levels: int) -> void:
+	"""Show the battle end modal that leads to upgrade screen."""
+	last_victory_state = victory
+	is_last_level = (level >= total_levels)
+	
+	if not battle_end_modal or not battle_end_label or not battle_end_button:
 		return
 	
-	# Store victory state for later use
-	last_victory_state = victory
-	
-	# Configure modal text
+	# Configure modal text and button
 	if victory:
-		if level >= total_levels:
-			upgrade_label.text = "Victory! You've completed all levels!"
+		if is_last_level:
+			# Last level completed - show victory message and restart option
+			battle_end_label.text = "Victory! You've completed all levels!"
+			battle_end_button.text = "Restart"
 		else:
-			upgrade_label.text = "Victory! Proceeding to Level %d..." % (level + 1)
+			battle_end_label.text = "Victory!"
+			battle_end_button.text = "Upgrade Army"
 	else:
-		upgrade_label.text = "Defeat! Try again?"
+		battle_end_label.text = "Defeat!"
+		battle_end_button.text = "Restart"
 	
 	# Show the modal
-	upgrade_modal.visible = true
+	battle_end_modal.visible = true
+
+
+func show_upgrade_screen(victory: bool, player_army: Array, enemies_faced: Array) -> void:
+	"""Show the upgrade screen with army and enemy data."""
+	# Hide battle end modal
+	if battle_end_modal:
+		battle_end_modal.visible = false
+	
+	# Hide HUD elements (tray, phase label, etc.)
+	hide_hud_elements()
+	
+	# Delegate to upgrade screen
+	if upgrade_screen:
+		upgrade_screen.show_upgrade_screen(victory, player_army, enemies_faced)
 
 
 func _on_go_button_pressed() -> void:
@@ -183,11 +213,55 @@ func _on_go_button_pressed() -> void:
 		start_battle_requested.emit()
 
 
-func _on_upgrade_confirm_button_pressed() -> void:
-	# Use stored victory state
-	upgrade_modal.visible = false
-	upgrade_confirmed.emit(last_victory_state)
+func _on_battle_end_button_pressed() -> void:
+	"""Handle battle end button - shows upgrade screen (or restarts if defeat or last level victory)."""
+	# Hide modal
+	if battle_end_modal:
+		battle_end_modal.visible = false
+	
+	# If defeat, restart immediately
+	if not last_victory_state:
+		upgrade_confirmed.emit(false)
+		return
+	
+	# If victory on last level, restart immediately (no upgrade screen)
+	if is_last_level:
+		upgrade_confirmed.emit(true)
+		return
+	
+	# Otherwise, victory on non-last level - show upgrade screen
+	# Signal to Game to show upgrade screen
+	show_upgrade_screen_requested.emit()
 
+
+func _on_upgrade_screen_continue_pressed(victory: bool) -> void:
+	"""Handle continue signal from upgrade screen."""
+	upgrade_confirmed.emit(victory)
+
+
+func hide_upgrade_screen() -> void:
+	"""Hide the upgrade screen."""
+	if upgrade_screen:
+		upgrade_screen.hide_upgrade_screen()
+	
+	# Re-show HUD elements
+	show_hud_elements()
+
+
+func hide_hud_elements() -> void:
+	"""Hide HUD UI elements (tray, phase label, etc.) when upgrade screen is shown."""
+	if tray_panel:
+		tray_panel.visible = false
+	if phase_label:
+		phase_label.get_parent().visible = false  # Hide the PanelContainer parent of phase_label
+
+
+func show_hud_elements() -> void:
+	"""Show HUD UI elements after upgrade screen is closed."""
+	if tray_panel:
+		tray_panel.visible = true
+	if phase_label:
+		phase_label.get_parent().visible = true  # Show the PanelContainer parent of phase_label
 
 
 func update_placed_count(count: int) -> void:

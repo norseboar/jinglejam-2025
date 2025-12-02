@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://c6vhu77lnu7a"]
+[gd_scene load_steps=6 format=3 uid="uid://c6vhu77lnu7a"]
 
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_c5o3r"]
 [ext_resource type="Texture2D" uid="uid://dt0cvswfre046" path="res://assets/backgrounds/temp_battlefield.jpg" id="2_3acmf"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_c5o3r"]
+[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_marker.tscn" id="4_yjjx0"]
+[ext_resource type="PackedScene" uid="uid://bbp51u1lohgx" path="res://scenes/units/knight.tscn" id="5_a3l5x"]
 
 [node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background")]
 layout_mode = 3
@@ -113,14 +115,17 @@ offset_bottom = 281.0
 
 [node name="EnemyMarkers" type="Node2D" parent="."]
 
-[node name="Marker2D2" type="Marker2D" parent="EnemyMarkers"]
-position = Vector2(538, 234)
+[node name="EnemyMarker" parent="EnemyMarkers" instance=ExtResource("4_yjjx0")]
+position = Vector2(511, 218)
+unit_scene = ExtResource("5_a3l5x")
+upgrades = {
+"hp": 1
+}
 
-[node name="Marker2D" type="Marker2D" parent="EnemyMarkers"]
-position = Vector2(521, 214)
-
-[node name="Marker2D3" type="Marker2D" parent="EnemyMarkers"]
-position = Vector2(494, 226)
-
-[node name="Marker2D4" type="Marker2D" parent="EnemyMarkers"]
-position = Vector2(567, 227)
+[node name="EnemyMarker2" parent="EnemyMarkers" instance=ExtResource("4_yjjx0")]
+position = Vector2(559, 231)
+unit_scene = ExtResource("5_a3l5x")
+upgrades = {
+"damage": 3,
+"hp": 0
+}

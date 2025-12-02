@@ -1,0 +1,2 @@
+- [ ] Add upgrade indicators to slots in HUD and upgrade panel
+- [ ] Fix bug where warriors sometimes walk off screen or otherwise don't target
