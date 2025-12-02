@@ -18,6 +18,7 @@ bg_color = Color(0.23874435, 0.23874438, 0.23874423, 1)
 bg_color = Color(0.2051174, 0.20511746, 0.20511732, 1)
 
 [node name="Game" type="Control" node_paths=PackedStringArray("background_rect", "gameplay", "player_units", "enemy_units", "hud", "ui_layer") groups=["game"]]
+texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -225,6 +226,8 @@ text = "Next Battle"
 
 [node name="PlayerUnits" type="Node2D" parent="SubViewportContainer/SubViewport/Gameplay"]
 y_sort_enabled = true
+texture_filter = 1
 
 [node name="EnemyUnits" type="Node2D" parent="SubViewportContainer/SubViewport/Gameplay"]
 y_sort_enabled = true
+texture_filter = 1
