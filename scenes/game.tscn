@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://6v0l0ja3i2tc" path="res://assets/sprites/placeholder-fortress.png" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cpp8nrk1v2n70" path="res://scenes/units/archer.tscn" id="3_p57ef"]
 [ext_resource type="PackedScene" uid="uid://xmwvmvin0jlw" path="res://scenes/units/enemy.tscn" id="4_u5sy4"]
-[ext_resource type="Texture2D" uid="uid://dt0cvswfre046" path="res://assets/IMG_4586.jpg" id="6_p57ef"]
+[ext_resource type="Texture2D" uid="uid://dt0cvswfre046" path="res://assets/backgrounds/temp_battlefield.jpg" id="6_p57ef"]
 
 [node name="Game" type="Node2D" node_paths=PackedStringArray("swordsman_button", "archer_button", "start_button", "restart_button", "hp_label")]
 script = ExtResource("1_yqjtg")
