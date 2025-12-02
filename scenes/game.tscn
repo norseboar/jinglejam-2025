@@ -1,8 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=10 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://dux2mgenh42lt" path="res://scenes/levels/level_01.tscn" id="2_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://bghtokhkny88a" path="res://scenes/units/swordsman.tscn" id="2_iywne"]
 [ext_resource type="PackedScene" uid="uid://cpp8nrk1v2n70" path="res://scenes/units/archer.tscn" id="3_p57ef"]
+[ext_resource type="PackedScene" uid="uid://c6vhu77lnu7a" path="res://scenes/levels/level_02.tscn" id="3_vtaks"]
+[ext_resource type="PackedScene" uid="uid://d1jwqtmfj4l01" path="res://scenes/levels/level_03.tscn" id="4_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://xmwvmvin0jlw" path="res://scenes/units/enemy.tscn" id="4_u5sy4"]
 [ext_resource type="Texture2D" uid="uid://qguwsk400gqy" path="res://assets/backgrounds/chess_table.jpg" id="5_p57ef"]
 [ext_resource type="PackedScene" uid="uid://c0d47vd87vlmt" path="res://scenes/ui/hud.tscn" id="6_p57ef"]
@@ -15,6 +18,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_yqjtg")
+level_scenes = Array[PackedScene]([ExtResource("2_0tnpc"), ExtResource("3_vtaks"), ExtResource("4_kvpfn")])
 swordsman_scene = ExtResource("2_iywne")
 archer_scene = ExtResource("3_p57ef")
 enemy_scene = ExtResource("4_u5sy4")
@@ -59,7 +63,6 @@ render_target_update_mode = 4
 [node name="HUD" parent="SubViewportContainer/SubViewport/UI" instance=ExtResource("6_p57ef")]
 offset_right = 0.0
 offset_bottom = 0.0
-mouse_filter = 2
 
 [node name="Gameplay" type="Node2D" parent="SubViewportContainer/SubViewport"]
 

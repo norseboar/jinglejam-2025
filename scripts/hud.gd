@@ -20,6 +20,7 @@ var current_level: int = 0
 var tray_slots: Array[Control] = []
 var placed_unit_count: int = 0
 var max_units: int = 10
+var last_victory_state: bool = false  # Store victory state for upgrade confirmation
 
 func _ready() -> void:
 	# Connect Go button
@@ -101,6 +102,40 @@ func set_tray_unit_scenes(unit_scenes: Array[PackedScene]) -> void:
 				slot.set_unit_texture(null)
 
 
+func set_tray_from_army(army_units: Array) -> void:
+	"""Populate the tray from army slot data."""
+	placed_unit_count = 0
+
+	if not unit_tray:
+		return
+
+	for i in range(tray_slots.size()):
+		var slot := tray_slots[i] as Control
+		if not slot:
+			continue
+
+		if i < army_units.size():
+			var army_unit = army_units[i]
+			if army_unit.placed:
+				# Slot already used, clear it
+				slot.set_meta("unit_type", "")
+				slot.set_meta("slot_index", i)
+				if slot.has_method("set_unit_texture"):
+					slot.set_unit_texture(null)
+			else:
+				# Slot available, populate it
+				slot.set_meta("unit_type", army_unit.unit_type)
+				slot.set_meta("slot_index", i)
+
+				var texture: Texture2D = _get_texture_from_scene(army_unit.unit_scene)
+				if slot.has_method("set_unit_texture"):
+					slot.set_unit_texture(texture)
+		else:
+			slot.set_meta("unit_type", "")
+			if slot.has_method("set_unit_texture"):
+				slot.set_unit_texture(null)
+
+
 func _get_texture_from_scene(scene: PackedScene) -> Texture2D:
 	"""Extract the first frame texture from a unit scene's AnimatedSprite2D."""
 	var instance := scene.instantiate()
@@ -123,13 +158,16 @@ func _get_texture_from_scene(scene: PackedScene) -> Texture2D:
 	return texture
 
 
-func show_upgrade_modal(victory: bool, level: int) -> void:
+func show_upgrade_modal(victory: bool, level: int, total_levels: int) -> void:
 	if not upgrade_modal or not upgrade_label or not upgrade_confirm_button:
 		return
 	
+	# Store victory state for later use
+	last_victory_state = victory
+	
 	# Configure modal text
 	if victory:
-		if level >= 3:
+		if level >= total_levels:
 			upgrade_label.text = "Victory! You've completed all levels!"
 		else:
 			upgrade_label.text = "Victory! Proceeding to Level %d..." % (level + 1)
@@ -146,10 +184,9 @@ func _on_go_button_pressed() -> void:
 
 
 func _on_upgrade_confirm_button_pressed() -> void:
-	# Determine victory state from modal text or store it
-	var victory := current_phase == "upgrade" and upgrade_label.text.contains("Victory")
+	# Use stored victory state
 	upgrade_modal.visible = false
-	upgrade_confirmed.emit(victory)
+	upgrade_confirmed.emit(last_victory_state)
 
 
 
@@ -166,3 +203,14 @@ func update_placed_count(count: int) -> void:
 			if slot:
 				slot.modulate = Color(1, 1, 1, 1)  # Normal color
 				slot.mouse_filter = Control.MOUSE_FILTER_STOP  # Enable interaction
+
+
+func clear_tray_slot(index: int) -> void:
+	"""Clear a tray slot after its unit has been placed."""
+	if index < 0 or index >= tray_slots.size():
+		return
+
+	var slot := tray_slots[index]
+	slot.set_meta("unit_type", "")
+	if slot.has_method("set_unit_texture"):
+		slot.set_unit_texture(null)

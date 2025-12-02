@@ -3,16 +3,20 @@ class_name Game
 
 # Signals
 signal unit_placed(unit_type: String)
+signal army_unit_placed(slot_index: int)
+
+# Army tracking
+class ArmyUnit:
+	var unit_type: String = ""
+	var unit_scene: PackedScene = null
+	var placed: bool = false
 
 # Game state
 var phase := "preparation"  # "preparation" | "battle" | "upgrade"
+var army: Array = []  # Array of ArmyUnit
 
 # Level management
-var level_paths: Array[String] = [
-	"res://scenes/levels/level_01.tscn",
-	"res://scenes/levels/level_02.tscn",
-	"res://scenes/levels/level_03.tscn",
-]
+@export var level_scenes: Array[PackedScene] = []
 var current_level_index := 0
 
 # Current level references (set when level loads)
@@ -41,7 +45,18 @@ func _ready() -> void:
 	hud.start_battle_requested.connect(_on_start_battle_requested)
 	hud.upgrade_confirmed.connect(_on_upgrade_confirmed)
 	unit_placed.connect(_on_unit_placed)
+	army_unit_placed.connect(_on_army_unit_placed)
 	load_level(current_level_index)
+
+
+func _init_army() -> void:
+	army.clear()
+	for scene in starting_unit_scenes:
+		var slot := ArmyUnit.new()
+		slot.unit_scene = scene
+		slot.unit_type = scene.resource_path.get_file().get_basename()
+		slot.placed = false
+		army.append(slot)
 
 
 func _process(_delta: float) -> void:
@@ -79,10 +94,23 @@ func _end_battle(victory: bool) -> void:
 			child.set_state("idle")
 
 	# Show upgrade modal
-	hud.show_upgrade_modal(victory, current_level_index + 1)
+	hud.show_upgrade_modal(victory, current_level_index + 1, level_scenes.size())
 
 
 func load_level(index: int) -> void:
+	# Validate index first
+	if index < 0 or index >= level_scenes.size():
+		push_error("Invalid level index: %d (array size: %d)" % [index, level_scenes.size()])
+		return
+	
+	var level_scene: PackedScene = level_scenes[index]
+	if level_scene == null:
+		push_error("Level scene at index %d is null! Make sure all entries in level_scenes array are assigned." % index)
+		return
+	
+	# Initialize/reset army from starting scenes
+	_init_army()
+	
 	# Clear all units
 	_clear_all_units()
 	
@@ -94,19 +122,9 @@ func load_level(index: int) -> void:
 	# Wait a frame for cleanup
 	await get_tree().process_frame
 
-	# Load the level scene
-	if index < 0 or index >= level_paths.size():
-		push_error("Invalid level index: %d" % index)
-		return
-	
-	var level_scene := load(level_paths[index]) as PackedScene
-	if level_scene == null:
-		push_error("Failed to load level: %s" % level_paths[index])
-		return
-	
 	current_level = level_scene.instantiate() as LevelRoot
 	if current_level == null:
-		push_error("Level root is not a LevelRoot: %s" % level_paths[index])
+		push_error("Level root is not a LevelRoot at index %d" % index)
 		return
 	
 	# Add level to UI layer BEFORE HUD (so it renders behind)
@@ -135,9 +153,9 @@ func load_level(index: int) -> void:
 	phase = "preparation"
 	hud.set_phase(phase, index + 1)
 	
-	# Populate tray with starting unit scenes
-	if starting_unit_scenes.size() > 0:
-		hud.set_tray_unit_scenes(starting_unit_scenes)
+	# Populate tray from army data
+	if army.size() > 0:
+		hud.set_tray_from_army(army)
 
 
 func _spawn_enemies_from_level() -> void:
@@ -190,7 +208,12 @@ func _on_unit_placed(_unit_type: String) -> void:
 		hud.update_placed_count(player_units.get_child_count())
 
 
-func place_unit_on_slot(unit_type: String, slot: SpawnSlot) -> void:
+func _on_army_unit_placed(slot_index: int) -> void:
+	if hud:
+		hud.clear_tray_slot(slot_index)
+
+
+func place_unit_on_slot(unit_type: String, slot: SpawnSlot, army_unit_index: int = -1) -> void:
 	if slot.is_occupied:
 		return
 
@@ -211,6 +234,11 @@ func place_unit_on_slot(unit_type: String, slot: SpawnSlot) -> void:
 	unit.global_position = slot.get_slot_center()
 
 	slot.set_occupied(true)
+	
+	# Mark army slot as placed
+	if army_unit_index >= 0 and army_unit_index < army.size():
+		army[army_unit_index].placed = true
+		army_unit_placed.emit(army_unit_index)
 	
 	# Notify HUD that a unit was placed
 	unit_placed.emit(unit_type)
@@ -250,8 +278,12 @@ func _on_start_battle_requested() -> void:
 
 func _on_upgrade_confirmed(victory: bool) -> void:
 	if victory:
-		# Advance to next level (clamp to last)
-		current_level_index = mini(current_level_index + 1, level_paths.size() - 1)
+		# Advance to next level if not already at the last level
+		if current_level_index < level_scenes.size() - 1:
+			current_level_index += 1
+		else:
+			# Completed all levels - restart at level 1
+			current_level_index = 0
 	# else: reload same level (current_level_index unchanged)
 
 	load_level(current_level_index)
