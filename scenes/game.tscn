@@ -1,89 +1,92 @@
-[gd_scene load_steps=6 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=7 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://bghtokhkny88a" path="res://scenes/units/swordsman.tscn" id="2_iywne"]
-[ext_resource type="Texture2D" uid="uid://6v0l0ja3i2tc" path="res://assets/sprites/placeholder-fortress.png" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cpp8nrk1v2n70" path="res://scenes/units/archer.tscn" id="3_p57ef"]
 [ext_resource type="PackedScene" uid="uid://xmwvmvin0jlw" path="res://scenes/units/enemy.tscn" id="4_u5sy4"]
+[ext_resource type="Texture2D" uid="uid://qguwsk400gqy" path="res://assets/backgrounds/chess_table.jpg" id="5_p57ef"]
+[ext_resource type="PackedScene" uid="uid://c0d47vd87vlmt" path="res://scenes/ui/hud.tscn" id="6_p57ef"]
 
-[node name="Game" type="Node2D" node_paths=PackedStringArray("swordsman_button", "archer_button", "start_button", "restart_button", "hp_label")]
+[node name="Game" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_yqjtg")
 swordsman_scene = ExtResource("2_iywne")
 archer_scene = ExtResource("3_p57ef")
 enemy_scene = ExtResource("4_u5sy4")
-swordsman_button = NodePath("UI/HBoxContainer/SwordsmanButton")
-archer_button = NodePath("UI/HBoxContainer/ArcherButton")
-start_button = NodePath("UI/HBoxContainer/StartButton")
-restart_button = NodePath("UI/HBoxContainer/RestartButton")
-hp_label = NodePath("UI/HpLabel")
 
-[node name="Fortress" type="Sprite2D" parent="."]
-position = Vector2(50, 180)
-texture = ExtResource("3_lnu2h")
+[node name="BackgroundRect" type="TextureRect" parent="."]
+texture_filter = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_p57ef")
+expand_mode = 3
 
-[node name="EnemySpawnSlots" type="Node2D" parent="."]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
 
-[node name="Marker2D3" type="Marker2D" parent="EnemySpawnSlots"]
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1280, 720)
+size_2d_override = Vector2i(640, 360)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="UI" type="CanvasLayer" parent="SubViewportContainer/SubViewport"]
+
+[node name="HUD" parent="SubViewportContainer/SubViewport/UI" instance=ExtResource("6_p57ef")]
+offset_right = 0.0
+offset_bottom = 0.0
+
+[node name="Gameplay" type="Node2D" parent="SubViewportContainer/SubViewport"]
+
+[node name="LevelContainer" type="Node2D" parent="SubViewportContainer/SubViewport/Gameplay"]
+
+[node name="EnemySpawnSlots" type="Node2D" parent="SubViewportContainer/SubViewport/Gameplay"]
+
+[node name="Marker2D3" type="Marker2D" parent="SubViewportContainer/SubViewport/Gameplay/EnemySpawnSlots"]
 position = Vector2(443, 184)
 
-[node name="Marker2D2" type="Marker2D" parent="EnemySpawnSlots"]
+[node name="Marker2D2" type="Marker2D" parent="SubViewportContainer/SubViewport/Gameplay/EnemySpawnSlots"]
 position = Vector2(500, 201)
 
-[node name="Marker2D" type="Marker2D" parent="EnemySpawnSlots"]
+[node name="Marker2D" type="Marker2D" parent="SubViewportContainer/SubViewport/Gameplay/EnemySpawnSlots"]
 position = Vector2(536, 173)
 
-[node name="PlayerSpawnSlots" type="Node2D" parent="."]
+[node name="PlayerSpawnSlots" type="Node2D" parent="SubViewportContainer/SubViewport/Gameplay"]
 
-[node name="Marker2D3" type="Marker2D" parent="PlayerSpawnSlots"]
+[node name="Marker2D3" type="Marker2D" parent="SubViewportContainer/SubViewport/Gameplay/PlayerSpawnSlots"]
 position = Vector2(171, 177)
 
-[node name="Marker2D2" type="Marker2D" parent="PlayerSpawnSlots"]
+[node name="Marker2D2" type="Marker2D" parent="SubViewportContainer/SubViewport/Gameplay/PlayerSpawnSlots"]
 position = Vector2(143, 206)
 
-[node name="Marker2D5" type="Marker2D" parent="PlayerSpawnSlots"]
+[node name="Marker2D5" type="Marker2D" parent="SubViewportContainer/SubViewport/Gameplay/PlayerSpawnSlots"]
 position = Vector2(198, 204)
 
-[node name="Marker2D4" type="Marker2D" parent="PlayerSpawnSlots"]
+[node name="Marker2D4" type="Marker2D" parent="SubViewportContainer/SubViewport/Gameplay/PlayerSpawnSlots"]
 position = Vector2(218, 178)
 
-[node name="Marker2D" type="Marker2D" parent="PlayerSpawnSlots"]
+[node name="Marker2D" type="Marker2D" parent="SubViewportContainer/SubViewport/Gameplay/PlayerSpawnSlots"]
 position = Vector2(108, 180)
 
-[node name="PlayerUnits" type="Node2D" parent="."]
+[node name="PlayerUnits" type="Node2D" parent="SubViewportContainer/SubViewport/Gameplay"]
 y_sort_enabled = true
 
-[node name="EnemyUnits" type="Node2D" parent="."]
+[node name="EnemyUnits" type="Node2D" parent="SubViewportContainer/SubViewport/Gameplay"]
 y_sort_enabled = true
-
-[node name="UI" type="CanvasLayer" parent="."]
-
-[node name="HpLabel" type="Label" parent="UI"]
-offset_left = 20.0
-offset_top = 16.0
-offset_right = 69.0
-offset_bottom = 39.0
-text = "HP: 10"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI"]
-offset_left = 16.0
-offset_top = 297.0
-offset_right = 304.0
-offset_bottom = 337.0
-
-[node name="SwordsmanButton" type="Button" parent="UI/HBoxContainer"]
-layout_mode = 2
-text = "Add Swordsman"
-
-[node name="ArcherButton" type="Button" parent="UI/HBoxContainer"]
-layout_mode = 2
-text = "Add Archer"
-
-[node name="StartButton" type="Button" parent="UI/HBoxContainer"]
-layout_mode = 2
-text = "Fight!"
-
-[node name="RestartButton" type="Button" parent="UI/HBoxContainer"]
-visible = false
-layout_mode = 2
-text = "Restart"
-metadata/_edit_use_anchors_ = true

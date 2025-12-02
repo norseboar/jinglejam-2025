@@ -1,0 +1,136 @@
+[gd_scene load_steps=4 format=3 uid="uid://c0d47vd87vlmt"]
+
+[ext_resource type="PackedScene" uid="uid://ccty86slv7qqy" path="res://scenes/ui/unit_slot.tscn" id="1_0mwgc"]
+[ext_resource type="Script" uid="uid://b4vx32mrylism" path="res://scripts/hud.gd" id="1_hqnrr"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0mwgc"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -640.0
+offset_bottom = -360.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hqnrr")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -134.5
+offset_right = 134.5
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="PhaseLabel" type="Label" parent="Panel"]
+layout_mode = 2
+theme_type_variation = &"HeaderSmall"
+text = "Level 1 -- Preparation Phase"
+
+[node name="TrayPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="UnitTray" type="GridContainer" parent="TrayPanel"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 12.0
+offset_right = 226.0
+offset_bottom = 80.0
+columns = 5
+
+[node name="UnitSlot" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
+layout_mode = 2
+
+[node name="UnitSlot2" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
+layout_mode = 2
+
+[node name="UnitSlot3" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
+layout_mode = 2
+
+[node name="UnitSlot4" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
+layout_mode = 2
+
+[node name="UnitSlot5" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
+layout_mode = 2
+
+[node name="UnitSlot6" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
+layout_mode = 2
+
+[node name="UnitSlot7" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
+layout_mode = 2
+
+[node name="UnitSlot8" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
+layout_mode = 2
+
+[node name="UnitSlot9" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
+layout_mode = 2
+
+[node name="UnitSlot10" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
+layout_mode = 2
+
+[node name="GoButton" type="Button" parent="TrayPanel"]
+layout_mode = 0
+offset_left = 246.0
+offset_top = 31.0
+offset_right = 297.0
+offset_bottom = 62.0
+text = "Fight!"
+
+[node name="UpgradeModal" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.2509804)
+
+[node name="Panel" type="Panel" parent="UpgradeModal"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -90.0
+offset_right = 160.0
+offset_bottom = 90.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="UpgradeModal/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_0mwgc")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UpgradeModal/Panel/PanelContainer"]
+layout_mode = 2
+
+[node name="UpgradeLabel" type="Label" parent="UpgradeModal/Panel/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Example text"
+
+[node name="UpgradeConfirmButton" type="Button" parent="UpgradeModal/Panel/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Confirm"

@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3 uid="uid://dux2mgenh42lt"]
+
+[ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_2djvx"]
+[ext_resource type="Texture2D" uid="uid://qguwsk400gqy" path="res://assets/backgrounds/chess_table.jpg" id="2_uvc87"]
+[ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/spawn_slot.tscn" id="3_qdh5e"]
+
+[node name="LevelRoot" type="Node2D"]
+script = ExtResource("1_2djvx")
+
+[node name="EditorBackground" type="Sprite2D" parent="."]
+position = Vector2(637.00006, 247.00002)
+scale = Vector2(0.315, 0.315)
+texture = ExtResource("2_uvc87")
+
+[node name="PlayerSpawnSlots" type="Node2D" parent="."]
+
+[node name="SpawnSlot" parent="PlayerSpawnSlots" instance=ExtResource("3_qdh5e")]
+position = Vector2(274, 348)
+
+[node name="SpawnSlot2" parent="PlayerSpawnSlots" instance=ExtResource("3_qdh5e")]
+position = Vector2(336, 345)
+
+[node name="SpawnSlot3" parent="PlayerSpawnSlots" instance=ExtResource("3_qdh5e")]
+position = Vector2(405, 344)
+
+[node name="SpawnSlot4" parent="PlayerSpawnSlots" instance=ExtResource("3_qdh5e")]
+position = Vector2(472, 344)
+
+[node name="SpawnSlot5" parent="PlayerSpawnSlots" instance=ExtResource("3_qdh5e")]
+position = Vector2(305, 395)
+
+[node name="SpawnSlot6" parent="PlayerSpawnSlots" instance=ExtResource("3_qdh5e")]
+position = Vector2(367, 392)
+
+[node name="SpawnSlot7" parent="PlayerSpawnSlots" instance=ExtResource("3_qdh5e")]
+position = Vector2(436, 391)
+
+[node name="SpawnSlot8" parent="PlayerSpawnSlots" instance=ExtResource("3_qdh5e")]
+position = Vector2(503, 391)
+
+[node name="SpawnSlot9" parent="PlayerSpawnSlots" instance=ExtResource("3_qdh5e")]
+position = Vector2(274, 438)
+
+[node name="SpawnSlot10" parent="PlayerSpawnSlots" instance=ExtResource("3_qdh5e")]
+position = Vector2(336, 435)
+
+[node name="SpawnSlot11" parent="PlayerSpawnSlots" instance=ExtResource("3_qdh5e")]
+position = Vector2(405, 434)
+
+[node name="SpawnSlot12" parent="PlayerSpawnSlots" instance=ExtResource("3_qdh5e")]
+position = Vector2(472, 434)
