@@ -29,6 +29,7 @@ Never add programmatic code to enforce or fix things that should be configured i
 - **UI control settings** — Focus modes, mouse filters, size flags, etc.
 
 **If you notice something is misconfigured:**
+
 - STOP and ask the user to fix it in the Godot editor
 - Don't add `_ready()` code to programmatically set the correct value
 - Don't add runtime checks that "correct" editor misconfigurations

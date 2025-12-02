@@ -27,7 +27,7 @@ Consult this file when you need to locate specs, project plans, or implementatio
 **Location:** `.cursor/rules/core-rules.mdc`
 
 **Purpose:**  
-The three non-negotiable rules for plan execution: follow the plan exactly, stop after each step, don't guess.
+The four non-negotiable rules for plan execution: follow the plan exactly, stop after each step, don't guess, don't programmatically fix Godot configuration.
 
 **Usage:**  
 Reference when executing any plan. These rules are mandatory. Also referenced by the `execute-plan` command.

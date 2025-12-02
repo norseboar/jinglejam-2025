@@ -33,7 +33,8 @@ var current_level: LevelRoot = null
 @export var enemy_units: Node2D
 
 # UI references (assign in inspector)
-@export var hud: Control
+@export var hud: HUD
+@export var ui_layer: CanvasLayer  # Where levels get loaded (same layer as HUD for drag-drop)
 
 
 func _ready() -> void:
@@ -209,17 +210,55 @@ func _end_battle(victory: bool) -> void:
 func load_level(index: int) -> void:
 	# Clear all units
 	_clear_all_units()
+	
+	# Remove old level if exists
+	if current_level:
+		current_level.queue_free()
+		current_level = null
 
 	# Wait a frame for cleanup
 	await get_tree().process_frame
 
+	# Load the level scene
+	if index < 0 or index >= level_paths.size():
+		push_error("Invalid level index: %d" % index)
+		return
+	
+	var level_scene := load(level_paths[index]) as PackedScene
+	if level_scene == null:
+		push_error("Failed to load level: %s" % level_paths[index])
+		return
+	
+	current_level = level_scene.instantiate() as LevelRoot
+	if current_level == null:
+		push_error("Level root is not a LevelRoot: %s" % level_paths[index])
+		return
+	
+	# Add level to UI layer BEFORE HUD (so it renders behind)
+	# HUD should be the last child to render on top
+	if ui_layer:
+		ui_layer.add_child(current_level)
+		ui_layer.move_child(current_level, 0)  # Move to first position (behind HUD)
+	else:
+		push_error("ui_layer not assigned!")
+		return
+	
+	# Hide editor background (only for editing)
+	current_level.hide_editor_background()
+	
+	# Set the game's background from level
+	if background_rect and current_level.background_texture:
+		background_rect.texture = current_level.background_texture
+
 	# Reset all spawn slots to unoccupied
 	_reset_spawn_slots()
+	
+	# Spawn enemies from level markers
+	_spawn_enemies_from_level()
 
 	# Update HUD
 	phase = "preparation"
 	hud.set_phase(phase, index + 1)
-	_set_spawn_slots_visible(true)
 	
 	# Populate tray with starting unit scenes
 	if starting_unit_scenes.size() > 0:
@@ -259,8 +298,11 @@ func _spawn_enemies_from_level() -> void:
 
 
 func _set_spawn_slots_visible(should_show: bool) -> void:
-	if hud and hud.spawn_slots_container:
-		hud.spawn_slots_container.visible = should_show
+	# Spawn slots are now part of the level scene
+	if current_level:
+		var spawn_slots_container := current_level.get_node_or_null("PlayerSpawnSlots")
+		if spawn_slots_container:
+			spawn_slots_container.visible = should_show
 
 
 func _reset_spawn_slots() -> void:

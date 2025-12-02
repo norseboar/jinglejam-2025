@@ -8,6 +8,10 @@ class_name LevelRoot
 @export var editor_background: CanvasItem
 
 func _ready() -> void:
+	hide_editor_background()
+
+
+func hide_editor_background() -> void:
 	# Hide the editor-only background at runtime
 	if editor_background:
 		editor_background.visible = false

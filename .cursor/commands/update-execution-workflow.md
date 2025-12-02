@@ -12,7 +12,7 @@ Update execution workflow documentation to ensure consistency across planning an
 
 **Rules:**
 
-- `.cursor/rules/core-rules.mdc` — The three non-negotiable rules
+- `.cursor/rules/core-rules.mdc` — The four non-negotiable rules
 - `.cursor/rules/docs-workflow.mdc` — Plan format and testing guidance
 
 ## Process

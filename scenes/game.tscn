@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://qguwsk400gqy" path="res://assets/backgrounds/chess_table.jpg" id="5_p57ef"]
 [ext_resource type="PackedScene" uid="uid://c0d47vd87vlmt" path="res://scenes/ui/hud.tscn" id="6_p57ef"]
 
-[node name="Game" type="Control" node_paths=PackedStringArray("background_rect", "gameplay", "level_container", "player_units", "enemy_units", "hud") groups=["game"]]
+[node name="Game" type="Control" node_paths=PackedStringArray("background_rect", "gameplay", "player_units", "enemy_units", "hud", "ui_layer") groups=["game"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,10 +21,10 @@ enemy_scene = ExtResource("4_u5sy4")
 starting_unit_scenes = Array[PackedScene]([ExtResource("3_p57ef"), ExtResource("3_p57ef"), ExtResource("2_iywne"), ExtResource("2_iywne")])
 background_rect = NodePath("BackgroundRect")
 gameplay = NodePath("SubViewportContainer/SubViewport/Gameplay")
-level_container = NodePath("")
 player_units = NodePath("SubViewportContainer/SubViewport/Gameplay/PlayerUnits")
 enemy_units = NodePath("SubViewportContainer/SubViewport/Gameplay/EnemyUnits")
 hud = NodePath("SubViewportContainer/SubViewport/UI/HUD")
+ui_layer = NodePath("SubViewportContainer/SubViewport/UI")
 
 [node name="BackgroundRect" type="TextureRect" parent="."]
 texture_filter = 2
@@ -59,7 +59,7 @@ render_target_update_mode = 4
 [node name="HUD" parent="SubViewportContainer/SubViewport/UI" instance=ExtResource("6_p57ef")]
 offset_right = 0.0
 offset_bottom = 0.0
-mouse_filter = 1
+mouse_filter = 2
 
 [node name="Gameplay" type="Node2D" parent="SubViewportContainer/SubViewport"]
 

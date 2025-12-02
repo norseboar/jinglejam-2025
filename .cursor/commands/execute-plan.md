@@ -137,6 +137,7 @@ Please confirm when this is done, and I'll continue with the next step.
 **Naming Conventions:**
 
 When executing steps, ensure:
+
 - **Filenames:** Always use snake_case (e.g., `unit.gd`, `combat_manager.gd`)
 - **Class names:** Always use PascalCase (e.g., `class_name Unit`, `class_name CombatManager`)
 - **Node names:** Always use PascalCase (e.g., `Unit`, `CombatManager`)
