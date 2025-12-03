@@ -86,9 +86,12 @@ func set_phase(phase: String, level: int) -> void:
 		
 		phase_label.text = phase_text
 	
-	# Enable/disable Go button based on phase
+	# Enable/disable Go button based on phase and placed units
 	if go_button:
-		go_button.disabled = (phase != "preparation")
+		if phase == "preparation":
+			go_button.disabled = (placed_unit_count == 0)
+		else:
+			go_button.disabled = true
 
 
 func set_tray_unit_scenes(unit_scenes: Array[PackedScene]) -> void:
@@ -309,6 +312,13 @@ func update_placed_count(count: int) -> void:
 			if slot:
 				slot.modulate = Color(1, 1, 1, 1)  # Normal color
 				slot.mouse_filter = Control.MOUSE_FILTER_STOP  # Enable interaction
+	
+	# Enable/disable Go button based on whether any units are placed
+	if go_button:
+		if current_phase == "preparation":
+			go_button.disabled = (placed_unit_count == 0)
+		else:
+			go_button.disabled = true
 
 
 func clear_tray_slot(index: int) -> void:

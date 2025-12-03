@@ -7,6 +7,7 @@ signal selected(option_index: int)
 @export var army_name_label: Label
 @export var enemy_grid: GridContainer
 @export var selection_highlight: Control  # A panel/border shown when selected
+@export var click_area: Control  # A full-screen clickable area (ColorRect/Panel) that covers the whole option
 
 # State
 var option_index: int = 0
@@ -19,8 +20,11 @@ func _ready() -> void:
 	if selection_highlight:
 		selection_highlight.visible = false
 	
-	# Connect click detection
-	gui_input.connect(_on_gui_input)
+	# Connect click detection - prefer click_area if provided, otherwise use self
+	if click_area:
+		click_area.gui_input.connect(_on_gui_input)
+	else:
+		gui_input.connect(_on_gui_input)
 
 
 func _on_gui_input(event: InputEvent) -> void:

@@ -55,6 +55,7 @@ func _ready() -> void:
 	hud.start_battle_requested.connect(_on_start_battle_requested)
 	hud.upgrade_confirmed.connect(_on_upgrade_confirmed)
 	hud.show_upgrade_screen_requested.connect(_on_show_upgrade_screen_requested)
+	hud.battle_select_advance.connect(_on_battle_select_advance)
 	unit_placed.connect(_on_unit_placed)
 	army_unit_placed.connect(_on_army_unit_placed)
 	
@@ -319,6 +320,37 @@ func get_current_pool_size() -> int:
 	return level_pool.level_scenes.size()
 
 
+func get_random_level_options(pool_index: int, count: int = 2) -> Array[PackedScene]:
+	"""Pick up to 'count' distinct random scenes from the specified pool."""
+	var result: Array[PackedScene] = []
+	
+	if pool_index < 0 or pool_index >= level_pools.size():
+		return result
+	
+	var pool = level_pools[pool_index]
+	if not pool is LevelPool:
+		return result
+	
+	var level_pool: LevelPool = pool as LevelPool
+	if level_pool == null or level_pool.level_scenes.size() == 0:
+		return result
+	
+	# Create a shuffled copy of indices
+	var indices: Array[int] = []
+	for i in range(level_pool.level_scenes.size()):
+		indices.append(i)
+	indices.shuffle()
+	
+	# Pick up to 'count' scenes
+	var pick_count := mini(count, level_pool.level_scenes.size())
+	for i in range(pick_count):
+		var scene: PackedScene = level_pool.level_scenes[indices[i]]
+		if scene != null:
+			result.append(scene)
+	
+	return result
+
+
 func _set_spawn_slots_visible(should_show: bool) -> void:
 	# Spawn slots are now part of the level scene
 	if current_level:
@@ -471,6 +503,11 @@ func _on_show_upgrade_screen_requested() -> void:
 	hud.show_upgrade_screen(true, army, enemies_faced)  # Only called on victory
 
 
+func _on_battle_select_advance(level_scene: PackedScene) -> void:
+	"""Handle battle select advance - load the chosen level."""
+	load_level_scene(level_scene)
+
+
 func _on_upgrade_confirmed(victory: bool) -> void:
 	# Hide upgrade screen
 	hud.hide_upgrade_screen()
@@ -479,13 +516,27 @@ func _on_upgrade_confirmed(victory: bool) -> void:
 		# Advance to next level if not already at the last level
 		if current_level_index < level_pools.size() - 1:
 			current_level_index += 1
+			
+			# Clear old level and units before showing battle select
+			_clear_all_units()
+			if current_level:
+				current_level.queue_free()
+				current_level = null
+			
+			# Show battle select screen with options from next level's pool
+			var options := get_random_level_options(current_level_index, 2)
+			if options.size() > 0:
+				hud.show_battle_select(options)
+			else:
+				# Fallback: load first scene from pool
+				load_level(current_level_index)
 		else:
 			# Completed all levels - restart at level 1
 			current_level_index = 0
 			army.clear()  # Reset army for new run
+			load_level(current_level_index)
 	else:
 		# On defeat, reset everything
 		army.clear()  # Clear army so it reinitializes
 		current_level_index = 0
-
-	load_level(current_level_index)
+		load_level(current_level_index)

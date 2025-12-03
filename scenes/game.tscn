@@ -84,6 +84,7 @@ upgrade_screen = NodePath("UpgradeScreen")
 battle_select_screen = NodePath("BattleSelectScreen")
 
 [node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("your_army_tray", "enemies_faced_tray", "continue_button", "editor_background", "upgrade_instructions", "upgrade_data", "hp_button", "damage_button", "recruit_instructions", "recruit_data", "recruit_button", "gold_label")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -347,6 +348,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="BattleSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("options_container", "advance_button")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -376,14 +378,7 @@ offset_top = 64.0
 offset_right = -20.0
 offset_bottom = 264.0
 grow_horizontal = 2
-theme_override_constants/separation = 64
 alignment = 1
-
-[node name="BattleOption" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/HBoxContainer" instance=ExtResource("14_trtic")]
-layout_mode = 2
-
-[node name="BattleOption2" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/HBoxContainer" instance=ExtResource("14_trtic")]
-layout_mode = 2
 
 [node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel"]
 layout_mode = 0
