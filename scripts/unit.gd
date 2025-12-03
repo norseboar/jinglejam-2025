@@ -240,6 +240,10 @@ func _reset_color() -> void:
 
 
 func die() -> void:
+	# Prevent multiple calls to die()
+	if state == "dying":
+		return
+	
 	# Stop all movement and combat
 	is_attacking = false
 	target = null
