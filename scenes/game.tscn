@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=15 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://dux2mgenh42lt" path="res://scenes/levels/level_01.tscn" id="2_0tnpc"]
@@ -10,12 +10,16 @@
 [ext_resource type="Texture2D" uid="uid://cv4fsh4q3oll" path="res://assets/backgrounds/reward_bg.jpg" id="7_gee14"]
 [ext_resource type="PackedScene" uid="uid://bbev3r4fqct55" path="res://scenes/units/ballista.tscn" id="7_vtaks"]
 [ext_resource type="PackedScene" uid="uid://duydnmoyvdugl" path="res://scenes/ui/unit_upgrade_slot.tscn" id="8_0tnpc"]
+[ext_resource type="PackedScene" uid="uid://qu7tcqixa2mi" path="res://scenes/ui/unit_summary.tscn" id="11_kvpfn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vtaks"]
 bg_color = Color(0.23874435, 0.23874438, 0.23874423, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvpfn"]
 bg_color = Color(0.2051174, 0.20511746, 0.20511732, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dinhu"]
+bg_color = Color(0.17402825, 0.17402828, 0.17402813, 1)
 
 [node name="Game" type="Control" node_paths=PackedStringArray("background_rect", "gameplay", "player_units", "enemy_units", "hud", "ui_layer") groups=["game"]]
 texture_filter = 1
@@ -71,8 +75,7 @@ offset_right = 0.0
 offset_bottom = 0.0
 upgrade_screen = NodePath("UpgradeScreen")
 
-[node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("your_army_tray", "enemies_faced_tray", "continue_button", "editor_background")]
-visible = false
+[node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("your_army_tray", "enemies_faced_tray", "continue_button", "editor_background", "upgrade_instructions", "upgrade_data", "hp_button", "damage_button", "recruit_instructions", "recruit_data", "recruit_button")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -85,6 +88,13 @@ your_army_tray = NodePath("PlayerArmy/GridContainer")
 enemies_faced_tray = NodePath("EnemyArmy/GridContainer")
 continue_button = NodePath("Button")
 editor_background = NodePath("DebugBackground")
+upgrade_instructions = NodePath("UpgradePane/UpgradeInstructions")
+upgrade_data = NodePath("UpgradePane/UpgradeData")
+hp_button = NodePath("UpgradePane/UpgradeData/VBoxContainer/HPUpgrade")
+damage_button = NodePath("UpgradePane/UpgradeData/VBoxContainer/DamageUpgrade")
+recruit_instructions = NodePath("RecruitPane/RecruitInstructions")
+recruit_data = NodePath("RecruitPane/RecruitData")
+recruit_button = NodePath("RecruitPane/RecruitData/RecruitButton")
 
 [node name="DebugBackground" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
 layout_mode = 1
@@ -221,6 +231,103 @@ offset_right = 364.0
 offset_bottom = 338.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_kvpfn")
 text = "Next Battle"
+
+[node name="UpgradePane" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 148.0
+offset_right = 236.0
+offset_bottom = 208.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dinhu")
+
+[node name="UpgradeData" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/UpgradePane"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UnitSummary" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/UpgradePane/UpgradeData" instance=ExtResource("11_kvpfn")]
+layout_mode = 1
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -36.0
+offset_bottom = -36.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/UpgradePane/UpgradeData"]
+layout_mode = 0
+offset_left = 148.0
+offset_top = 5.5
+offset_right = 188.0
+offset_bottom = 49.5
+
+[node name="HPUpgrade" type="Button" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/UpgradePane/UpgradeData/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "+1 HP"
+
+[node name="DamageUpgrade" type="Button" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/UpgradePane/UpgradeData/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "+1 DMG
+"
+
+[node name="UpgradeInstructions" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/UpgradePane"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 12
+text = "Select a unit to upgrade"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RecruitPane" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 149.0
+offset_right = 600.0
+offset_bottom = 209.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dinhu")
+
+[node name="RecruitData" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/RecruitPane"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UnitSummary" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/RecruitPane/RecruitData" instance=ExtResource("11_kvpfn")]
+layout_mode = 1
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -36.0
+offset_bottom = -36.0
+
+[node name="RecruitButton" type="Button" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/RecruitPane/RecruitData"]
+layout_mode = 0
+offset_left = 148.0
+offset_top = 5.5
+offset_right = 188.0
+offset_bottom = 25.5
+theme_override_font_sizes/font_size = 8
+text = "Recruit"
+
+[node name="RecruitInstructions" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/RecruitPane"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 12
+text = "Select a unit to recruit"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Gameplay" type="Node2D" parent="SubViewportContainer/SubViewport"]
 

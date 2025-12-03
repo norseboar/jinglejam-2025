@@ -9,6 +9,10 @@ class_name Unit
 @export var attack_range := 50.0     # radius to detect enemies
 @export var attack_cooldown := 1.0   # seconds between attacks
 
+# Display info
+@export var display_name: String = "Unit"
+@export var description: String = "A basic unit."
+
 # State
 var is_enemy := false        # true = moves left (enemy), false = moves right (player)
 var state := "idle"          # "idle" | "moving" | "fighting" | "dying"

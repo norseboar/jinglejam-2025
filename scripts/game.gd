@@ -309,6 +309,21 @@ func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
 	unit_placed.emit(army_unit.unit_type)
 
 
+func recruit_enemy(enemy_data: Dictionary) -> void:
+	"""Add an enemy to the player's army."""
+	if army.size() >= 10:
+		push_warning("Cannot recruit: army is full")
+		return
+
+	var new_unit := ArmyUnit.new()
+	new_unit.unit_scene = enemy_data.get("unit_scene")
+	new_unit.unit_type = enemy_data.get("unit_type", "unknown")
+	new_unit.placed = false
+	new_unit.upgrades = enemy_data.get("upgrades", {}).duplicate()
+
+	army.append(new_unit)
+
+
 func _count_living_units(container: Node2D) -> int:
 	var count := 0
 	for child in container.get_children():
