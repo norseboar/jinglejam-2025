@@ -12,7 +12,7 @@
 - [x] Task 2: Create upgrade slot script with click selection
 - [x] Task 3: Create reusable UnitSummary scene
 - [x] Task 4: Add panes to upgrade screen scene (Godot Editor)
-- [ ] Task 5: Add selection and pane state to upgrade_screen.gd
+- [x] Task 5: Add selection and pane state to upgrade_screen.gd
 - [x] Task 6: Implement upgrade functionality
 - [x] Task 7: Implement recruit functionality
 
