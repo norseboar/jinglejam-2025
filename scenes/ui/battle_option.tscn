@@ -1,0 +1,92 @@
+[gd_scene load_steps=4 format=3 uid="uid://it7xpadbortl"]
+
+[ext_resource type="Script" uid="uid://d3nq1er42he7o" path="res://scripts/battle_option.gd" id="1_cuvmm"]
+[ext_resource type="PackedScene" uid="uid://ccty86slv7qqy" path="res://scenes/ui/unit_tray_slot.tscn" id="2_tdirc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cuvmm"]
+bg_color = Color(0.28485027, 0.2848503, 0.28485018, 1)
+
+[node name="BattleOption" type="Control" node_paths=PackedStringArray("army_name_label", "enemy_grid", "selection_highlight")]
+custom_minimum_size = Vector2(200, 160)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1080.0
+offset_bottom = -560.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cuvmm")
+army_name_label = NodePath("Panel/Label")
+enemy_grid = NodePath("Panel/UnitTray")
+selection_highlight = NodePath("Panel/SelectedHighlight")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SelectedHighlight" type="Panel" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_cuvmm")
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -24.5
+offset_top = 16.0
+offset_right = 24.5
+offset_bottom = 39.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 12
+text = "Humans"
+horizontal_alignment = 1
+
+[node name="UnitTray" type="GridContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 61.0
+offset_right = 185.0
+offset_bottom = 129.0
+columns = 5
+
+[node name="UnitSlot" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
+layout_mode = 2
+
+[node name="UnitSlot2" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
+layout_mode = 2
+
+[node name="UnitSlot3" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
+layout_mode = 2
+
+[node name="UnitSlot4" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
+layout_mode = 2
+
+[node name="UnitSlot5" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
+layout_mode = 2
+
+[node name="UnitSlot6" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
+layout_mode = 2
+
+[node name="UnitSlot7" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
+layout_mode = 2
+
+[node name="UnitSlot8" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
+layout_mode = 2
+
+[node name="UnitSlot9" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
+layout_mode = 2
+
+[node name="UnitSlot10" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
+layout_mode = 2

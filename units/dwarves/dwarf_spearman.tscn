@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dhf2ohsvwac2b"]
 
-[ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://scenes/units/unit.tscn" id="1_pw30i"]
+[ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_pw30i"]
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="2_66k5u"]
 [ext_resource type="SpriteFrames" uid="uid://d23wfea1q7erd" path="res://assets/spriteframes/dwarf_spearman.tres" id="3_u18bb"]
 

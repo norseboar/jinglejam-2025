@@ -16,6 +16,7 @@ grow_vertical = 2
 script = ExtResource("1_4wrbh")
 background_texture = ExtResource("2_4wrbh")
 editor_background = NodePath("EditorBackground")
+army_name = "Humans"
 
 [node name="EditorBackground" type="TextureRect" parent="."]
 layout_mode = 0

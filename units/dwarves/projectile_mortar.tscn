@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://thp8cavfgw4e"]
+
+[ext_resource type="Script" uid="uid://6l48pknbh2il" path="res://scripts/projectile.gd" id="1_bfw0b"]
+[ext_resource type="Texture2D" uid="uid://7g1705tq3e27" path="res://assets/sprites/dwarves/mortar_projectile.png" id="2_bfw0b"]
+
+[node name="Projectile" type="Node2D"]
+script = ExtResource("1_bfw0b")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(-1, 1)
+texture = ExtResource("2_bfw0b")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]

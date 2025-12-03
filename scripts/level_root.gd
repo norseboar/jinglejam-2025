@@ -7,6 +7,9 @@ class_name LevelRoot
 ## Editor-only background for placement reference (hidden at runtime)
 @export var editor_background: CanvasItem
 
+## The name of the enemy army for this level (shown in battle select screen)
+@export var army_name: String = "Enemy Army"
+
 func _ready() -> void:
 	hide_editor_background()
 

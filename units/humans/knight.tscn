@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bbp51u1lohgx"]
 
-[ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://scenes/units/unit.tscn" id="1_8k1n4"]
+[ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_8k1n4"]
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_8w6po"]
 
 [node name="Knight" instance=ExtResource("1_8k1n4")]

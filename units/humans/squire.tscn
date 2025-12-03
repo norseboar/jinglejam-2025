@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bklaap88dmjbp"]
 
-[ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://scenes/units/unit.tscn" id="1_de5d7"]
+[ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_de5d7"]
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_e8w7h"]
 [ext_resource type="SpriteFrames" uid="uid://knqbris7i53u" path="res://assets/spriteframes/squire.tres" id="2_e8w7h"]
 

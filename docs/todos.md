@@ -1,2 +1,3 @@
 - [ ] Add upgrade indicators to slots in HUD and upgrade panel
 - [ ] Fix bug where warriors sometimes walk off screen or otherwise don't target
+- [ ] Fix bug where gold can be double-counted for a kill

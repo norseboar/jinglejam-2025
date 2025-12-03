@@ -5,6 +5,7 @@ class_name HUD
 signal start_battle_requested
 signal upgrade_confirmed(victory: bool)
 signal show_upgrade_screen_requested  # Emitted when battle end button is clicked (victory)
+signal battle_select_advance(level_scene: PackedScene)
 
 # Node references (assign in inspector)
 @export var phase_label: Label
@@ -20,6 +21,7 @@ signal show_upgrade_screen_requested  # Emitted when battle end button is clicke
 
 # Upgrade screen reference (assign in inspector)
 @export var upgrade_screen: UpgradeScreen
+@export var battle_select_screen: BattleSelectScreen
 
 # State
 var current_phase: String = ""
@@ -42,6 +44,10 @@ func _ready() -> void:
 	# Connect upgrade screen continue signal
 	if upgrade_screen:
 		upgrade_screen.continue_pressed.connect(_on_upgrade_screen_continue_pressed)
+	
+	# Connect battle select screen signal
+	if battle_select_screen:
+		battle_select_screen.advance_pressed.connect(_on_battle_select_advance_pressed)
 	
 	# Ensure modal is hidden initially
 	if battle_end_modal:
@@ -254,6 +260,24 @@ func hide_upgrade_screen() -> void:
 	
 	# Re-show HUD elements
 	show_hud_elements()
+
+
+func show_battle_select(scenes: Array[PackedScene]) -> void:
+	"""Show the battle select screen with level options."""
+	if battle_select_screen:
+		battle_select_screen.show_battle_select(scenes)
+
+
+func hide_battle_select() -> void:
+	"""Hide the battle select screen."""
+	if battle_select_screen:
+		battle_select_screen.hide_battle_select()
+
+
+func _on_battle_select_advance_pressed(level_scene: PackedScene) -> void:
+	"""Handle advance from battle select screen."""
+	hide_battle_select()
+	battle_select_advance.emit(level_scene)
 
 
 func hide_hud_elements() -> void:

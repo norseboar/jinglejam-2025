@@ -22,8 +22,10 @@ var army: Array = []  # Array of ArmyUnit
 var gold: int = 0
 
 # Level management
-@export var level_scenes: Array[PackedScene] = []
+## Array of LevelPool resources. Each pool contains multiple level scene options for that level.
+@export var level_pools: Array[Resource] = []
 var current_level_index := 0
+var selected_level_scene: PackedScene = null  # The specific scene chosen from the pool
 
 # Upgrade screen
 @export var upgrade_background: Texture2D
@@ -75,6 +77,11 @@ func _init_army() -> void:
 
 func add_gold(amount: int) -> void:
 	"""Add gold and notify listeners."""
+	print("=== GOLD INCREMENT ===")
+	print("Amount: ", amount)
+	print("Gold before: ", gold)
+	print("Gold after: ", gold + amount)
+	print_stack()
 	gold += amount
 	gold_changed.emit(gold)
 
@@ -119,31 +126,52 @@ func _clear_all_units() -> void:
 func _end_battle(victory: bool) -> void:
 	phase = "upgrade"
 
-	# Stop all units
+	# Stop all units (but don't reset dying units - they need to stay "dying" to prevent double gold)
 	for child in player_units.get_children():
-		if child is Unit:
+		if child is Unit and child.state != "dying":
 			child.set_state("idle")
 	for child in enemy_units.get_children():
-		if child is Unit:
+		if child is Unit and child.state != "dying":
 			child.set_state("idle")
 
 	# Capture enemy data for upgrade screen (only if victory and not last level, defeat will restart)
-	if victory and current_level_index < level_scenes.size() - 1:
+	if victory and current_level_index < level_pools.size() - 1:
 		_capture_enemies_faced()
 	
 	# Show battle end modal (which leads to upgrade screen on victory, or restart on defeat/last level)
-	hud.show_battle_end_modal(victory, current_level_index + 1, level_scenes.size())
+	hud.show_battle_end_modal(victory, current_level_index + 1, level_pools.size())
 
 
 func load_level(index: int) -> void:
+	"""Load a level by index, picking the first scene from that level's pool."""
 	# Validate index first
-	if index < 0 or index >= level_scenes.size():
-		push_error("Invalid level index: %d (array size: %d)" % [index, level_scenes.size()])
+	if index < 0 or index >= level_pools.size():
+		push_error("Invalid level index: %d (pool count: %d)" % [index, level_pools.size()])
 		return
 	
-	var level_scene: PackedScene = level_scenes[index]
+	var pool = level_pools[index]
+	if not pool is LevelPool:
+		push_error("Level pool at index %d is not a LevelPool resource!" % index)
+		return
+	
+	var level_pool: LevelPool = pool as LevelPool
+	if level_pool == null or level_pool.level_scenes.size() == 0:
+		push_error("Level pool at index %d is empty or invalid!" % index)
+		return
+	
+	var level_scene: PackedScene = level_pool.level_scenes[0]
 	if level_scene == null:
-		push_error("Level scene at index %d is null! Make sure all entries in level_scenes array are assigned." % index)
+		push_error("First scene in level pool %d is null!" % index)
+		return
+	
+	# Use the new load method
+	await load_level_scene(level_scene)
+
+
+func load_level_scene(level_scene: PackedScene) -> void:
+	"""Load a specific level scene (used when player picks from battle select)."""
+	if level_scene == null:
+		push_error("level_scene is null!")
 		return
 	
 	# Only initialize army on first level or after it was cleared (defeat)
@@ -170,14 +198,13 @@ func load_level(index: int) -> void:
 
 	current_level = level_scene.instantiate() as LevelRoot
 	if current_level == null:
-		push_error("Level root is not a LevelRoot at index %d" % index)
+		push_error("Level scene is not a LevelRoot!")
 		return
 	
 	# Add level to UI layer BEFORE HUD (so it renders behind)
-	# HUD should be the last child to render on top
 	if ui_layer:
 		ui_layer.add_child(current_level)
-		ui_layer.move_child(current_level, 0)  # Move to first position (behind HUD)
+		ui_layer.move_child(current_level, 0)
 	else:
 		push_error("ui_layer not assigned!")
 		return
@@ -197,7 +224,7 @@ func load_level(index: int) -> void:
 
 	# Update HUD
 	phase = "preparation"
-	hud.set_phase(phase, index + 1)
+	hud.set_phase(phase, current_level_index + 1)
 	
 	# Populate tray from army data
 	if army.size() > 0:
@@ -277,6 +304,19 @@ func _capture_enemies_faced() -> void:
 			"unit_scene": enemy_marker.unit_scene,
 			"upgrades": enemy_marker.upgrades.duplicate()
 		})
+
+
+func get_current_pool_size() -> int:
+	"""Get the number of level options in the current level's pool."""
+	if current_level_index < 0 or current_level_index >= level_pools.size():
+		return 0
+	var pool = level_pools[current_level_index]
+	if not pool is LevelPool:
+		return 0
+	var level_pool: LevelPool = pool as LevelPool
+	if level_pool == null:
+		return 0
+	return level_pool.level_scenes.size()
 
 
 func _set_spawn_slots_visible(should_show: bool) -> void:
@@ -437,7 +477,7 @@ func _on_upgrade_confirmed(victory: bool) -> void:
 	
 	if victory:
 		# Advance to next level if not already at the last level
-		if current_level_index < level_scenes.size() - 1:
+		if current_level_index < level_pools.size() - 1:
 			current_level_index += 1
 		else:
 			# Completed all levels - restart at level 1
