@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://b2gg7627166nr"]
+
+[ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://scenes/units/unit.tscn" id="1_ccyet"]
+[ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="2_7n0xh"]
+[ext_resource type="SpriteFrames" uid="uid://kil0yya47sgr" path="res://assets/spriteframes/dwarf_mortarman.tres" id="3_ccyet"]
+
+[node name="Dwarf_mortarman" instance=ExtResource("1_ccyet")]
+script = ExtResource("2_7n0xh")
+max_hp = 5
+current_hp = 5
+damage = 4
+speed = 0.0
+attack_cooldown = 4.0
+display_name = "Dwarf Mortarman"
+description = "Long range with a thunderous impact"
+
+[node name="AnimatedSprite2D" parent="." index="0"]
+sprite_frames = ExtResource("3_ccyet")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="UpgradeMarkers" parent="." index="1"]
+position = Vector2(0, -4)
