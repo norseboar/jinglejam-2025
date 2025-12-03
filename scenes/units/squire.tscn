@@ -7,6 +7,8 @@
 [node name="Squire" instance=ExtResource("1_de5d7")]
 script = ExtResource("1_e8w7h")
 attack_range = 25.0
+display_name = "Squire"
+description = "A lightly-armored soldier"
 
 [node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = ExtResource("2_e8w7h")
