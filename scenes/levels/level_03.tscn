@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://d1jwqtmfj4l01"]
 
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_4wrbh"]
-[ext_resource type="Texture2D" uid="uid://dt0cvswfre046" path="res://assets/backgrounds/temp_battlefield.jpg" id="2_ps4tf"]
+[ext_resource type="Texture2D" uid="uid://bw7jftfbecibg" path="res://assets/backgrounds/selective-focus-shot-tree-log-covered-with-moss.jpg" id="2_4wrbh"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_4wrbh"]
 
 [node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background")]
@@ -14,14 +14,14 @@ offset_bottom = -360.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4wrbh")
-background_texture = ExtResource("2_ps4tf")
+background_texture = ExtResource("2_4wrbh")
 editor_background = NodePath("EditorBackground")
 
 [node name="EditorBackground" type="TextureRect" parent="."]
 layout_mode = 0
 offset_right = 640.0
 offset_bottom = 360.0
-texture = ExtResource("2_ps4tf")
+texture = ExtResource("2_4wrbh")
 expand_mode = 3
 
 [node name="PlayerSpawnSlots" type="Control" parent="."]

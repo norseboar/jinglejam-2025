@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://dux2mgenh42lt"]
 
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_2djvx"]
-[ext_resource type="Texture2D" uid="uid://dt0cvswfre046" path="res://assets/backgrounds/temp_battlefield.jpg" id="2_2djvx"]
+[ext_resource type="Texture2D" uid="uid://bxnr8frb2awil" path="res://assets/backgrounds/autumn-leaves-forest.jpg" id="2_qdh5e"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_qdh5e"]
 [ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_marker.tscn" id="4_qdh5e"]
 [ext_resource type="PackedScene" uid="uid://bbp51u1lohgx" path="res://scenes/units/knight.tscn" id="5_50wog"]
@@ -16,14 +16,14 @@ offset_bottom = -360.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2djvx")
-background_texture = ExtResource("2_2djvx")
+background_texture = ExtResource("2_qdh5e")
 editor_background = NodePath("EditorBackground")
 
 [node name="EditorBackground" type="TextureRect" parent="."]
 layout_mode = 0
 offset_right = 640.0
 offset_bottom = 360.0
-texture = ExtResource("2_2djvx")
+texture = ExtResource("2_qdh5e")
 expand_mode = 3
 
 [node name="PlayerSpawnSlots" type="Control" parent="."]

@@ -6,4 +6,3 @@ class_name EnemyMarker
 
 ## Upgrades for the enemy unit (e.g., { "hp": 2, "damage": 1 })
 @export var upgrades: Dictionary = {}
-
