@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fit3de0gsprh"
-path="res://.godot/imported/ballista_arrow.png-2ced20db141bcf04b42806cb3c2349e0.ctex"
+uid="uid://bhgvr0q1ke1te"
+path="res://.godot/imported/squire.png-0eeaeda5f4feb0044622b42bcf87ef77.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ballista_arrow.png"
-dest_files=["res://.godot/imported/ballista_arrow.png-2ced20db141bcf04b42806cb3c2349e0.ctex"]
+source_file="res://assets/sprites/human/squire.png"
+dest_files=["res://.godot/imported/squire.png-0eeaeda5f4feb0044622b42bcf87ef77.ctex"]
 
 [params]
 

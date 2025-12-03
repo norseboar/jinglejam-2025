@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qenfre20cn3f"
-path="res://.godot/imported/ballista.png-2e1e0da57678b4793e086a0c9a85e1e8.ctex"
+uid="uid://6kwvj8gc6wem"
+path="res://.godot/imported/dwarf_spearman.png-2c234e1c6397b66a44d72f58ef1c0945.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ballista.png"
-dest_files=["res://.godot/imported/ballista.png-2e1e0da57678b4793e086a0c9a85e1e8.ctex"]
+source_file="res://assets/sprites/dwarves/dwarf_spearman.png"
+dest_files=["res://.godot/imported/dwarf_spearman.png-2c234e1c6397b66a44d72f58ef1c0945.ctex"]
 
 [params]
 

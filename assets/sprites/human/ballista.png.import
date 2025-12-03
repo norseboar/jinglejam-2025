@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bduybapepv747"
-path="res://.godot/imported/Knight.png-e45669e7fb4092566a77df702bc61950.ctex"
+uid="uid://qenfre20cn3f"
+path="res://.godot/imported/ballista.png-446a5dc8ab5752c75711242c0640358f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/Knight.png"
-dest_files=["res://.godot/imported/Knight.png-e45669e7fb4092566a77df702bc61950.ctex"]
+source_file="res://assets/sprites/human/ballista.png"
+dest_files=["res://.godot/imported/ballista.png-446a5dc8ab5752c75711242c0640358f.ctex"]
 
 [params]
 

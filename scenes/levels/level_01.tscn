@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bxnr8frb2awil" path="res://assets/backgrounds/autumn-leaves-forest.jpg" id="2_qdh5e"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_qdh5e"]
 [ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_marker.tscn" id="4_qdh5e"]
-[ext_resource type="PackedScene" uid="uid://bbp51u1lohgx" path="res://scenes/units/knight.tscn" id="5_50wog"]
+[ext_resource type="PackedScene" uid="uid://bbp51u1lohgx" path="res://scenes/units/humans/knight.tscn" id="5_50wog"]
 
 [node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background")]
 layout_mode = 3

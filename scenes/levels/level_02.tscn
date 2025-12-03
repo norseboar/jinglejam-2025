@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://clxoa2k34d7wk" path="res://assets/backgrounds/nature-wood-background-dirty-detail.jpg" id="2_yjjx0"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_c5o3r"]
 [ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_marker.tscn" id="4_yjjx0"]
-[ext_resource type="PackedScene" uid="uid://bbp51u1lohgx" path="res://scenes/units/knight.tscn" id="5_a3l5x"]
+[ext_resource type="PackedScene" uid="uid://bbp51u1lohgx" path="res://scenes/units/humans/knight.tscn" id="5_a3l5x"]
 
 [node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background")]
 layout_mode = 3
