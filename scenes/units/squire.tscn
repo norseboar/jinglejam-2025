@@ -9,6 +9,9 @@ script = ExtResource("1_e8w7h")
 attack_range = 25.0
 display_name = "Squire"
 description = "A lightly-armored soldier"
+base_recruit_cost = 5
+upgrade_cost = 3
+gold_reward = 1
 
 [node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = ExtResource("2_e8w7h")

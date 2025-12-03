@@ -5,7 +5,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0mwgc"]
 
-[node name="HUD" type="Control" node_paths=PackedStringArray("phase_label", "tray_panel", "unit_tray", "go_button", "battle_end_modal", "battle_end_label", "battle_end_button")]
+[node name="HUD" type="Control" node_paths=PackedStringArray("phase_label", "tray_panel", "unit_tray", "go_button", "gold_label", "battle_end_modal", "battle_end_label", "battle_end_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,6 +20,7 @@ phase_label = NodePath("Panel/PhaseLabel")
 tray_panel = NodePath("TrayPanel")
 unit_tray = NodePath("TrayPanel/UnitTray")
 go_button = NodePath("TrayPanel/GoButton")
+gold_label = NodePath("TrayPanel/Gold")
 battle_end_modal = NodePath("BattleEndModal")
 battle_end_label = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/BattleEndLabel")
 battle_end_button = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/ConfirmButton")
@@ -103,6 +104,14 @@ offset_top = 31.0
 offset_right = 297.0
 offset_bottom = 62.0
 text = "Fight!"
+
+[node name="Gold" type="Label" parent="TrayPanel"]
+layout_mode = 0
+offset_left = 327.0
+offset_top = 36.0
+offset_right = 367.0
+offset_bottom = 59.0
+text = "Gold: 10"
 
 [node name="BattleEndModal" type="ColorRect" parent="."]
 visible = false

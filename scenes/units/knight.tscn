@@ -12,3 +12,4 @@ attack_range = 25.0
 attack_cooldown = 2.0
 display_name = "Knight"
 description = "A lumbering suit of armor"
+gold_reward = 3

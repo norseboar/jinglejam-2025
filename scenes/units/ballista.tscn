@@ -13,7 +13,8 @@ current_hp = 2
 speed = 50.0
 attack_range = 400.0
 display_name = "Ballista"
-description = "Heavy ranged artillery"
+description = "Ranged artillery"
+gold_reward = 3
 
 [node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = ExtResource("3_tjwou")

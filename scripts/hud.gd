@@ -11,6 +11,7 @@ signal show_upgrade_screen_requested  # Emitted when battle end button is clicke
 @export var tray_panel: Panel
 @export var unit_tray: GridContainer
 @export var go_button: Button
+@export var gold_label: Label
 
 # Battle end modal (shown first, then leads to upgrade screen)
 @export var battle_end_modal: ColorRect
@@ -52,6 +53,13 @@ func _ready() -> void:
 			if child is Control:
 				tray_slots.append(child)
 				child.set_meta("slot_index", tray_slots.size() - 1)
+	
+	# Connect to Game's gold_changed signal
+	var game := get_tree().get_first_node_in_group("game") as Game
+	if game:
+		game.gold_changed.connect(update_gold_display)
+		# Initialize display with current gold
+		update_gold_display(game.gold)
 
 
 func set_phase(phase: String, level: int) -> void:
@@ -288,3 +296,9 @@ func clear_tray_slot(index: int) -> void:
 	slot.set_meta("unit_type", "")
 	if slot.has_method("set_unit_texture"):
 		slot.set_unit_texture(null)
+
+
+func update_gold_display(amount: int) -> void:
+	"""Update the gold label text."""
+	if gold_label:
+		gold_label.text = "Gold: %d" % amount

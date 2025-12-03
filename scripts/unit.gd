@@ -1,6 +1,10 @@
 extends Node2D
 class_name Unit
 
+# Signals
+signal enemy_unit_died(gold_reward: int)  # Emitted by enemies with gold_reward
+signal player_unit_died(army_index: int)  # Emitted by player units with army_index
+
 # Stats
 @export var max_hp := 3
 @export var current_hp := 3
@@ -13,12 +17,18 @@ class_name Unit
 @export var display_name: String = "Unit"
 @export var description: String = "A basic unit."
 
+# Gold system properties
+@export var base_recruit_cost := 10  # Base cost to recruit this unit type
+@export var upgrade_cost := 5  # Cost per upgrade (HP or Damage)
+@export var gold_reward := 5  # Gold given when this unit is killed
+
 # State
 var is_enemy := false        # true = moves left (enemy), false = moves right (player)
 var state := "idle"          # "idle" | "moving" | "fighting" | "dying"
 var target: Node2D = null    # current attack target
 var time_since_attack := 0.0 # timer for attack cooldown
 var is_attacking := false    # true when attack animation is playing
+var army_index := -1         # Index in Game.army array, or -1 if not from army
 
 # Upgrades
 var upgrades: Dictionary = {}  # e.g., { "hp": 2, "damage": 1 }
@@ -234,6 +244,14 @@ func die() -> void:
 	is_attacking = false
 	target = null
 	set_state("dying")
+	
+	# Emit appropriate signal based on unit type
+	if is_enemy:
+		enemy_unit_died.emit(gold_reward)
+	else:
+		# Emit signal for player unit death (to remove from army)
+		if army_index >= 0:
+			player_unit_died.emit(army_index)
 	
 	# Fade out before removing from scene
 	if animated_sprite:

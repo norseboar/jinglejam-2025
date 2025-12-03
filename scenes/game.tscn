@@ -30,6 +30,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_yqjtg")
+starting_gold = 50
 level_scenes = Array[PackedScene]([ExtResource("2_0tnpc"), ExtResource("3_vtaks")])
 upgrade_background = ExtResource("7_gee14")
 starting_unit_scenes = Array[PackedScene]([ExtResource("7_vtaks"), ExtResource("7_vtaks"), ExtResource("4_p57ef"), ExtResource("4_p57ef")])
@@ -75,7 +76,7 @@ offset_right = 0.0
 offset_bottom = 0.0
 upgrade_screen = NodePath("UpgradeScreen")
 
-[node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("your_army_tray", "enemies_faced_tray", "continue_button", "editor_background", "upgrade_instructions", "upgrade_data", "hp_button", "damage_button", "recruit_instructions", "recruit_data", "recruit_button")]
+[node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("your_army_tray", "enemies_faced_tray", "continue_button", "editor_background", "upgrade_instructions", "upgrade_data", "hp_button", "damage_button", "recruit_instructions", "recruit_data", "recruit_button", "gold_label")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -95,6 +96,7 @@ damage_button = NodePath("UpgradePane/UpgradeData/VBoxContainer/DamageUpgrade")
 recruit_instructions = NodePath("RecruitPane/RecruitInstructions")
 recruit_data = NodePath("RecruitPane/RecruitData")
 recruit_button = NodePath("RecruitPane/RecruitData/RecruitButton")
+gold_label = NodePath("GoldLabel")
 
 [node name="DebugBackground" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
 layout_mode = 1
@@ -106,6 +108,14 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("7_gee14")
 expand_mode = 3
+
+[node name="GoldLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+layout_mode = 0
+offset_left = 281.5
+offset_top = 181.0
+offset_right = 344.5
+offset_bottom = 204.0
+text = "Gold: 10"
 
 [node name="PlayerArmy" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
 layout_mode = 0

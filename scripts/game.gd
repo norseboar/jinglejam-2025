@@ -4,6 +4,7 @@ class_name Game
 # Signals
 signal unit_placed(unit_type: String)
 signal army_unit_placed(slot_index: int)
+signal gold_changed(new_amount: int)
 
 # Army tracking
 class ArmyUnit:
@@ -15,6 +16,10 @@ class ArmyUnit:
 # Game state
 var phase := "preparation"  # "preparation" | "battle" | "upgrade"
 var army: Array = []  # Array of ArmyUnit
+
+# Gold system
+@export var starting_gold := 20
+var gold: int = 0
 
 # Level management
 @export var level_scenes: Array[PackedScene] = []
@@ -50,6 +55,11 @@ func _ready() -> void:
 	hud.show_upgrade_screen_requested.connect(_on_show_upgrade_screen_requested)
 	unit_placed.connect(_on_unit_placed)
 	army_unit_placed.connect(_on_army_unit_placed)
+	
+	# Initialize gold
+	gold = starting_gold
+	gold_changed.emit(gold)
+	
 	load_level(current_level_index)
 
 
@@ -61,6 +71,26 @@ func _init_army() -> void:
 		slot.unit_type = scene.resource_path.get_file().get_basename()
 		slot.placed = false
 		army.append(slot)
+
+
+func add_gold(amount: int) -> void:
+	"""Add gold and notify listeners."""
+	gold += amount
+	gold_changed.emit(gold)
+
+
+func spend_gold(amount: int) -> bool:
+	"""Spend gold if available. Returns true if successful, false if insufficient."""
+	if gold < amount:
+		return false
+	gold -= amount
+	gold_changed.emit(gold)
+	return true
+
+
+func can_afford(amount: int) -> bool:
+	"""Check if player has enough gold."""
+	return gold >= amount
 
 
 func _process(_delta: float) -> void:
@@ -119,6 +149,9 @@ func load_level(index: int) -> void:
 	# Only initialize army on first level or after it was cleared (defeat)
 	if army.size() == 0:
 		_init_army()
+		# Reset gold when starting new run
+		gold = starting_gold
+		gold_changed.emit(gold)
 	else:
 		# Reset placed status for new level (units can be placed again)
 		for army_unit in army:
@@ -203,6 +236,9 @@ func _spawn_enemies_from_level() -> void:
 		
 		enemy_units.add_child(enemy)
 		enemy.apply_upgrades()  # Apply after added to tree
+		
+		# Connect death signal to award gold
+		enemy.enemy_unit_died.connect(_on_enemy_unit_died)
 
 
 func _capture_enemies_faced() -> void:
@@ -297,7 +333,11 @@ func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
 	unit.enemy_container = enemy_units
 	unit.global_position = slot.get_slot_center()
 	unit.upgrades = army_unit.upgrades.duplicate()  # Copy upgrades
+	unit.army_index = army_index  # Track which army slot this unit came from
 	unit.apply_upgrades()  # Apply after positioning
+	
+	# Connect player unit death signal
+	unit.player_unit_died.connect(_on_player_unit_died)
 
 	slot.set_occupied(true)
 	
@@ -333,6 +373,31 @@ func _count_living_units(container: Node2D) -> int:
 			if unit.current_hp > 0 and unit.state != "dying":
 				count += 1
 	return count
+
+
+func _on_enemy_unit_died(gold_reward: int) -> void:
+	"""Handle enemy unit death and award gold."""
+	add_gold(gold_reward)
+
+
+func _on_player_unit_died(army_index: int) -> void:
+	"""Handle player unit death and remove from army."""
+	if army_index < 0 or army_index >= army.size():
+		return
+	
+	# Remove from army array
+	army.remove_at(army_index)
+	
+	# Update army indices for remaining units (since array shifted)
+	for child in player_units.get_children():
+		if child is Unit:
+			var unit := child as Unit
+			if unit.army_index > army_index:
+				unit.army_index -= 1
+	
+	# Update HUD tray
+	if hud:
+		hud.set_tray_from_army(army)
 
 
 func _on_start_battle_requested() -> void:
