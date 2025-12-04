@@ -1,0 +1,89 @@
+[gd_scene load_steps=6 format=3 uid="uid://dspj2kekx0lyk"]
+
+[ext_resource type="Texture2D" uid="uid://cv8ss3kp7yyis" path="res://assets/sprites/ui/button_80x40.png" id="2_t7v6v"]
+[ext_resource type="Texture2D" uid="uid://30t8n1juy04" path="res://assets/sprites/ui/9slice_undamaged.png" id="2_vhbaf"]
+[ext_resource type="Texture2D" uid="uid://6i83ew26wnpc" path="res://assets/backgrounds/titlescreen_test2.png" id="3_tt55a"]
+[ext_resource type="Texture2D" uid="uid://b2etbnep4uivq" path="res://assets/sprites/ui/button_80x42.png" id="3_vhbaf"]
+[ext_resource type="Texture2D" uid="uid://blniwgp84tndh" path="res://assets/sprites/ui/button_80x41.png" id="4_v6ms7"]
+
+[node name="titlescreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="bg_test" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+scale = Vector2(1.9961426, 1.9961426)
+texture = ExtResource("3_tt55a")
+expand_mode = 3
+
+[node name="titlescreen name" type="Label" parent="."]
+layout_mode = 0
+offset_left = 550.0
+offset_top = 223.0
+offset_right = 1262.0
+offset_bottom = 293.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 51
+text = "Fucking amazing game name
+(ill prob just make this inline wth the bg)"
+
+[node name="bottom screen shit" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 60.0
+offset_top = 627.0
+offset_right = 100.0
+offset_bottom = 667.0
+
+[node name="Container" type="Container" parent="bottom screen shit"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="NinePatchRect" type="NinePatchRect" parent="bottom screen shit/Container"]
+layout_mode = 2
+texture = ExtResource("2_vhbaf")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="bottom screen shit/Container"]
+layout_mode = 2
+
+[node name="play" type="TextureButton" parent="bottom screen shit/Container/HBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+texture_normal = ExtResource("2_t7v6v")
+texture_pressed = ExtResource("3_vhbaf")
+texture_hover = ExtResource("4_v6ms7")
+
+[node name="settings" type="TextureButton" parent="bottom screen shit/Container/HBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+texture_normal = ExtResource("2_t7v6v")
+texture_pressed = ExtResource("3_vhbaf")
+texture_hover = ExtResource("4_v6ms7")
+
+[node name="attribs" type="TextureButton" parent="bottom screen shit/Container/HBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+texture_normal = ExtResource("2_t7v6v")
+texture_pressed = ExtResource("3_vhbaf")
+texture_hover = ExtResource("4_v6ms7")
+
+[node name="exit" type="TextureButton" parent="bottom screen shit/Container/HBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+texture_normal = ExtResource("2_t7v6v")
+texture_pressed = ExtResource("3_vhbaf")
+texture_hover = ExtResource("4_v6ms7")
+
+[node name="Label2" type="Label" parent="bottom screen shit/Container"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "jinglejam2025
+programmer - norseboar
+art - pontax"
