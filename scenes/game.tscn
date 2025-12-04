@@ -71,6 +71,7 @@ stretch = true
 transparent_bg = true
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
+audio_listener_enable_2d = true
 size = Vector2i(1280, 720)
 size_2d_override = Vector2i(640, 360)
 size_2d_override_stretch = true
@@ -99,6 +100,7 @@ upgrade_screen = NodePath("UpgradeScreen")
 battle_select_screen = NodePath("BattleSelectScreen")
 
 [node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "editor_background", "upgrade_instructions", "upgrade_data", "hp_button", "damage_button", "upgrade_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_label", "gold_label")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

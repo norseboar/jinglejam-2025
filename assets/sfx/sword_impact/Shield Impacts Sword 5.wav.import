@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://did3tg14g38vf"
+path="res://.godot/imported/Shield Impacts Sword 5.wav-81f6672ede90aa270c6722c6b61a2e6a.sample"
+
+[deps]
+
+source_file="res://assets/sfx/sword_impact/Shield Impacts Sword 5.wav"
+dest_files=["res://.godot/imported/Shield Impacts Sword 5.wav-81f6672ede90aa270c6722c6b61a2e6a.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

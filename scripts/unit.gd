@@ -10,7 +10,8 @@ signal player_unit_died(army_index: int)  # Emitted by player units with army_in
 @export var current_hp := 3
 @export var damage := 1
 @export var speed := 100.0           # pixels per second
-@export var attack_range := 50.0     # radius to detect enemies
+@export var attack_range := 50.0     # radius to attack enemies
+@export var detection_range := 2000.0 # radius to detect enemies (very large to cover screen)
 @export var attack_cooldown := 1.0   # seconds between attacks
 
 # Display info
@@ -21,6 +22,15 @@ signal player_unit_died(army_index: int)  # Emitted by player units with army_in
 @export var base_recruit_cost := 10  # Base cost to recruit this unit type
 @export var upgrade_cost := 5  # Cost per upgrade (HP or Damage)
 @export var gold_reward := 5  # Gold given when this unit is killed
+
+# Sound effects
+@export var damage_sounds: Array[AudioStream] = [
+	preload("res://assets/sfx/sword_impact/Shield Impacts Sword.wav"),
+	preload("res://assets/sfx/sword_impact/Shield Impacts Sword 1.wav"),
+	preload("res://assets/sfx/sword_impact/Shield Impacts Sword 2.wav"),
+	preload("res://assets/sfx/sword_impact/Shield Impacts Sword 3.wav"),
+	preload("res://assets/sfx/sword_impact/Shield Impacts Sword 5.wav")
+]  # List of damage sound effects to randomly choose from
 
 # State
 var is_enemy := false        # true = moves left (enemy), false = moves right (player)
@@ -38,6 +48,7 @@ var enemy_container: Node2D = null
 
 # Node references
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
 
 func _ready() -> void:
@@ -82,17 +93,28 @@ func set_state(new_state: String) -> void:
 
 
 func _do_movement(delta: float) -> void:
-	# Determine movement direction based on team
-	var direction := 1.0 if not is_enemy else -1.0  # Player moves right, enemy moves left
-
-	# Flip sprite to face movement direction
-	animated_sprite.flip_h = is_enemy
-
-	# Move horizontally
-	position.x += direction * speed * delta
-
-	# Check for enemies in range
+	# Check for enemies first
 	_check_for_targets()
+	
+	# If we have a target, move towards it
+	if target != null and is_instance_valid(target):
+		var target_pos := target.position
+		var direction_to_target := (target_pos - position).normalized()
+		
+		# Move towards target
+		position += direction_to_target * speed * delta
+		
+		# Flip sprite to face movement direction
+		animated_sprite.flip_h = direction_to_target.x < 0
+	else:
+		# No target - move in default direction based on team
+		var direction := 1.0 if not is_enemy else -1.0  # Player moves right, enemy moves left
+		
+		# Flip sprite to face movement direction
+		animated_sprite.flip_h = is_enemy
+		
+		# Move horizontally
+		position.x += direction * speed * delta
 
 
 func _check_for_targets() -> void:
@@ -114,14 +136,21 @@ func _check_for_targets() -> void:
 			continue  # Skip dead or dying units
 
 		var distance := position.distance_to(enemy.position)
-		if distance < attack_range and distance < closest_distance:
+		
+		# Check if enemy is within detection range
+		if distance < detection_range and distance < closest_distance:
 			closest_enemy = enemy
 			closest_distance = distance
 
 	if closest_enemy != null:
 		target = closest_enemy
-		set_state("fighting")
-		time_since_attack = attack_cooldown  # Attack immediately when entering combat
+		var distance_to_target := position.distance_to(closest_enemy.position)
+		
+		# If we're in attack range, start fighting
+		if distance_to_target <= attack_range:
+			set_state("fighting")
+			time_since_attack = attack_cooldown  # Attack immediately when entering combat
+		# Otherwise, we'll keep moving towards them (state stays "moving")
 
 
 func _do_fighting(delta: float) -> void:
@@ -137,10 +166,10 @@ func _do_fighting(delta: float) -> void:
 		set_state("moving")
 		return
 
-	# Check if target moved out of range
+	# Check if target moved out of attack range
 	var distance := position.distance_to(target.position)
 	if distance > attack_range * 1.2:  # Small buffer to prevent flickering
-		target = null
+		# Keep the target but switch to moving so we can move towards them
 		set_state("moving")
 		return
 
@@ -216,9 +245,14 @@ func _on_attack_animation_finished() -> void:
 
 ## Virtual method - subclasses override this to implement their attack type
 func _apply_attack_damage() -> void:
+	print("[Unit] _apply_attack_damage called")
 	# Default melee behavior - deal damage directly to target
 	if target != null and is_instance_valid(target) and target.has_method("take_damage"):
 		target.take_damage(damage)
+		# Play damage sound when damage is applied
+		_play_damage_sound()
+	else:
+		print("[Unit] No valid target for damage")
 
 
 func take_damage(amount: int) -> void:
@@ -289,6 +323,36 @@ func _safe_play_animation(anim_name: String) -> void:
 	if animated_sprite and animated_sprite.sprite_frames:
 		if animated_sprite.sprite_frames.has_animation(anim_name):
 			animated_sprite.play(anim_name)
+
+
+func _play_damage_sound() -> void:
+	"""Play a random damage sound effect from the damage_sounds array."""
+	print("[Unit] _play_damage_sound called - sounds: %d, audio_player: %s" % [damage_sounds.size(), audio_player])
+	if damage_sounds.is_empty():
+		print("[Unit] No damage sounds configured!")
+		return
+	if audio_player == null:
+		print("[Unit] audio_player is null!")
+		return
+	
+	# Pick a random sound from the array
+	var random_index := randi() % damage_sounds.size()
+	var sound: AudioStream = damage_sounds[random_index]
+	print("[Unit] Playing sound index %d: %s" % [random_index, sound])
+	if sound != null:
+		audio_player.stream = sound
+		audio_player.play()
+		print("[Unit] Sound playback started - volume_db: %s, playing: %s, bus: %s, max_distance: %s, position: %s" % [
+			audio_player.volume_db,
+			audio_player.playing,
+			audio_player.bus,
+			audio_player.max_distance,
+			global_position
+		])
+		# Also check master bus
+		var master_vol = AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Master"))
+		var master_mute = AudioServer.is_bus_mute(AudioServer.get_bus_index("Master"))
+		print("[Unit] Master bus - volume_db: %s, muted: %s" % [master_vol, master_mute])
 
 
 func _update_upgrade_markers() -> void:

@@ -8,10 +8,12 @@
 [node name="Dwarf_mortarman" instance=ExtResource("1_ccyet")]
 script = ExtResource("2_ccyet")
 projectile_scene = ExtResource("3_7n0xh")
+projectile_speed = 200.0
 max_hp = 5
 current_hp = 5
 damage = 4
 speed = 0.0
+attack_range = 990.0
 attack_cooldown = 4.0
 display_name = "Dwarf Mortarman"
 description = "Long range with a thunderous impact"
