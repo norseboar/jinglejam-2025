@@ -1,0 +1,60 @@
+[gd_scene load_steps=6 format=3 uid="uid://b70pbcw3dkq1y"]
+
+[ext_resource type="Texture2D" uid="uid://b31oq7excrdy7" path="res://assets/ui/unit-slot.png" id="1_1lbe2"]
+[ext_resource type="Script" uid="uid://c4vfmh2r3cdo8" path="res://scripts/unit_slot.gd" id="1_7qvqg"]
+[ext_resource type="PackedScene" uid="uid://s7jjret7o6yr" path="res://scenes/ui/drag_preview.tscn" id="2_5hopu"]
+[ext_resource type="Texture2D" uid="uid://brevdaw0koj0g" path="res://assets/ui/unit_slot_highlight.png" id="2_c56av"]
+[ext_resource type="SpriteFrames" uid="uid://d23wfea1q7erd" path="res://assets/spriteframes/dwarf_spearman.tres" id="3_7qvqg"]
+
+[node name="UnitSlot" type="Control" node_paths=PackedStringArray("animated_sprite", "selection_node", "background_node")]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1248.0
+offset_bottom = -688.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7qvqg")
+animated_sprite = NodePath("Panel/AnimatedSprite2D")
+selection_node = NodePath("SelectionIndicator")
+background_node = NodePath("Background")
+show_background = false
+drag_preview_scene = ExtResource("2_5hopu")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_1lbe2")
+
+[node name="Panel" type="Control" parent="."]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Panel"]
+position = Vector2(16, 8)
+sprite_frames = ExtResource("3_7qvqg")
+animation = &"idle"
+
+[node name="SelectionIndicator" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_c56av")

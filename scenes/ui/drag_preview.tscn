@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://s7jjret7o6yr"]
+
+[ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/spriteframes/knight.tres" id="1_bepfd"]
+
+[node name="DragPreview" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -8)
+sprite_frames = ExtResource("1_bepfd")
+animation = &"idle"

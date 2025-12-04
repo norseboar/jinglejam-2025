@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://cu6uv6d63rbjb"]
+
+[ext_resource type="Script" uid="uid://71wu21tg5k05" path="res://scripts/unit_slot_group.gd" id="1_1attc"]
+[ext_resource type="PackedScene" uid="uid://b70pbcw3dkq1y" path="res://scenes/ui/unit_slot.tscn" id="1_mhqbk"]
+
+[node name="UnitSlotGroup" type="GridContainer"]
+columns = 5
+script = ExtResource("1_1attc")
+
+[node name="UnitSlot" parent="." instance=ExtResource("1_mhqbk")]
+layout_mode = 2
+
+[node name="UnitSlot2" parent="." instance=ExtResource("1_mhqbk")]
+layout_mode = 2
+
+[node name="UnitSlot3" parent="." instance=ExtResource("1_mhqbk")]
+layout_mode = 2
+
+[node name="UnitSlot4" parent="." instance=ExtResource("1_mhqbk")]
+layout_mode = 2
+
+[node name="UnitSlot5" parent="." instance=ExtResource("1_mhqbk")]
+layout_mode = 2
+
+[node name="UnitSlot6" parent="." instance=ExtResource("1_mhqbk")]
+layout_mode = 2
+
+[node name="UnitSlot7" parent="." instance=ExtResource("1_mhqbk")]
+layout_mode = 2
+
+[node name="UnitSlot8" parent="." instance=ExtResource("1_mhqbk")]
+layout_mode = 2
+
+[node name="UnitSlot9" parent="." instance=ExtResource("1_mhqbk")]
+layout_mode = 2
+
+[node name="UnitSlot10" parent="." instance=ExtResource("1_mhqbk")]
+layout_mode = 2

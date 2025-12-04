@@ -1,6 +1,8 @@
 extends Control
 class_name SpawnSlot
 
+@export var center_offset: Vector2 = Vector2.ZERO
+
 var is_occupied: bool = false
 var is_highlighted: bool = false
 
@@ -25,7 +27,7 @@ func set_occupied(occupied: bool) -> void:
 
 
 func get_slot_center() -> Vector2:
-	return global_position + size / 2
+	return global_position + size / 2 + center_offset
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
@@ -35,18 +37,32 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	
 	if not data is Dictionary:
 		return false
-	if not data.has("army_index"):
+	
+	# Accept either army_index (old) or army_unit (new UnitSlot)
+	if not data.has("army_index") and not data.has("army_unit"):
 		return false
+	
 	if is_occupied:
 		return false
+	
 	return true
 
 
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
-	if data is Dictionary and data.has("army_index"):
+	if not data is Dictionary:
+		return
+	
+	var army_index: int = -1
+	
+	# Handle new UnitSlot format (has army_unit and army_index)
+	if data.has("army_index"):
+		army_index = data.get("army_index", -1)
+	# Fallback: if only army_unit provided, we'd need to look it up
+	# But UnitSlot always provides army_index, so this shouldn't be needed
+	
+	if army_index >= 0:
 		var game := get_tree().get_first_node_in_group("game") as Game
 		if game:
-			var army_index: int = data.get("army_index", -1)
 			game.place_unit_from_army(army_index, self)
 
 

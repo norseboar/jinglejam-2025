@@ -6,13 +6,6 @@ signal unit_placed(unit_type: String)
 signal army_unit_placed(slot_index: int)
 signal gold_changed(new_amount: int)
 
-# Army tracking
-class ArmyUnit:
-	var unit_type: String = ""
-	var unit_scene: PackedScene = null
-	var placed: bool = false
-	var upgrades: Dictionary = {}  # NEW
-
 # Game state
 var phase := "preparation"  # "preparation" | "battle" | "upgrade"
 var army: Array = []  # Array of ArmyUnit

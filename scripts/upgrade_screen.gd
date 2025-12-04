@@ -5,8 +5,8 @@ class_name UpgradeScreen
 signal continue_pressed(victory: bool)
 
 # Node references (assign in inspector)
-@export var your_army_tray: GridContainer
-@export var enemies_faced_tray: GridContainer
+@export var army_slot_group: UnitSlotGroup
+@export var enemy_slot_group: UnitSlotGroup
 @export var continue_button: Button
 
 # Editor-only background for placement reference (hidden at runtime)
@@ -33,8 +33,8 @@ var selected_enemy_index: int = -1
 var recruited_indices: Array[int] = []
 
 # References to slot arrays (populated when screen shows)
-var army_slots: Array[UpgradeSlot] = []
-var enemy_slots: Array[UpgradeSlot] = []
+var army_slots: Array[UnitSlot] = []
+var enemy_slots: Array[UnitSlot] = []
 
 # Reference to game's army (set when screen shows)
 var army_ref: Array = []
@@ -88,8 +88,8 @@ func show_upgrade_screen(victory: bool, player_army: Array, enemies_faced: Array
 	recruited_indices.clear()
 
 	# Populate trays and connect slots
-	_populate_army_tray(your_army_tray, player_army)
-	_populate_enemy_tray(enemies_faced_tray, enemies_faced)
+	_populate_army_tray(army_slot_group, player_army)
+	_populate_enemy_tray(enemy_slot_group, enemies_faced)
 
 	# Reset panes to instruction state
 	_refresh_upgrade_pane()
@@ -109,115 +109,87 @@ func hide_upgrade_screen() -> void:
 	visible = false
 
 
-func _populate_army_tray(tray: GridContainer, units: Array) -> void:
-	"""Populate the army tray with unit textures and connect click signals."""
-	if not tray:
+func _populate_army_tray(slot_group: UnitSlotGroup, units: Array) -> void:
+	"""Populate the army tray with units using UnitSlotGroup."""
+	if not slot_group:
 		return
 
-	army_slots.clear()
+	# Get slots from UnitSlotGroup
+	army_slots = slot_group.slots.duplicate()
 
-	var slot_index := 0
-	for child in tray.get_children():
-		if child is UpgradeSlot:
-			var slot := child as UpgradeSlot
-			army_slots.append(slot)
-			slot.slot_index = slot_index
+	# Populate slots with ArmyUnit objects and connect signals
+	for slot_index in range(army_slots.size()):
+		var slot := army_slots[slot_index]
+		
+		# Disconnect any existing connections
+		if slot.unit_slot_clicked.is_connected(_on_army_slot_clicked):
+			slot.unit_slot_clicked.disconnect(_on_army_slot_clicked)
 
-			# Disconnect any existing connections
-			if slot.slot_clicked.is_connected(_on_army_slot_clicked):
-				slot.slot_clicked.disconnect(_on_army_slot_clicked)
+		# Connect click signal
+		slot.unit_slot_clicked.connect(_on_army_slot_clicked)
 
-			# Connect click signal
-			slot.slot_clicked.connect(_on_army_slot_clicked)
+		# Set unit from ArmyUnit object
+		if slot_index < units.size():
+			var army_unit = units[slot_index]
+			slot.set_unit(army_unit)
+		else:
+			slot.set_unit(null)
 
-			# Set texture
-			if slot_index < units.size():
-				var unit_data = units[slot_index]
-				var scene: PackedScene = unit_data.unit_scene
-				if scene:
-					var texture := _get_texture_from_scene(scene)
-					slot.set_unit_texture(texture)
-				else:
-					slot.set_unit_texture(null)
-			else:
-				slot.set_unit_texture(null)
-
-			# Reset selection state
-			slot.set_selected(false)
-
-			slot_index += 1
+		# Reset selection state
+		slot.set_selected(false)
 
 
-func _populate_enemy_tray(tray: GridContainer, units: Array) -> void:
-	"""Populate the enemy tray with unit textures and connect click signals."""
-	if not tray:
+func _populate_enemy_tray(slot_group: UnitSlotGroup, units: Array) -> void:
+	"""Populate the enemy tray with units using UnitSlotGroup."""
+	if not slot_group:
 		return
 
-	enemy_slots.clear()
+	# Get slots from UnitSlotGroup
+	enemy_slots = slot_group.slots.duplicate()
 
-	var slot_index := 0
-	for child in tray.get_children():
-		if child is UpgradeSlot:
-			var slot := child as UpgradeSlot
-			enemy_slots.append(slot)
-			slot.slot_index = slot_index
+	# Populate slots with ArmyUnit objects created from enemy data and connect signals
+	for slot_index in range(enemy_slots.size()):
+		var slot := enemy_slots[slot_index]
+		
+		# Disconnect any existing connections
+		if slot.unit_slot_clicked.is_connected(_on_enemy_slot_clicked):
+			slot.unit_slot_clicked.disconnect(_on_enemy_slot_clicked)
 
-			# Disconnect any existing connections
-			if slot.slot_clicked.is_connected(_on_enemy_slot_clicked):
-				slot.slot_clicked.disconnect(_on_enemy_slot_clicked)
+		# Connect click signal
+		slot.unit_slot_clicked.connect(_on_enemy_slot_clicked)
 
-			# Connect click signal
-			slot.slot_clicked.connect(_on_enemy_slot_clicked)
-
-			# Set texture
-			if slot_index < units.size():
-				var unit_data = units[slot_index]
-				var scene: PackedScene = null
-				if unit_data is Dictionary:
-					scene = unit_data.get("unit_scene")
-				else:
-					scene = unit_data.unit_scene
-
-				if scene:
-					var texture := _get_texture_from_scene(scene)
-					slot.set_unit_texture(texture)
-				else:
-					slot.set_unit_texture(null)
+		# Create ArmyUnit from enemy data and set on slot
+		if slot_index < units.size():
+			var unit_data = units[slot_index]
+			# Convert enemy data to ArmyUnit using the static method
+			var army_unit: ArmyUnit = null
+			if unit_data is Dictionary:
+				army_unit = ArmyUnit.create_from_enemy(unit_data)
 			else:
-				slot.set_unit_texture(null)
+				# If it's already an ArmyUnit-like object, create from it
+				army_unit = ArmyUnit.new()
+				army_unit.unit_scene = unit_data.unit_scene
+				army_unit.unit_type = unit_data.get("unit_type", "") if unit_data.has("unit_type") else ""
+				army_unit.upgrades = unit_data.get("upgrades", {}).duplicate() if unit_data.has("upgrades") else {}
+				army_unit.placed = false
+			
+			slot.set_unit(army_unit)
+		else:
+			slot.set_unit(null)
 
-			# Reset selection state
-			slot.set_selected(false)
-
-			slot_index += 1
-
-
-func _get_texture_from_scene(scene: PackedScene) -> Texture2D:
-	"""Extract the first frame texture from a unit scene's AnimatedSprite2D."""
-	var instance := scene.instantiate()
-	var texture: Texture2D = null
-	
-	# Look for AnimatedSprite2D
-	var sprite: AnimatedSprite2D = null
-	if instance is AnimatedSprite2D:
-		sprite = instance
-	elif instance.has_node("AnimatedSprite2D"):
-		sprite = instance.get_node("AnimatedSprite2D")
-	
-	if sprite and sprite.sprite_frames:
-		# Get the first frame of the "idle" animation, or default animation
-		var anim_name := "idle" if sprite.sprite_frames.has_animation("idle") else "default"
-		if sprite.sprite_frames.has_animation(anim_name) and sprite.sprite_frames.get_frame_count(anim_name) > 0:
-			texture = sprite.sprite_frames.get_frame_texture(anim_name, 0)
-	
-	instance.queue_free()
-	return texture
+		# Reset selection state
+		slot.set_selected(false)
 
 
-func _on_army_slot_clicked(slot_index: int) -> void:
+
+
+func _on_army_slot_clicked(clicked_slot: UnitSlot) -> void:
 	"""Handle click on an army slot."""
+	# Get slot index from the slot
+	var slot_index := clicked_slot.slot_index
+	
 	# Check if slot has a unit
-	if slot_index >= army_ref.size():
+	if slot_index < 0 or slot_index >= army_ref.size():
 		return
 
 	# Deselect previous
@@ -232,10 +204,13 @@ func _on_army_slot_clicked(slot_index: int) -> void:
 	_refresh_upgrade_pane()
 
 
-func _on_enemy_slot_clicked(slot_index: int) -> void:
+func _on_enemy_slot_clicked(clicked_slot: UnitSlot) -> void:
 	"""Handle click on an enemy slot."""
+	# Get slot index from the slot
+	var slot_index := clicked_slot.slot_index
+	
 	# Check if slot has an enemy
-	if slot_index >= enemies_faced_ref.size():
+	if slot_index < 0 or slot_index >= enemies_faced_ref.size():
 		return
 
 	# Deselect previous

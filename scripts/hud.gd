@@ -9,7 +9,7 @@ signal battle_select_advance(level_scene: PackedScene)
 
 # Node references (assign in inspector)
 @export var phase_label: Label
-@export var tray_panel: Panel
+@export var tray_panel: Control
 @export var unit_tray: GridContainer
 @export var go_button: Button
 @export var gold_label: Label
@@ -53,12 +53,13 @@ func _ready() -> void:
 	if battle_end_modal:
 		battle_end_modal.visible = false
 	
-	# Get all tray slot Controls and set them up for dragging
+	# Get all tray slot Controls and set them up
 	if unit_tray:
 		for child in unit_tray.get_children():
-			if child is Control:
+			if child is UnitSlot:
 				tray_slots.append(child)
-				child.set_meta("slot_index", tray_slots.size() - 1)
+				var slot := child as UnitSlot
+				slot.slot_index = tray_slots.size() - 1
 	
 	# Connect to Game's gold_changed signal
 	var game := get_tree().get_first_node_in_group("game") as Game
@@ -138,7 +139,7 @@ func set_tray_from_army(army_units: Array) -> void:
 		return
 
 	for i in range(tray_slots.size()):
-		var slot := tray_slots[i] as Control
+		var slot = tray_slots[i]
 		if not slot:
 			continue
 
@@ -146,22 +147,38 @@ func set_tray_from_army(army_units: Array) -> void:
 			var army_unit = army_units[i]
 			if army_unit.placed:
 				# Slot already used, clear it
-				slot.set_meta("unit_type", "")
-				slot.set_meta("slot_index", i)
-				if slot.has_method("set_unit_texture"):
-					slot.set_unit_texture(null)
+				if slot is UnitSlot:
+					var unit_slot := slot as UnitSlot
+					unit_slot.set_unit(null)
+				else:
+					# Fallback for old slots
+					slot.set_meta("unit_type", "")
+					slot.set_meta("slot_index", i)
+					if slot.has_method("set_unit_texture"):
+						slot.set_unit_texture(null)
 			else:
 				# Slot available, populate it
-				slot.set_meta("unit_type", army_unit.unit_type)
-				slot.set_meta("slot_index", i)
-
-				var texture: Texture2D = _get_texture_from_scene(army_unit.unit_scene)
-				if slot.has_method("set_unit_texture"):
-					slot.set_unit_texture(texture)
+				if slot is UnitSlot:
+					var unit_slot := slot as UnitSlot
+					unit_slot.slot_index = i
+					unit_slot.set_unit(army_unit)
+				else:
+					# Fallback for old slots
+					slot.set_meta("unit_type", army_unit.unit_type)
+					slot.set_meta("slot_index", i)
+					var texture: Texture2D = _get_texture_from_scene(army_unit.unit_scene)
+					if slot.has_method("set_unit_texture"):
+						slot.set_unit_texture(texture)
 		else:
-			slot.set_meta("unit_type", "")
-			if slot.has_method("set_unit_texture"):
-				slot.set_unit_texture(null)
+			# Empty slot
+			if slot is UnitSlot:
+				var unit_slot := slot as UnitSlot
+				unit_slot.set_unit(null)
+			else:
+				# Fallback for old slots
+				slot.set_meta("unit_type", "")
+				if slot.has_method("set_unit_texture"):
+					slot.set_unit_texture(null)
 
 
 func _get_texture_from_scene(scene: PackedScene) -> Texture2D:
@@ -327,9 +344,14 @@ func clear_tray_slot(index: int) -> void:
 		return
 
 	var slot := tray_slots[index]
-	slot.set_meta("unit_type", "")
-	if slot.has_method("set_unit_texture"):
-		slot.set_unit_texture(null)
+	if slot is UnitSlot:
+		var unit_slot := slot as UnitSlot
+		unit_slot.set_unit(null)
+	else:
+		# Fallback for old slots
+		slot.set_meta("unit_type", "")
+		if slot.has_method("set_unit_texture"):
+			slot.set_unit_texture(null)
 
 
 func update_gold_display(amount: int) -> void:

@@ -1,0 +1,10 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://cyl07x3ea7dvx"]
+
+[ext_resource type="StyleBox" uid="uid://cycotn11yam3y" path="res://themes/modal_stylebox.tres" id="1_e5m4k"]
+[ext_resource type="FontFile" uid="uid://ciw8foppj4sia" path="res://assets/fonts/Silver.ttf" id="2_e5m4k"]
+
+[resource]
+default_font = ExtResource("2_e5m4k")
+default_font_size = 18
+Panel/styles/panel = ExtResource("1_e5m4k")
+PanelContainer/styles/panel = ExtResource("1_e5m4k")

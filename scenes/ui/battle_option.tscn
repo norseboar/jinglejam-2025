@@ -1,107 +1,63 @@
 [gd_scene load_steps=4 format=3 uid="uid://it7xpadbortl"]
 
 [ext_resource type="Script" uid="uid://d3nq1er42he7o" path="res://scripts/battle_option.gd" id="1_cuvmm"]
-[ext_resource type="PackedScene" uid="uid://ccty86slv7qqy" path="res://scenes/ui/unit_tray_slot.tscn" id="2_tdirc"]
+[ext_resource type="PackedScene" uid="uid://cu6uv6d63rbjb" path="res://scenes/ui/unit_slot_group.tscn" id="2_tdirc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cuvmm"]
 bg_color = Color(0.28485027, 0.2848503, 0.28485018, 1)
 
-[node name="BattleOption" type="Control" node_paths=PackedStringArray("army_name_label", "enemy_grid", "selection_highlight", "click_area")]
+[node name="BattleOption" type="Control" node_paths=PackedStringArray("army_name_label", "enemy_slot_group", "selection_highlight", "click_area")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -1080.0
-offset_bottom = -560.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1_cuvmm")
-army_name_label = NodePath("Panel/Label")
-enemy_grid = NodePath("Panel/UnitTray")
+army_name_label = NodePath("Panel/MarginContainer/VBoxContainer/Label")
+enemy_slot_group = NodePath("Panel/MarginContainer/VBoxContainer/UnitSlotGroup")
 selection_highlight = NodePath("Panel/SelectedHighlight")
 click_area = NodePath("Panel/ClickArea")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -80.0
-offset_right = 100.0
-offset_bottom = 80.0
+offset_left = -91.0
+offset_top = -45.5
+offset_right = 91.0
+offset_bottom = 45.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
 [node name="SelectedHighlight" type="Panel" parent="Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cuvmm")
 
-[node name="Label" type="Label" parent="Panel"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -24.5
-offset_top = 16.0
-offset_right = 24.5
-offset_bottom = 39.0
-grow_horizontal = 2
-theme_override_font_sizes/font_size = 12
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
 text = "Humans"
 horizontal_alignment = 1
 
-[node name="UnitTray" type="GridContainer" parent="Panel"]
-layout_mode = 0
-offset_left = 9.0
-offset_top = 61.0
-offset_right = 185.0
-offset_bottom = 129.0
-columns = 5
-
-[node name="UnitSlot" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
+[node name="UnitSlotGroup" parent="Panel/MarginContainer/VBoxContainer" instance=ExtResource("2_tdirc")]
 layout_mode = 2
-
-[node name="UnitSlot2" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
-layout_mode = 2
-
-[node name="UnitSlot3" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
-layout_mode = 2
-
-[node name="UnitSlot4" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
-layout_mode = 2
-
-[node name="UnitSlot5" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
-layout_mode = 2
-
-[node name="UnitSlot6" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
-layout_mode = 2
-
-[node name="UnitSlot7" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
-layout_mode = 2
-
-[node name="UnitSlot8" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
-layout_mode = 2
-
-[node name="UnitSlot9" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
-layout_mode = 2
-
-[node name="UnitSlot10" parent="Panel/UnitTray" instance=ExtResource("2_tdirc")]
-layout_mode = 2
+selection_mode = 0
 
 [node name="ClickArea" type="Control" parent="Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
