@@ -1,8 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://c0d47vd87vlmt"]
+[gd_scene load_steps=8 format=3 uid="uid://c0d47vd87vlmt"]
 
 [ext_resource type="PackedScene" uid="uid://ccty86slv7qqy" path="res://scenes/ui/unit_tray_slot.tscn" id="1_0mwgc"]
 [ext_resource type="Script" uid="uid://b4vx32mrylism" path="res://scripts/hud.gd" id="1_hqnrr"]
 [ext_resource type="Texture2D" uid="uid://cuyaqmy0d44ys" path="res://assets/sprites/ui/bottom_panel.png" id="2_bo48s"]
+[ext_resource type="Texture2D" uid="uid://o52prcn311li" path="res://assets/sprites/ui/button_54x28.png" id="4_oj5la"]
+[ext_resource type="Texture2D" uid="uid://uqid8xo3wv80" path="res://assets/sprites/ui/button_54x30.png" id="5_gss2c"]
+[ext_resource type="Texture2D" uid="uid://o2xmcjwjs5x2" path="res://assets/sprites/ui/button_54x29.png" id="6_h022r"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0mwgc"]
 
@@ -20,7 +23,7 @@ script = ExtResource("1_hqnrr")
 phase_label = NodePath("Panel/PhaseLabel")
 tray_panel = NodePath("TrayPanel")
 unit_tray = NodePath("TrayPanel/UnitTray")
-go_button = NodePath("TrayPanel/GoButton")
+go_button = NodePath("")
 gold_label = NodePath("TrayPanel/Gold")
 battle_end_modal = NodePath("BattleEndModal")
 battle_end_label = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/BattleEndLabel")
@@ -105,13 +108,15 @@ layout_mode = 2
 [node name="UnitSlot10" parent="TrayPanel/UnitTray" instance=ExtResource("1_0mwgc")]
 layout_mode = 2
 
-[node name="GoButton" type="Button" parent="TrayPanel"]
+[node name="GoButton" type="TextureButton" parent="TrayPanel"]
 layout_mode = 0
 offset_left = 262.0
 offset_top = 31.0
 offset_right = 313.0
 offset_bottom = 62.0
-text = "Fight!"
+texture_normal = ExtResource("4_oj5la")
+texture_pressed = ExtResource("5_gss2c")
+texture_hover = ExtResource("6_h022r")
 
 [node name="Gold" type="Label" parent="TrayPanel"]
 layout_mode = 0
