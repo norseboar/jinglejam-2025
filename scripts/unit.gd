@@ -223,13 +223,10 @@ func _apply_attack_damage() -> void:
 
 func take_damage(amount: int) -> void:
 	# Ignore damage if already dead/dying
-	print("take_damage called: amount=", amount, " state=", state, " hp=", current_hp)
 	if state == "dying" or current_hp <= 0:
-		print("take_damage: Already dead/dying, returning early")
 		return
 	
 	current_hp -= amount
-	print("take_damage: HP after damage: ", current_hp)
 
 	# Visual feedback: flash the sprite red
 	if animated_sprite:
@@ -238,10 +235,7 @@ func take_damage(amount: int) -> void:
 		get_tree().create_timer(0.1).timeout.connect(_reset_color)
 
 	if current_hp <= 0:
-		print("take_damage: HP <= 0, calling die()")
 		die()
-	else:
-		print("take_damage: HP > 0, not calling die()")
 
 
 func _reset_color() -> void:
@@ -251,26 +245,16 @@ func _reset_color() -> void:
 
 func die() -> void:
 	# Prevent multiple calls to die()
-	print("=== DIE CALLED ===")
-	print("Unit: ", self)
-	print("State before check: ", state)
-	print("HP: ", current_hp)
-	print_stack()
-	
 	if state == "dying":
-		print("Already dying, returning early")
 		return
 	
-	print("Setting state to dying...")
 	# Stop all movement and combat
 	is_attacking = false
 	target = null
 	set_state("dying")
-	print("State after set_state: ", state)
 	
 	# Emit appropriate signal based on unit type
 	if is_enemy:
-		print("Emitting enemy_unit_died signal with reward: ", gold_reward)
 		enemy_unit_died.emit(gold_reward)
 	else:
 		# Emit signal for player unit death (to remove from army)

@@ -11,13 +11,13 @@ signal battle_select_advance(level_scene: PackedScene)
 @export var phase_label: Label
 @export var tray_panel: Control
 @export var unit_tray: GridContainer
-@export var go_button: Button
+@export var go_button: BaseButton
 @export var gold_label: Label
 
 # Battle end modal (shown first, then leads to upgrade screen)
 @export var battle_end_modal: ColorRect
 @export var battle_end_label: Label
-@export var battle_end_button: Button
+@export var battle_end_button: BaseButton
 
 # Upgrade screen reference (assign in inspector)
 @export var upgrade_screen: UpgradeScreen
@@ -216,13 +216,16 @@ func show_battle_end_modal(victory: bool, level: int, total_levels: int) -> void
 		if is_last_level:
 			# Last level completed - show victory message and restart option
 			battle_end_label.text = "Victory! You've completed all levels!"
-			battle_end_button.text = "Restart"
+			if battle_end_button is Button:
+				battle_end_button.text = "Restart"
 		else:
 			battle_end_label.text = "Victory!"
-			battle_end_button.text = "Upgrade Army"
+			if battle_end_button is Button:
+				battle_end_button.text = "Upgrade Army"
 	else:
 		battle_end_label.text = "Defeat!"
-		battle_end_button.text = "Restart"
+		if battle_end_button is Button:
+			battle_end_button.text = "Restart"
 	
 	# Show the modal
 	battle_end_modal.visible = true

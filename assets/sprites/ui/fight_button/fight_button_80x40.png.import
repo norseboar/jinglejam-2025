@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cthdmaxtlbvn3"
-path="res://.godot/imported/basic-modal.png-70fda2463aa156bf393174be1f7f63c2.ctex"
+uid="uid://bh1bkpyf8w1mk"
+path="res://.godot/imported/fight_button_80x40.png-a0c95507439009746a2ec2596c3c73bd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/basic-modal.png"
-dest_files=["res://.godot/imported/basic-modal.png-70fda2463aa156bf393174be1f7f63c2.ctex"]
+source_file="res://assets/sprites/ui/fight_button/fight_button_80x40.png"
+dest_files=["res://.godot/imported/fight_button_80x40.png-a0c95507439009746a2ec2596c3c73bd.ctex"]
 
 [params]
 

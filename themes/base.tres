@@ -6,5 +6,7 @@
 [resource]
 default_font = ExtResource("2_e5m4k")
 default_font_size = 18
+Label/colors/font_color = Color(0.42352942, 0.11372549, 0.105882354, 1)
+Label/font_sizes/font_size = 18
 Panel/styles/panel = ExtResource("1_e5m4k")
 PanelContainer/styles/panel = ExtResource("1_e5m4k")

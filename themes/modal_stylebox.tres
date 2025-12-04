@@ -1,14 +1,10 @@
 [gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://cycotn11yam3y"]
 
-[ext_resource type="Texture2D" uid="uid://cthdmaxtlbvn3" path="res://assets/ui/basic-modal.png" id="1_mnumd"]
+[ext_resource type="Texture2D" uid="uid://cey2dr8mrhwvq" path="res://assets/sprites/ui/9slice_damaged.png" id="1_mnumd"]
 
 [resource]
 texture = ExtResource("1_mnumd")
-texture_margin_left = 3.0
-texture_margin_top = 3.0
-texture_margin_right = 3.0
-texture_margin_bottom = 3.0
-expand_margin_left = 3.0
-expand_margin_top = 3.0
-expand_margin_right = 3.0
-expand_margin_bottom = 3.0
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0

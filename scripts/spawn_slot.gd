@@ -2,28 +2,34 @@ extends Control
 class_name SpawnSlot
 
 @export var center_offset: Vector2 = Vector2.ZERO
+@export var visual: AnimatedSprite2D  ## Assign the AnimatedSprite2D in the editor
+@export var idle_color: Color = Color(1, 1, 1, 0.5)  ## Color when not hovered
+@export var hovered_color: Color = Color(0, 1, 0, 1)  ## Color when hovered with a unit
 
 var is_occupied: bool = false
 var is_highlighted: bool = false
-
-@onready var visual: Control = $Visual  # ColorRect or TextureRect child
 
 
 func _ready() -> void:
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
+	if visual:
+		visual.play("pulse")
+		visual.modulate = idle_color
 
 
 func set_highlighted(active: bool) -> void:
 	is_highlighted = active
 	if visual:
-		visual.modulate = Color(0, 1, 0, 0.5) if active else Color(1, 1, 1, 0.3)
+		visual.modulate = hovered_color if active else idle_color
 
 
 func set_occupied(occupied: bool) -> void:
 	is_occupied = occupied
 	if visual:
-		visual.modulate = Color(0.5, 0.5, 0.5, 0.3) if occupied else Color(1, 1, 1, 0.3)
+		visual.visible = not occupied
+		if not occupied:
+			visual.modulate = idle_color
 
 
 func get_slot_center() -> Vector2:
@@ -67,9 +73,19 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 
 
 func _on_mouse_entered() -> void:
-	if not is_occupied:
+	if not is_occupied and _is_dragging_unit():
 		set_highlighted(true)
 
 
 func _on_mouse_exited() -> void:
-	set_highlighted(false)
+	if is_highlighted:
+		set_highlighted(false)
+
+
+func _is_dragging_unit() -> bool:
+	if not get_viewport().gui_is_dragging():
+		return false
+	var drag_data = get_viewport().gui_get_drag_data()
+	if not drag_data is Dictionary:
+		return false
+	return drag_data.has("army_index") or drag_data.has("army_unit")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=24 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="1_ca42v"]
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -11,20 +11,17 @@
 [ext_resource type="Script" uid="uid://bwkdnef87rpc7" path="res://scripts/upgrade_screen.gd" id="7_0tnpc"]
 [ext_resource type="Texture2D" uid="uid://cv4fsh4q3oll" path="res://assets/backgrounds/reward_bg.jpg" id="7_gee14"]
 [ext_resource type="PackedScene" uid="uid://bbev3r4fqct55" path="res://units/humans/ballista.tscn" id="7_vtaks"]
-[ext_resource type="Texture2D" uid="uid://csxttbukwfau0" path="res://assets/ui/background-frame.png" id="9_ir15t"]
+[ext_resource type="Texture2D" uid="uid://csxttbukwfau0" path="res://assets/sprites/ui/background-frame.png" id="9_ir15t"]
 [ext_resource type="PackedScene" uid="uid://qu7tcqixa2mi" path="res://scenes/ui/unit_summary.tscn" id="11_kvpfn"]
+[ext_resource type="Texture2D" uid="uid://c6eydxw58l61v" path="res://assets/sprites/ui/next_button/next_button_80x40.png" id="13_264po"]
 [ext_resource type="PackedScene" uid="uid://cu6uv6d63rbjb" path="res://scenes/ui/unit_slot_group.tscn" id="13_ca42v"]
 [ext_resource type="Script" uid="uid://bcb4symh42ybk" path="res://scripts/battle_select_screen.gd" id="13_kvuet"]
+[ext_resource type="Texture2D" uid="uid://boqvm3pbcc2x6" path="res://assets/sprites/ui/next_button/next_button_pressed.png" id="14_1kice"]
 [ext_resource type="PackedScene" uid="uid://it7xpadbortl" path="res://scenes/ui/battle_option.tscn" id="14_trtic"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vtaks"]
-bg_color = Color(0.23874435, 0.23874438, 0.23874423, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvpfn"]
-bg_color = Color(0.2051174, 0.20511746, 0.20511732, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dinhu"]
-bg_color = Color(0.17402825, 0.17402828, 0.17402813, 1)
+[ext_resource type="Texture2D" uid="uid://2rhn2jh2rt6r" path="res://assets/sprites/ui/next_button/next_button_highlight.png" id="15_5newe"]
+[ext_resource type="Texture2D" uid="uid://domaspt406cjf" path="res://assets/sprites/ui/buy_button/buy_button.png" id="18_37s47"]
+[ext_resource type="Texture2D" uid="uid://belfmhbyw1w1s" path="res://assets/sprites/ui/buy_button/buy_button_pressed.png" id="19_bt5mj"]
+[ext_resource type="Texture2D" uid="uid://cadwb1i3siefs" path="res://assets/sprites/ui/buy_button/buy_button_highlight.png" id="20_e1j6l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trtic"]
 bg_color = Color(0.099985994, 0.09998601, 0.099985965, 1)
@@ -82,6 +79,7 @@ render_target_update_mode = 4
 [node name="UI" type="CanvasLayer" parent="SubViewportContainer/SubViewport"]
 
 [node name="NinePatchRect" type="NinePatchRect" parent="SubViewportContainer/SubViewport/UI"]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -100,8 +98,7 @@ offset_bottom = 0.0
 upgrade_screen = NodePath("UpgradeScreen")
 battle_select_screen = NodePath("BattleSelectScreen")
 
-[node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "editor_background", "upgrade_instructions", "upgrade_data", "hp_button", "damage_button", "recruit_instructions", "recruit_data", "recruit_button", "gold_label")]
-visible = false
+[node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "editor_background", "upgrade_instructions", "upgrade_data", "hp_button", "damage_button", "upgrade_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_label", "gold_label")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -110,18 +107,20 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("7_0tnpc")
-army_slot_group = NodePath("PlayerArmy/UnitSlotGroup")
-enemy_slot_group = NodePath("EnemyArmy/UnitSlotGroup")
-continue_button = NodePath("Button")
+army_slot_group = NodePath("Control/PlayerArmy/MarginContainer/VBoxContainer/PlayerGroup")
+enemy_slot_group = NodePath("Control/EnemyArmy/MarginContainer/VBoxContainer/EnemyGroup")
+continue_button = NodePath("CenterPanel/VBoxContainer/Button")
 editor_background = NodePath("DebugBackground")
-upgrade_instructions = NodePath("UpgradePane/UpgradeInstructions")
-upgrade_data = NodePath("UpgradePane/UpgradeData")
-hp_button = NodePath("UpgradePane/UpgradeData/VBoxContainer/HPUpgrade")
-damage_button = NodePath("UpgradePane/UpgradeData/VBoxContainer/DamageUpgrade")
-recruit_instructions = NodePath("RecruitPane/RecruitInstructions")
-recruit_data = NodePath("RecruitPane/RecruitData")
-recruit_button = NodePath("RecruitPane/RecruitData/RecruitButton")
-gold_label = NodePath("GoldLabel")
+upgrade_instructions = NodePath("Control/UpgradePane/MarginContainer/UpgradeInstructions")
+upgrade_data = NodePath("Control/UpgradePane/MarginContainer/UpgradeData")
+hp_button = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/VBoxContainer/HPUpgrade")
+damage_button = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/VBoxContainer2/DMGUpgrade")
+upgrade_label = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/UpgradePriceLabel")
+recruit_instructions = NodePath("Control/RecruitPane/MarginContainer/RecruitInstructions")
+recruit_data = NodePath("Control/RecruitPane/MarginContainer/RecruitData")
+recruit_button = NodePath("Control/RecruitPane/MarginContainer/RecruitData/VBoxContainer2/RecruitButton")
+recruit_label = NodePath("Control/RecruitPane/MarginContainer/RecruitData/VBoxContainer2/RecruitPriceLabel")
+gold_label = NodePath("CenterPanel/VBoxContainer/GoldLabel")
 
 [node name="DebugBackground" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
 layout_mode = 1
@@ -134,179 +133,256 @@ mouse_filter = 2
 texture = ExtResource("7_gee14")
 expand_mode = 3
 
-[node name="GoldLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+anchors_preset = 0
+offset_left = -7.25
+offset_top = -161.0
+offset_right = 32.75
+offset_bottom = -121.0
+
+[node name="PlayerArmy" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control"]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 7
 anchor_left = 0.5
-anchor_top = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -44.0
-offset_top = -8.5
-offset_right = 30.0
-offset_bottom = 30.5
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 180.0
+offset_right = 212.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/PlayerArmy"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_top = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/PlayerArmy/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/PlayerArmy/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Upgrade your army"
+horizontal_alignment = 1
+
+[node name="PlayerGroup" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/PlayerArmy/MarginContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="UpgradePane" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 347.0
+offset_right = 232.0
+offset_bottom = 497.0
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="UpgradeInstructions" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer"]
+visible = false
+layout_mode = 2
+text = "Select a unit to upgrade"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UpgradeData" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer"]
+layout_mode = 2
+
+[node name="UnitSummary" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData" instance=ExtResource("11_kvpfn")]
+layout_mode = 1
+offset_left = 4.0
+offset_top = -0.5
+offset_right = -36.0
+offset_bottom = -24.5
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -21.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="UpgradePriceLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2"]
+layout_mode = 2
+text = "Upgrade: 5 Gold"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "+1 HP"
+
+[node name="HPUpgrade" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("18_37s47")
+texture_pressed = ExtResource("19_bt5mj")
+texture_hover = ExtResource("20_e1j6l")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "+1 DMG"
+
+[node name="DMGUpgrade" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+texture_normal = ExtResource("18_37s47")
+texture_pressed = ExtResource("19_bt5mj")
+texture_hover = ExtResource("20_e1j6l")
+
+[node name="EnemyArmy" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 380.0
+offset_top = 180.0
+offset_right = 580.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/EnemyArmy"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/EnemyArmy/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/EnemyArmy/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Recruit their army"
+horizontal_alignment = 1
+
+[node name="EnemyGroup" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/EnemyArmy/MarginContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="RecruitPane" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control"]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 347.0
+offset_right = 600.0
+offset_bottom = 497.0
+
+[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="RecruitInstructions" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer"]
+layout_mode = 2
+text = "Select a unit to recruit"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RecruitData" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer"]
+layout_mode = 2
+
+[node name="UnitSummary" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData" instance=ExtResource("11_kvpfn")]
+layout_mode = 1
+offset_left = 4.0
+offset_top = -0.5
+offset_right = -36.0
+offset_bottom = -24.5
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -21.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="RecruitPriceLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData/VBoxContainer2"]
+layout_mode = 2
+text = "Recruit: 5 Gold"
+horizontal_alignment = 1
+
+[node name="RecruitButton" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("18_37s47")
+texture_pressed = ExtResource("19_bt5mj")
+texture_hover = ExtResource("20_e1j6l")
+
+[node name="CenterPanel" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -134.0
+offset_right = 48.0
+offset_bottom = -19.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/CenterPanel"]
+layout_mode = 2
+
+[node name="GoldLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/CenterPanel/VBoxContainer"]
+layout_mode = 2
 theme_override_font_sizes/font_size = 34
 text = "Gold: 10"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PlayerArmy" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
-layout_mode = 0
-offset_left = 33.75
-offset_top = 212.75
-offset_right = 233.75
-offset_bottom = 332.75
-theme_override_styles/panel = SubResource("StyleBoxFlat_vtaks")
-
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -88.0
-offset_right = 88.0
-offset_bottom = 23.0
-grow_horizontal = 2
-text = "Upgrade your army"
-horizontal_alignment = 1
-
-[node name="UnitSlotGroup" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/PlayerArmy" instance=ExtResource("13_ca42v")]
-layout_mode = 0
-offset_left = 10.75
-offset_top = 33.75
-offset_right = 186.75
-offset_bottom = 101.75
-
-[node name="EnemyArmy" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
-layout_mode = 0
-offset_left = 399.25
-offset_top = 215.75
-offset_right = 599.25
-offset_bottom = 335.75
-theme_override_styles/panel = SubResource("StyleBoxFlat_vtaks")
-
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -88.0
-offset_right = 88.0
-offset_bottom = 23.0
-grow_horizontal = 2
-text = "Recruit their army"
-horizontal_alignment = 1
-
-[node name="UnitSlotGroup" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/EnemyArmy" instance=ExtResource("13_ca42v")]
-layout_mode = 0
-offset_left = 11.25
-offset_top = 37.75
-offset_right = 187.25
-offset_bottom = 105.75
-
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
-layout_mode = 0
-offset_left = 268.0
-offset_top = 307.0
-offset_right = 364.0
-offset_bottom = 338.0
-theme_override_styles/normal = SubResource("StyleBoxFlat_kvpfn")
-text = "Next Battle"
-
-[node name="UpgradePane" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
-layout_mode = 0
-offset_left = 34.0
-offset_top = 113.0
-offset_right = 234.0
-offset_bottom = 203.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_dinhu")
-
-[node name="UpgradeData" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/UpgradePane"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="UnitSummary" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/UpgradePane/UpgradeData" instance=ExtResource("11_kvpfn")]
-layout_mode = 1
-offset_left = 4.0
-offset_top = 4.0
-offset_right = -36.0
-offset_bottom = -36.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/UpgradePane/UpgradeData"]
-layout_mode = 0
-offset_left = 155.5
-offset_top = 5.5
-offset_right = 196.5
-offset_bottom = 67.5
-
-[node name="HPUpgrade" type="Button" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/UpgradePane/UpgradeData/VBoxContainer"]
+[node name="Button" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/CenterPanel/VBoxContainer"]
 layout_mode = 2
-text = "+1 HP"
-
-[node name="DamageUpgrade" type="Button" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/UpgradePane/UpgradeData/VBoxContainer"]
-layout_mode = 2
-text = "+1 DMG
-"
-
-[node name="UpgradeInstructions" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/UpgradePane"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Select a unit to upgrade"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RecruitPane" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
-layout_mode = 0
-offset_left = 400.5
-offset_top = 116.0
-offset_right = 600.5
-offset_bottom = 206.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_dinhu")
-
-[node name="RecruitData" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/RecruitPane"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="UnitSummary" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/RecruitPane/RecruitData" instance=ExtResource("11_kvpfn")]
-layout_mode = 1
-offset_left = 4.0
-offset_top = 4.0
-offset_right = -36.0
-offset_bottom = -36.0
-
-[node name="RecruitButton" type="Button" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/RecruitPane/RecruitData"]
-layout_mode = 0
-offset_left = 148.0
-offset_top = 35.0
-offset_right = 196.0
-offset_bottom = 64.0
-text = "Recruit"
-
-[node name="RecruitInstructions" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/RecruitPane"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 18
-text = "Select a unit to recruit"
-horizontal_alignment = 1
-vertical_alignment = 1
+texture_normal = ExtResource("13_264po")
+texture_pressed = ExtResource("14_1kice")
+texture_hover = ExtResource("15_5newe")
 
 [node name="BattleSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("options_container", "advance_button")]
 visible = false

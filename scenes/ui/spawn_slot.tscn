@@ -3,16 +3,20 @@
 [ext_resource type="Script" uid="uid://c4lx1b3l3si7b" path="res://scripts/spawn_slot.gd" id="1_bxigs"]
 [ext_resource type="SpriteFrames" uid="uid://cfpsqi3lgl0fo" path="res://assets/sprites/ui/selection_indicator.tres" id="2_pjkox"]
 
-[node name="SpawnSlot" type="Control" groups=["spawn_slots"]]
+[node name="SpawnSlot" type="Control" node_paths=PackedStringArray("visual") groups=["spawn_slots"]]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 32.0
 offset_bottom = 32.0
 script = ExtResource("1_bxigs")
 center_offset = Vector2(0, -8)
+visual = NodePath("Sprite")
+idle_color = Color(0.54509807, 0.69411767, 0.8235294, 1)
+hovered_color = Color(1, 1, 1, 1)
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(16, 16)
 sprite_frames = ExtResource("2_pjkox")
-animation = &"idle"
-autoplay = "idle"
-frame_progress = 0.79478055
+animation = &"pulse"
+autoplay = "pulse"
+frame_progress = 0.31604922

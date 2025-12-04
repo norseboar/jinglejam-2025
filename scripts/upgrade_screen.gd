@@ -7,7 +7,7 @@ signal continue_pressed(victory: bool)
 # Node references (assign in inspector)
 @export var army_slot_group: UnitSlotGroup
 @export var enemy_slot_group: UnitSlotGroup
-@export var continue_button: Button
+@export var continue_button: BaseButton
 
 # Editor-only background for placement reference (hidden at runtime)
 @export var editor_background: CanvasItem
@@ -15,13 +15,15 @@ signal continue_pressed(victory: bool)
 # Upgrade pane references
 @export var upgrade_instructions: Node
 @export var upgrade_data: Node
-@export var hp_button: Button
-@export var damage_button: Button
+@export var hp_button: BaseButton
+@export var damage_button: BaseButton
+@export var upgrade_label: Label
 
 # Recruit pane references
 @export var recruit_instructions: Node
 @export var recruit_data: Node
-@export var recruit_button: Button
+@export var recruit_button: BaseButton
+@export var recruit_label: Label
 @export var gold_label: Label
 
 # State
@@ -259,14 +261,16 @@ func _refresh_upgrade_pane() -> void:
 	if unit_summary:
 		unit_summary.show_unit_from_scene(army_unit.unit_scene, army_unit.upgrades)
 
+	# Update upgrade label
+	if upgrade_label:
+		upgrade_label.text = "Upgrade: %d Gold" % upgrade_cost
+
 	# Disable buttons if maxed or can't afford
 	var maxed := total_upgrades >= 3
 	if hp_button:
 		hp_button.disabled = maxed or not can_afford_upgrade
-		hp_button.text = "+1 HP (%dgp)" % upgrade_cost
 	if damage_button:
 		damage_button.disabled = maxed or not can_afford_upgrade
-		damage_button.text = "+1 DMG (%dgp)" % upgrade_cost
 
 
 func _refresh_recruit_pane() -> void:
@@ -279,7 +283,6 @@ func _refresh_recruit_pane() -> void:
 			recruit_data.visible = false
 		if recruit_button:
 			recruit_button.disabled = true
-			recruit_button.text = "Recruit"
 		return
 
 	# Has selection - hide instructions, show data
@@ -305,25 +308,27 @@ func _refresh_recruit_pane() -> void:
 	if unit_summary:
 		unit_summary.show_unit_from_scene(enemy_scene, enemy_upgrades)
 
+	# Calculate recruit cost: base_recruit_cost + (upgrade_cost * total_upgrades)
+	var base_cost := _get_unit_base_recruit_cost(enemy_scene)
+	var upgrade_cost := _get_unit_upgrade_cost(enemy_scene)
+	var total_upgrades := _get_total_upgrades(enemy_upgrades)
+	var recruit_cost := base_cost + (upgrade_cost * total_upgrades)
+	
+	# Update recruit label
+	if recruit_label:
+		recruit_label.text = "Recruit: %d Gold" % recruit_cost
+
 	# Check if already recruited
 	if selected_enemy_index in recruited_indices:
 		if recruit_button:
 			recruit_button.disabled = true
-			recruit_button.text = "Recruited"
 		return
 
 	# Check army size
 	if army_ref.size() >= 10:
 		if recruit_button:
 			recruit_button.disabled = true
-			recruit_button.text = "Recruited"
 		return
-
-	# Calculate recruit cost: base_recruit_cost + (upgrade_cost * total_upgrades)
-	var base_cost := _get_unit_base_recruit_cost(enemy_scene)
-	var upgrade_cost := _get_unit_upgrade_cost(enemy_scene)
-	var total_upgrades := _get_total_upgrades(enemy_upgrades)
-	var recruit_cost := base_cost + (upgrade_cost * total_upgrades)
 	
 	# Check if can afford
 	var game := _get_game()
@@ -332,7 +337,6 @@ func _refresh_recruit_pane() -> void:
 	# Update button
 	if recruit_button:
 		recruit_button.disabled = not can_afford
-		recruit_button.text = "Recruit (%dgp)" % recruit_cost
 
 
 func _get_total_upgrades(upgrades: Dictionary) -> int:

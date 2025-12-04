@@ -23,7 +23,6 @@ window/size/viewport_height=720
 [gui]
 
 theme/custom="uid://cyl07x3ea7dvx"
-theme/custom_font="uid://cyl07x3ea7dvx"
 
 [importer_defaults]
 

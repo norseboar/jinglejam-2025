@@ -71,11 +71,6 @@ func _init_army() -> void:
 
 func add_gold(amount: int) -> void:
 	"""Add gold and notify listeners."""
-	print("=== GOLD INCREMENT ===")
-	print("Amount: ", amount)
-	print("Gold before: ", gold)
-	print("Gold after: ", gold + amount)
-	print_stack()
 	gold += amount
 	gold_changed.emit(gold)
 

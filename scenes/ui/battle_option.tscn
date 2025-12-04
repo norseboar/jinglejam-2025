@@ -3,8 +3,13 @@
 [ext_resource type="Script" uid="uid://d3nq1er42he7o" path="res://scripts/battle_option.gd" id="1_cuvmm"]
 [ext_resource type="PackedScene" uid="uid://cu6uv6d63rbjb" path="res://scenes/ui/unit_slot_group.tscn" id="2_tdirc"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cuvmm"]
-bg_color = Color(0.28485027, 0.2848503, 0.28485018, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tdirc"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.42352942, 0.11372549, 0.105882354, 1)
 
 [node name="BattleOption" type="Control" node_paths=PackedStringArray("army_name_label", "enemy_slot_group", "selection_highlight", "click_area")]
 layout_mode = 3
@@ -37,7 +42,7 @@ mouse_filter = 2
 
 [node name="SelectedHighlight" type="Panel" parent="Panel"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_cuvmm")
+theme_override_styles/panel = SubResource("StyleBoxFlat_tdirc")
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel"]
 layout_mode = 2

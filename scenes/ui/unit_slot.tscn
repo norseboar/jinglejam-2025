@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://b70pbcw3dkq1y"]
 
-[ext_resource type="Texture2D" uid="uid://b31oq7excrdy7" path="res://assets/ui/unit-slot.png" id="1_1lbe2"]
+[ext_resource type="Texture2D" uid="uid://b31oq7excrdy7" path="res://assets/sprites/ui/unit-slot.png" id="1_1lbe2"]
 [ext_resource type="Script" uid="uid://c4vfmh2r3cdo8" path="res://scripts/unit_slot.gd" id="1_7qvqg"]
 [ext_resource type="PackedScene" uid="uid://s7jjret7o6yr" path="res://scenes/ui/drag_preview.tscn" id="2_5hopu"]
-[ext_resource type="Texture2D" uid="uid://brevdaw0koj0g" path="res://assets/ui/unit_slot_highlight.png" id="2_c56av"]
+[ext_resource type="Texture2D" uid="uid://brevdaw0koj0g" path="res://assets/sprites/ui/unit_slot_highlight.png" id="2_c56av"]
 [ext_resource type="SpriteFrames" uid="uid://d23wfea1q7erd" path="res://assets/spriteframes/dwarf_spearman.tres" id="3_7qvqg"]
 
 [node name="UnitSlot" type="Control" node_paths=PackedStringArray("animated_sprite", "selection_node", "background_node")]
@@ -24,6 +24,7 @@ show_background = false
 drag_preview_scene = ExtResource("2_5hopu")
 
 [node name="Background" type="TextureRect" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

@@ -76,7 +76,7 @@ func show_unit_from_scene(unit_scene: PackedScene, upgrades: Dictionary = {}) ->
 		for count in upgrades.values():
 			total_upgrades += count as int
 		if upgrade_fraction_label:
-			upgrade_fraction_label.text = "%d/3" % total_upgrades
+			upgrade_fraction_label.text = "%d/3 upgrades" % total_upgrades
 	else:
 		# Fallback if not a Unit
 		if unit_name_label:
@@ -114,6 +114,6 @@ func update_stats(upgrades: Dictionary) -> void:
 		for count in upgrades.values():
 			total_upgrades += count as int
 		if upgrade_fraction_label:
-			upgrade_fraction_label.text = "%d/3" % total_upgrades
+			upgrade_fraction_label.text = "%d/3 upgrades" % total_upgrades
 
 	instance.queue_free()

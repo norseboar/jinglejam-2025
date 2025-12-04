@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://csxttbukwfau0"
-path="res://.godot/imported/background-frame.png-95d70d79a46513d3ce965048c9a48310.ctex"
+uid="uid://domaspt406cjf"
+path="res://.godot/imported/buy_button.png-493cd4e5f86e83182b734d6e0e5c2789.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/background-frame.png"
-dest_files=["res://.godot/imported/background-frame.png-95d70d79a46513d3ce965048c9a48310.ctex"]
+source_file="res://assets/sprites/ui/buy_button/buy_button.png"
+dest_files=["res://.godot/imported/buy_button.png-493cd4e5f86e83182b734d6e0e5c2789.ctex"]
 
 [params]
 
