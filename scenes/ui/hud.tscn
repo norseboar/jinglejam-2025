@@ -1,4 +1,5 @@
-[gd_scene load_steps=7 format=3 uid="uid://c0d47vd87vlmt"]
+
+[gd_scene load_steps=8 format=3 uid="uid://c0d47vd87vlmt"]
 
 [ext_resource type="Script" uid="uid://b4vx32mrylism" path="res://scripts/hud.gd" id="1_hqnrr"]
 [ext_resource type="Texture2D" uid="uid://cuyaqmy0d44ys" path="res://assets/sprites/ui/bottom_panel.png" id="2_bo48s"]
@@ -17,6 +18,10 @@ expand_margin_right = 8.0
 expand_margin_bottom = 4.0
 modulate_color = Color(1, 1, 1, 0.7529412)
 
+[ext_resource type="Texture2D" uid="uid://o52prcn311li" path="res://assets/sprites/ui/button_54x28.png" id="4_oj5la"]
+[ext_resource type="Texture2D" uid="uid://uqid8xo3wv80" path="res://assets/sprites/ui/button_54x30.png" id="5_gss2c"]
+[ext_resource type="Texture2D" uid="uid://o2xmcjwjs5x2" path="res://assets/sprites/ui/button_54x29.png" id="6_h022r"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0mwgc"]
 
 [node name="HUD" type="Control" node_paths=PackedStringArray("phase_label", "tray_panel", "unit_tray", "battle_end_modal", "battle_end_label", "battle_end_button")]
@@ -33,6 +38,7 @@ script = ExtResource("1_hqnrr")
 phase_label = NodePath("PanelContainer/PhaseLabel")
 tray_panel = NodePath("")
 unit_tray = NodePath("TrayPanel/Control/UnitSlotGroup")
+
 battle_end_modal = NodePath("BattleEndModal")
 battle_end_label = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/BattleEndLabel")
 battle_end_button = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/ConfirmButton")
@@ -90,13 +96,15 @@ offset_right = 640.0
 offset_bottom = 90.0
 columns = 5
 
-[node name="GoButton" type="Button" parent="TrayPanel/Control"]
+[node name="GoButton" type="TextureButton" parent="TrayPanel"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 34.0
-offset_right = 347.0
-offset_bottom = 63.0
-text = "Fight!"
+offset_left = 262.0
+offset_top = 31.0
+offset_right = 313.0
+offset_bottom = 62.0
+texture_normal = ExtResource("4_oj5la")
+texture_pressed = ExtResource("5_gss2c")
+texture_hover = ExtResource("6_h022r")
 
 [node name="Gold" type="Label" parent="TrayPanel/Control"]
 layout_mode = 0
