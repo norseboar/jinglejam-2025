@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3 uid="uid://ccty86slv7qqy"]
+
+[ext_resource type="Script" uid="uid://by886t0l5ollr" path="res://scripts/tray_slot_drag.gd" id="1_7gadb"]
+
+[node name="UnitTraySlot" type="Control" node_paths=PackedStringArray("texture_rect")]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
+script = ExtResource("1_7gadb")
+texture_rect = NodePath("TextureRect")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.5019608)
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
