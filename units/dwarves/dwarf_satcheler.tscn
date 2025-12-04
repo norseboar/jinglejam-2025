@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://dhrjnricjo8lf"]
+
+[ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_t1dey"]
+[ext_resource type="Script" uid="uid://c36sx2wogsgew" path="res://scripts/archer.gd" id="2_rhl77"]
+[ext_resource type="PackedScene" uid="uid://thp8cavfgw4e" path="res://units/dwarves/projectile_mortar.tscn" id="3_fnv0c"]
+[ext_resource type="SpriteFrames" uid="uid://d1sgs5255jqyd" path="res://assets/spriteframes/dwarf_satcheler.tres" id="4_t1dey"]
+
+[node name="Dwarf_mortarman" instance=ExtResource("1_t1dey")]
+script = ExtResource("2_rhl77")
+projectile_scene = ExtResource("3_fnv0c")
+max_hp = 4
+current_hp = 4
+damage = 7
+speed = 1.0
+attack_range = 25.0
+attack_cooldown = 3.0
+display_name = "Dwarf Satcheler"
+description = "Shortrange frontline that back a big punch"
+
+[node name="AnimatedSprite2D" parent="." index="0"]
+sprite_frames = ExtResource("4_t1dey")
+animation = &"death"
+autoplay = "idle"
+frame = 6
+frame_progress = 1.0
+
+[node name="UpgradeMarkers" parent="." index="1"]
+position = Vector2(0, -4)
