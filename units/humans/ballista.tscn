@@ -8,10 +8,13 @@
 [node name="Ballista" instance=ExtResource("1_2rwqy")]
 script = ExtResource("1_tjwou")
 projectile_scene = ExtResource("2_kb8w8")
-max_hp = 2
-current_hp = 2
+projectile_speed = 400.0
+max_hp = 20
+damage = 10
 speed = 50.0
 attack_range = 400.0
+priority = 2
+targets_high_priority = true
 display_name = "Ballista"
 description = "Ranged artillery"
 gold_reward = 3

@@ -484,6 +484,17 @@ func _on_recruit_button_pressed() -> void:
 	# Mark as recruited
 	recruited_indices.append(selected_enemy_index)
 
+	# Refresh army tray to show the newly recruited unit
+	_populate_army_tray(army_slot_group, army_ref)
+
+	# Hide the recruited enemy from the enemy tray
+	if selected_enemy_index >= 0 and selected_enemy_index < enemy_slots.size():
+		enemy_slots[selected_enemy_index].set_unit(null)
+		enemy_slots[selected_enemy_index].set_selected(false)
+
+	# Clear enemy selection
+	selected_enemy_index = -1
+
 	# Refresh pane immediately (updates button states and text)
 	_refresh_recruit_pane()
 

@@ -115,8 +115,8 @@ continue_button = NodePath("CenterPanel/VBoxContainer/Button")
 editor_background = NodePath("DebugBackground")
 upgrade_instructions = NodePath("Control/UpgradePane/MarginContainer/UpgradeInstructions")
 upgrade_data = NodePath("Control/UpgradePane/MarginContainer/UpgradeData")
-hp_button = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/VBoxContainer/HPUpgrade")
-damage_button = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/VBoxContainer2/DMGUpgrade")
+hp_button = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup/HPUpgrade")
+damage_button = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup2/DMGUpgrade")
 upgrade_label = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/UpgradePriceLabel")
 recruit_instructions = NodePath("Control/RecruitPane/MarginContainer/RecruitInstructions")
 recruit_data = NodePath("Control/RecruitPane/MarginContainer/RecruitData")
@@ -213,6 +213,18 @@ offset_top = -0.5
 offset_right = -36.0
 offset_bottom = -24.5
 
+[node name="Divider" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -62.0
+offset_bottom = -61.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.42352942, 0.11372549, 0.105882354, 1)
+
 [node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData"]
 layout_mode = 1
 anchors_preset = 12
@@ -230,34 +242,34 @@ horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 12
 alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
+[node name="UpgradeGroup" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup"]
 layout_mode = 2
 text = "+1 HP"
 
-[node name="HPUpgrade" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/VBoxContainer"]
+[node name="HPUpgrade" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup"]
 layout_mode = 2
 texture_normal = ExtResource("18_37s47")
 texture_pressed = ExtResource("19_bt5mj")
 texture_hover = ExtResource("20_e1j6l")
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
+[node name="UpgradeGroup2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/VBoxContainer2"]
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup2"]
 layout_mode = 2
 text = "+1 DMG"
 
-[node name="DMGUpgrade" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/VBoxContainer2"]
+[node name="DMGUpgrade" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup2"]
 layout_mode = 2
 texture_normal = ExtResource("18_37s47")
 texture_pressed = ExtResource("19_bt5mj")
@@ -332,6 +344,18 @@ offset_left = 4.0
 offset_top = -0.5
 offset_right = -36.0
 offset_bottom = -24.5
+
+[node name="Divider" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -62.0
+offset_bottom = -61.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.42352942, 0.11372549, 0.105882354, 1)
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData"]
 layout_mode = 1

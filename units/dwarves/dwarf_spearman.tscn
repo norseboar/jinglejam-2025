@@ -7,12 +7,12 @@
 [node name="Dwarf_spearman" instance=ExtResource("1_pw30i")]
 script = ExtResource("2_66k5u")
 max_hp = 7
-current_hp = 7
 speed = 15.0
 attack_range = 20.0
 attack_cooldown = 2.5
+armor_piercing = true
 display_name = "Dwarf Spearman"
-description = "Sturdy frontline warrior"
+description = "Uses armor-piercing spear"
 
 [node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = ExtResource("3_u18bb")

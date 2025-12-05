@@ -6,9 +6,11 @@
 
 [node name="Squire" instance=ExtResource("1_de5d7")]
 script = ExtResource("1_e8w7h")
+max_hp = 30
+damage = 10
 attack_range = 20.0
 display_name = "Squire"
-description = "A lightly-armored soldier"
+description = "Lightly-armored soldier"
 base_recruit_cost = 5
 upgrade_cost = 3
 gold_reward = 1

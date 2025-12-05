@@ -46,5 +46,5 @@ func _apply_attack_damage() -> void:
 	var direction := (target.global_position - global_position).normalized()
 	
 	# Setup projectile
-	projectile.setup(direction, enemy_container, damage)
+	projectile.setup(direction, enemy_container, damage, armor_piercing)
 	projectile.speed = projectile_speed

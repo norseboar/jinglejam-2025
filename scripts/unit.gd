@@ -7,12 +7,15 @@ signal player_unit_died(army_index: int)  # Emitted by player units with army_in
 
 # Stats
 @export var max_hp := 3
-@export var current_hp := 3
 @export var damage := 1
 @export var speed := 100.0           # pixels per second
 @export var attack_range := 50.0     # radius to attack enemies
 @export var detection_range := 2000.0 # radius to detect enemies (very large to cover screen)
 @export var attack_cooldown := 1.0   # seconds between attacks
+@export var priority := 1            # Priority for targeting (higher = more important)
+@export var armor := 0               # Damage reduction (subtracted from incoming damage)
+@export var armor_piercing := false  # If true, attacks ignore enemy armor
+@export var targets_high_priority := false  # If true, only targets highest priority enemies
 
 # Display info
 @export var display_name: String = "Unit"
@@ -33,6 +36,7 @@ signal player_unit_died(army_index: int)  # Emitted by player units with army_in
 ]  # List of damage sound effects to randomly choose from
 
 # State
+var current_hp := 3
 var is_enemy := false        # true = moves left (enemy), false = moves right (player)
 var state := "idle"          # "idle" | "moving" | "fighting" | "dying"
 var target: Node2D = null    # current attack target
@@ -124,23 +128,72 @@ func _check_for_targets() -> void:
 	var closest_enemy: Node2D = null
 	var closest_distance := INF
 
-	for enemy in enemy_container.get_children():
-		if not is_instance_valid(enemy):
-			continue
-		# Only consider Unit nodes as valid targets
-		if not enemy is Unit:
-			continue
+	if targets_high_priority:
+		# Priority-based targeting: find highest priority, then closest of those
+		var highest_priority := -INF
+		var high_priority_enemies: Array[Unit] = []
 		
-		var unit_enemy := enemy as Unit
-		if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
-			continue  # Skip dead or dying units
+		# First pass: find highest priority
+		for enemy in enemy_container.get_children():
+			if not is_instance_valid(enemy):
+				continue
+			if not enemy is Unit:
+				continue
+			
+			var unit_enemy := enemy as Unit
+			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+				continue
+			
+			var distance := position.distance_to(enemy.position)
+			if distance >= detection_range:
+				continue
+			
+			if unit_enemy.priority > highest_priority:
+				highest_priority = unit_enemy.priority
+		
+		# Second pass: collect all enemies with highest priority
+		for enemy in enemy_container.get_children():
+			if not is_instance_valid(enemy):
+				continue
+			if not enemy is Unit:
+				continue
+			
+			var unit_enemy := enemy as Unit
+			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+				continue
+			
+			var distance := position.distance_to(enemy.position)
+			if distance >= detection_range:
+				continue
+			
+			if unit_enemy.priority == highest_priority:
+				high_priority_enemies.append(unit_enemy)
+		
+		# Third pass: find closest among high priority enemies
+		for unit_enemy in high_priority_enemies:
+			var distance := position.distance_to(unit_enemy.position)
+			if distance < closest_distance:
+				closest_enemy = unit_enemy
+				closest_distance = distance
+	else:
+		# Normal targeting: just find closest enemy
+		for enemy in enemy_container.get_children():
+			if not is_instance_valid(enemy):
+				continue
+			# Only consider Unit nodes as valid targets
+			if not enemy is Unit:
+				continue
+			
+			var unit_enemy := enemy as Unit
+			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+				continue  # Skip dead or dying units
 
-		var distance := position.distance_to(enemy.position)
-		
-		# Check if enemy is within detection range
-		if distance < detection_range and distance < closest_distance:
-			closest_enemy = enemy
-			closest_distance = distance
+			var distance := position.distance_to(enemy.position)
+			
+			# Check if enemy is within detection range
+			if distance < detection_range and distance < closest_distance:
+				closest_enemy = enemy
+				closest_distance = distance
 
 	if closest_enemy != null:
 		target = closest_enemy
@@ -248,19 +301,24 @@ func _apply_attack_damage() -> void:
 	print("[Unit] _apply_attack_damage called")
 	# Default melee behavior - deal damage directly to target
 	if target != null and is_instance_valid(target) and target.has_method("take_damage"):
-		target.take_damage(damage)
+		target.take_damage(damage, armor_piercing)
 		# Play damage sound when damage is applied
 		_play_damage_sound()
 	else:
 		print("[Unit] No valid target for damage")
 
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:
 	# Ignore damage if already dead/dying
 	if state == "dying" or current_hp <= 0:
 		return
 	
-	current_hp -= amount
+	# Apply armor reduction unless attacker has armor piercing
+	var final_damage := amount
+	if not attacker_armor_piercing:
+		final_damage = max(0, amount - armor)
+	
+	current_hp -= final_damage
 
 	# Visual feedback: flash the sprite red
 	if animated_sprite:

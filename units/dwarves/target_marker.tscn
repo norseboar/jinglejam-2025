@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bmxoi03d6ndhn"]
+
+[ext_resource type="Texture2D" uid="uid://b2mw4jva8lmdq" path="res://assets/sprites/artillery_target.png" id="1_mpsqr"]
+
+[node name="TargetMarker" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_mpsqr")

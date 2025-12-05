@@ -5,11 +5,12 @@
 
 [node name="Knight" instance=ExtResource("1_8k1n4")]
 script = ExtResource("1_8w6po")
-max_hp = 5
-current_hp = 5
+max_hp = 40
+damage = 2
 speed = 50.0
 attack_range = 20.0
 attack_cooldown = 2.0
+armor = 5
 display_name = "Knight"
-description = "A lumbering suit of armor"
+description = "Heavily armored warrior"
 gold_reward = 3
