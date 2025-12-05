@@ -1,0 +1,143 @@
+[gd_scene load_steps=6 format=3 uid="uid://dbfnx1ed8abot"]
+
+[ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_812al"]
+[ext_resource type="Texture2D" uid="uid://bxnr8frb2awil" path="res://assets/backgrounds/autumn-leaves-forest.jpg" id="2_r83ro"]
+[ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_v0msx"]
+[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="4_40h0h"]
+[ext_resource type="PackedScene" uid="uid://dhf2ohsvwac2b" path="res://units/dwarves/dwarf_spearman.tscn" id="5_lbhog"]
+
+[node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -640.0
+offset_bottom = -360.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_812al")
+background_texture = ExtResource("2_r83ro")
+editor_background = NodePath("EditorBackground")
+army_name = "Humans"
+
+[node name="EditorBackground" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+texture = ExtResource("2_r83ro")
+expand_mode = 3
+
+[node name="PlayerSpawnSlots" type="Control" parent="."]
+anchors_preset = 0
+
+[node name="SpawnSlot2" parent="PlayerSpawnSlots" instance=ExtResource("3_v0msx")]
+layout_mode = 0
+offset_left = 107.0
+offset_top = 155.0
+offset_right = 139.0
+offset_bottom = 187.0
+
+[node name="SpawnSlot5" parent="PlayerSpawnSlots" instance=ExtResource("3_v0msx")]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 139.0
+offset_right = 102.0
+offset_bottom = 171.0
+
+[node name="SpawnSlot9" parent="PlayerSpawnSlots" instance=ExtResource("3_v0msx")]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 162.0
+offset_right = 47.0
+offset_bottom = 194.0
+
+[node name="SpawnSlot10" parent="PlayerSpawnSlots" instance=ExtResource("3_v0msx")]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 132.0
+offset_right = 60.0
+offset_bottom = 164.0
+
+[node name="SpawnSlot11" parent="PlayerSpawnSlots" instance=ExtResource("3_v0msx")]
+layout_mode = 0
+offset_left = 194.0
+offset_top = 154.0
+offset_right = 226.0
+offset_bottom = 186.0
+
+[node name="SpawnSlot3" parent="PlayerSpawnSlots" instance=ExtResource("3_v0msx")]
+layout_mode = 0
+offset_left = 143.0
+offset_top = 164.0
+offset_right = 175.0
+offset_bottom = 196.0
+
+[node name="SpawnSlot4" parent="PlayerSpawnSlots" instance=ExtResource("3_v0msx")]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 130.0
+offset_right = 216.0
+offset_bottom = 162.0
+
+[node name="SpawnSlot6" parent="PlayerSpawnSlots" instance=ExtResource("3_v0msx")]
+layout_mode = 0
+offset_left = 59.0
+offset_top = 166.0
+offset_right = 91.0
+offset_bottom = 198.0
+
+[node name="SpawnSlot7" parent="PlayerSpawnSlots" instance=ExtResource("3_v0msx")]
+layout_mode = 0
+offset_left = 143.0
+offset_top = 139.0
+offset_right = 175.0
+offset_bottom = 171.0
+
+[node name="SpawnSlot8" parent="PlayerSpawnSlots" instance=ExtResource("3_v0msx")]
+layout_mode = 0
+offset_left = 238.0
+offset_top = 148.0
+offset_right = 270.0
+offset_bottom = 180.0
+
+[node name="EnemyMarkers" type="Node2D" parent="."]
+
+[node name="EnemyMarker" parent="EnemyMarkers" instance=ExtResource("4_40h0h")]
+position = Vector2(571, 122)
+unit_scene = ExtResource("5_lbhog")
+
+[node name="EnemyMarker2" parent="EnemyMarkers" instance=ExtResource("4_40h0h")]
+position = Vector2(561, 166)
+unit_scene = ExtResource("5_lbhog")
+
+[node name="EnemyMarker3" parent="EnemyMarkers" instance=ExtResource("4_40h0h")]
+position = Vector2(519, 129)
+unit_scene = ExtResource("5_lbhog")
+
+[node name="EnemyMarker4" parent="EnemyMarkers" instance=ExtResource("4_40h0h")]
+position = Vector2(513, 174)
+unit_scene = ExtResource("5_lbhog")
+
+[node name="EnemyMarker5" parent="EnemyMarkers" instance=ExtResource("4_40h0h")]
+position = Vector2(467, 116)
+unit_scene = ExtResource("5_lbhog")
+
+[node name="EnemyMarker6" parent="EnemyMarkers" instance=ExtResource("4_40h0h")]
+position = Vector2(469, 157)
+unit_scene = ExtResource("5_lbhog")
+
+[node name="EnemyMarker7" parent="EnemyMarkers" instance=ExtResource("4_40h0h")]
+position = Vector2(425, 100)
+unit_scene = ExtResource("5_lbhog")
+
+[node name="EnemyMarker8" parent="EnemyMarkers" instance=ExtResource("4_40h0h")]
+position = Vector2(426, 136)
+unit_scene = ExtResource("5_lbhog")
+
+[node name="EnemyMarker9" parent="EnemyMarkers" instance=ExtResource("4_40h0h")]
+position = Vector2(429, 173)
+unit_scene = ExtResource("5_lbhog")
+
+[node name="EnemyMarker10" parent="EnemyMarkers" instance=ExtResource("4_40h0h")]
+position = Vector2(374, 140)
+unit_scene = ExtResource("5_lbhog")

@@ -1,0 +1,126 @@
+[gd_scene load_steps=5 format=3 uid="uid://d0cewvge382qj"]
+
+[ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_vukk4"]
+[ext_resource type="Texture2D" uid="uid://bw7jftfbecibg" path="res://assets/backgrounds/selective-focus-shot-tree-log-covered-with-moss.jpg" id="2_odrfp"]
+[ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_50rdu"]
+[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="4_hhytr"]
+
+[node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -640.0
+offset_bottom = -360.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vukk4")
+background_texture = ExtResource("2_odrfp")
+editor_background = NodePath("EditorBackground")
+army_name = "Humans"
+
+[node name="EditorBackground" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+texture = ExtResource("2_odrfp")
+expand_mode = 3
+
+[node name="PlayerSpawnSlots" type="Control" parent="."]
+anchors_preset = 0
+
+[node name="SpawnSlot" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 198.0
+offset_top = 155.0
+offset_right = 230.0
+offset_bottom = 187.0
+
+[node name="SpawnSlot2" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 260.0
+offset_top = 163.0
+offset_right = 292.0
+offset_bottom = 195.0
+
+[node name="SpawnSlot3" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 316.0
+offset_top = 166.0
+offset_right = 348.0
+offset_bottom = 198.0
+
+[node name="SpawnSlot4" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 318.0
+offset_top = 199.0
+offset_right = 350.0
+offset_bottom = 231.0
+
+[node name="SpawnSlot6" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 175.0
+offset_top = 189.0
+offset_right = 207.0
+offset_bottom = 221.0
+
+[node name="SpawnSlot7" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 217.0
+offset_top = 184.0
+offset_right = 249.0
+offset_bottom = 216.0
+
+[node name="SpawnSlot8" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 271.0
+offset_top = 191.0
+offset_right = 303.0
+offset_bottom = 223.0
+
+[node name="SpawnSlot10" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 230.0
+offset_right = 216.0
+offset_bottom = 262.0
+
+[node name="SpawnSlot11" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 225.0
+offset_top = 220.0
+offset_right = 257.0
+offset_bottom = 252.0
+
+[node name="SpawnSlot12" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 230.0
+offset_right = 302.0
+offset_bottom = 262.0
+
+[node name="EnemyMarkers" type="Node2D" parent="."]
+
+[node name="EnemyMarker" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
+position = Vector2(527, 140)
+
+[node name="EnemyMarker2" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
+position = Vector2(475, 130)
+
+[node name="EnemyMarker3" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
+position = Vector2(484, 172)
+
+[node name="EnemyMarker4" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
+position = Vector2(428, 130)
+
+[node name="EnemyMarker5" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
+position = Vector2(434, 163)
+
+[node name="EnemyMarker6" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
+position = Vector2(439, 198)
+
+[node name="EnemyMarker7" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
+position = Vector2(385, 143)
+
+[node name="EnemyMarker8" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
+position = Vector2(391, 189)

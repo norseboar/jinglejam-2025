@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_reijj"]
 [ext_resource type="Texture2D" uid="uid://clxoa2k34d7wk" path="res://assets/backgrounds/nature-wood-background-dirty-detail.jpg" id="2_jh44x"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_0086f"]
-[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_marker.tscn" id="4_spapn"]
+[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="4_spapn"]
 [ext_resource type="PackedScene" uid="uid://dhf2ohsvwac2b" path="res://units/dwarves/dwarf_spearman.tscn" id="5_jh44x"]
 [ext_resource type="PackedScene" uid="uid://b2gg7627166nr" path="res://units/dwarves/dwarf_mortarman.tscn" id="6_0086f"]
 

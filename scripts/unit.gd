@@ -298,14 +298,11 @@ func _on_attack_animation_finished() -> void:
 
 ## Virtual method - subclasses override this to implement their attack type
 func _apply_attack_damage() -> void:
-	print("[Unit] _apply_attack_damage called")
 	# Default melee behavior - deal damage directly to target
 	if target != null and is_instance_valid(target) and target.has_method("take_damage"):
 		target.take_damage(damage, armor_piercing)
 		# Play damage sound when damage is applied
 		_play_damage_sound()
-	else:
-		print("[Unit] No valid target for damage")
 
 
 func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:
@@ -385,32 +382,17 @@ func _safe_play_animation(anim_name: String) -> void:
 
 func _play_damage_sound() -> void:
 	"""Play a random damage sound effect from the damage_sounds array."""
-	print("[Unit] _play_damage_sound called - sounds: %d, audio_player: %s" % [damage_sounds.size(), audio_player])
 	if damage_sounds.is_empty():
-		print("[Unit] No damage sounds configured!")
 		return
 	if audio_player == null:
-		print("[Unit] audio_player is null!")
 		return
 	
 	# Pick a random sound from the array
 	var random_index := randi() % damage_sounds.size()
 	var sound: AudioStream = damage_sounds[random_index]
-	print("[Unit] Playing sound index %d: %s" % [random_index, sound])
 	if sound != null:
 		audio_player.stream = sound
 		audio_player.play()
-		print("[Unit] Sound playback started - volume_db: %s, playing: %s, bus: %s, max_distance: %s, position: %s" % [
-			audio_player.volume_db,
-			audio_player.playing,
-			audio_player.bus,
-			audio_player.max_distance,
-			global_position
-		])
-		# Also check master bus
-		var master_vol = AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Master"))
-		var master_mute = AudioServer.is_bus_mute(AudioServer.get_bus_index("Master"))
-		print("[Unit] Master bus - volume_db: %s, muted: %s" % [master_vol, master_mute])
 
 
 func _update_upgrade_markers() -> void:

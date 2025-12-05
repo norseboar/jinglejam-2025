@@ -12,6 +12,7 @@ signal selected(option_index: int)
 # State
 var option_index: int = 0
 var level_scene: PackedScene = null
+var option_data: BattleOptionData = null  # New: holds generated battle data
 var is_selected: bool = false
 
 
@@ -56,6 +57,37 @@ func setup(index: int, scene: PackedScene) -> void:
 	
 	# Clean up
 	level_instance.queue_free()
+
+
+func setup_from_data(index: int, data: BattleOptionData) -> void:
+	"""Initialize this option with generated battle data."""
+	option_index = index
+	option_data = data
+	level_scene = data.battlefield  # Store battlefield as level_scene for compatibility
+
+	# Set army name from roster
+	if army_name_label and data.roster:
+		army_name_label.text = data.roster.team_name
+
+	# Populate enemy slots from generated army
+	_populate_slots_from_army(data.army)
+
+
+func _populate_slots_from_army(generated_army: Array[ArmyUnit]) -> void:
+	"""Populate the UnitSlotGroup with units from the generated army."""
+	if enemy_slot_group == null:
+		return
+
+	var slots := enemy_slot_group.slots
+
+	for i in range(slots.size()):
+		var slot := slots[i]
+		if i < generated_army.size():
+			# Create a copy of the ArmyUnit for display
+			var army_unit := generated_army[i]
+			slot.set_unit(army_unit)
+		else:
+			slot.set_unit(null)
 
 
 func _populate_enemy_slots(level_instance: LevelRoot) -> void:

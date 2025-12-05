@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=26 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="1_ca42v"]
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -8,10 +8,13 @@
 [ext_resource type="Texture2D" uid="uid://qguwsk400gqy" path="res://assets/backgrounds/chess_table.jpg" id="5_p57ef"]
 [ext_resource type="PackedScene" uid="uid://c0d47vd87vlmt" path="res://scenes/ui/hud.tscn" id="6_p57ef"]
 [ext_resource type="Script" uid="uid://bwkdnef87rpc7" path="res://scripts/upgrade_screen.gd" id="7_0tnpc"]
-[ext_resource type="Resource" uid="uid://ccncwdniynkcg" path="res://units/rosters/human_roster.tres" id="7_5newe"]
+[ext_resource type="Resource" uid="uid://ccncwdniynkcg" path="res://units/rosters/starting_rosters/humans.tres" id="7_5newe"]
 [ext_resource type="Texture2D" uid="uid://cv4fsh4q3oll" path="res://assets/backgrounds/reward_bg.jpg" id="7_gee14"]
+[ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="8_pl11u"]
 [ext_resource type="Texture2D" uid="uid://csxttbukwfau0" path="res://assets/sprites/ui/background-frame.png" id="9_ir15t"]
+[ext_resource type="Resource" uid="uid://cqbdneupe6hhs" path="res://units/rosters/full_rosters/dwarves_full.tres" id="10_qnb83"]
 [ext_resource type="PackedScene" uid="uid://qu7tcqixa2mi" path="res://scenes/ui/unit_summary.tscn" id="11_kvpfn"]
+[ext_resource type="Resource" uid="uid://dcdd1vps5sd0k" path="res://units/rosters/full_rosters/humans_full.tres" id="11_sww3w"]
 [ext_resource type="Texture2D" uid="uid://c6eydxw58l61v" path="res://assets/sprites/ui/next_button/next_button_80x40.png" id="13_264po"]
 [ext_resource type="PackedScene" uid="uid://cu6uv6d63rbjb" path="res://scenes/ui/unit_slot_group.tscn" id="13_ca42v"]
 [ext_resource type="Script" uid="uid://bcb4symh42ybk" path="res://scripts/battle_select_screen.gd" id="13_kvuet"]
@@ -37,8 +40,10 @@ theme = ExtResource("1_ca42v")
 script = ExtResource("1_yqjtg")
 starting_gold = 50
 level_pools = Array[Resource]([ExtResource("2_dinhu"), ExtResource("3_kvuet"), ExtResource("4_trtic")])
+total_levels = 2
 upgrade_background = ExtResource("7_gee14")
 starting_roster = ExtResource("7_5newe")
+full_rosters = Array[ExtResource("8_pl11u")]([ExtResource("10_qnb83"), ExtResource("11_sww3w")])
 background_rect = NodePath("BackgroundRect")
 gameplay = NodePath("SubViewportContainer/SubViewport/Gameplay")
 player_units = NodePath("SubViewportContainer/SubViewport/Gameplay/PlayerUnits")
@@ -99,6 +104,7 @@ upgrade_screen = NodePath("UpgradeScreen")
 battle_select_screen = NodePath("BattleSelectScreen")
 
 [node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "start_battle_button", "editor_background", "upgrade_instructions", "upgrade_data", "hp_button", "damage_button", "upgrade_price_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_price_label", "gold_label", "draft_label", "recruit_label")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -423,6 +429,7 @@ texture_pressed = ExtResource("14_1kice")
 texture_hover = ExtResource("15_5newe")
 
 [node name="BattleSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("options_container", "advance_button")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_mllcm"]
 [ext_resource type="Texture2D" uid="uid://bxnr8frb2awil" path="res://assets/backgrounds/autumn-leaves-forest.jpg" id="2_q7ibo"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_cg8v6"]
-[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_marker.tscn" id="4_j0sdw"]
+[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="4_j0sdw"]
 [ext_resource type="PackedScene" uid="uid://dhf2ohsvwac2b" path="res://units/dwarves/dwarf_spearman.tscn" id="5_mllcm"]
 
 [node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background")]

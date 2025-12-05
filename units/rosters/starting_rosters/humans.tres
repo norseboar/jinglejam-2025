@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Roster" load_steps=5 format=3 uid="uid://ccncwdniynkcg"]
+
+[ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="1_ubd7u"]
+[ext_resource type="PackedScene" uid="uid://bbev3r4fqct55" path="res://units/humans/ballista.tscn" id="2_lwg47"]
+[ext_resource type="PackedScene" uid="uid://bbp51u1lohgx" path="res://units/humans/knight.tscn" id="3_qllg4"]
+[ext_resource type="PackedScene" uid="uid://bklaap88dmjbp" path="res://units/humans/squire.tscn" id="4_qrpoa"]
+
+[resource]
+script = ExtResource("1_ubd7u")
+team_name = "Humans"
+units = Array[PackedScene]([ExtResource("2_lwg47"), ExtResource("2_lwg47"), ExtResource("3_qllg4"), ExtResource("3_qllg4"), ExtResource("4_qrpoa"), ExtResource("4_qrpoa"), ExtResource("4_qrpoa"), ExtResource("4_qrpoa")])

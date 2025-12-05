@@ -1,10 +1,13 @@
-[gd_scene load_steps=11 format=3 uid="uid://c0d47vd87vlmt"]
+[gd_scene load_steps=14 format=3 uid="uid://c0d47vd87vlmt"]
 
 [ext_resource type="Script" uid="uid://b4vx32mrylism" path="res://scripts/hud.gd" id="1_hqnrr"]
 [ext_resource type="Texture2D" uid="uid://cuyaqmy0d44ys" path="res://assets/sprites/ui/bottom_panel.png" id="2_bo48s"]
+[ext_resource type="Texture2D" uid="uid://ctjkqeio7568h" path="res://assets/sprites/ui/deploy_button/deploy_button.png" id="4_0h1do"]
 [ext_resource type="PackedScene" uid="uid://cu6uv6d63rbjb" path="res://scenes/ui/unit_slot_group.tscn" id="4_8qguk"]
 [ext_resource type="Texture2D" uid="uid://bh1bkpyf8w1mk" path="res://assets/sprites/ui/fight_button/fight_button_80x40.png" id="4_oj5la"]
+[ext_resource type="Texture2D" uid="uid://btd4uey3lxetp" path="res://assets/sprites/ui/deploy_button/deploy_button_pressed.png" id="5_4d46k"]
 [ext_resource type="Texture2D" uid="uid://224hb5iqorv7" path="res://assets/sprites/ui/fight_button/fight_button_80x42.png" id="5_gss2c"]
+[ext_resource type="Texture2D" uid="uid://cr0jj48q2688x" path="res://assets/sprites/ui/deploy_button/deploy_button_highlight.png" id="6_erw67"]
 [ext_resource type="Texture2D" uid="uid://hp0p6bqlua4x" path="res://assets/sprites/ui/fight_button/fight_button_80x41.png" id="6_h022r"]
 [ext_resource type="Texture2D" uid="uid://c6eydxw58l61v" path="res://assets/sprites/ui/next_button/next_button_80x40.png" id="7_4jqwt"]
 [ext_resource type="Texture2D" uid="uid://boqvm3pbcc2x6" path="res://assets/sprites/ui/next_button/next_button_pressed.png" id="8_kicr4"]
@@ -12,7 +15,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0mwgc"]
 
-[node name="HUD" type="Control" node_paths=PackedStringArray("phase_label", "tray_panel", "unit_tray", "go_button", "gold_label", "battle_end_modal", "battle_end_label", "battle_end_button")]
+[node name="HUD" type="Control" node_paths=PackedStringArray("phase_label", "tray_panel", "unit_tray", "go_button", "auto_deploy_button", "gold_label", "battle_end_modal", "battle_end_label", "battle_end_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,7 +29,8 @@ script = ExtResource("1_hqnrr")
 phase_label = NodePath("PanelContainer/PhaseLabel")
 tray_panel = NodePath("TrayPanel")
 unit_tray = NodePath("TrayPanel/Control/HBoxContainer/UnitSlotGroup")
-go_button = NodePath("TrayPanel/Control/HBoxContainer/GoButton")
+go_button = NodePath("TrayPanel/Control/HBoxContainer/VBoxContainer/GoButton")
+auto_deploy_button = NodePath("TrayPanel/Control/HBoxContainer/VBoxContainer/AutodeployButton")
 gold_label = NodePath("TrayPanel/Control/Gold")
 battle_end_modal = NodePath("BattleEndModal")
 battle_end_label = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/BattleEndLabel")
@@ -84,7 +88,19 @@ layout_mode = 2
 enable_drag_drop = true
 selection_mode = 2
 
-[node name="GoButton" type="TextureButton" parent="TrayPanel/Control/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TrayPanel/Control/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="AutodeployButton" type="TextureButton" parent="TrayPanel/Control/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("4_0h1do")
+texture_pressed = ExtResource("5_4d46k")
+texture_hover = ExtResource("6_erw67")
+
+[node name="GoButton" type="TextureButton" parent="TrayPanel/Control/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4

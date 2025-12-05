@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Roster" load_steps=8 format=3 uid="uid://dcdd1vps5sd0k"]
+
+[ext_resource type="PackedScene" uid="uid://ddg0d0euvs07d" path="res://battlefields/bridge.tscn" id="1_fw8qg"]
+[ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="1_gqjm7"]
+[ext_resource type="PackedScene" uid="uid://dbfnx1ed8abot" path="res://battlefields/grass.tscn" id="2_dur07"]
+[ext_resource type="PackedScene" uid="uid://bbp51u1lohgx" path="res://units/humans/knight.tscn" id="2_eoojl"]
+[ext_resource type="PackedScene" uid="uid://bklaap88dmjbp" path="res://units/humans/squire.tscn" id="3_j6ynk"]
+[ext_resource type="PackedScene" uid="uid://d0cewvge382qj" path="res://battlefields/mossy_rock.tscn" id="3_rrmhc"]
+[ext_resource type="PackedScene" uid="uid://bbev3r4fqct55" path="res://units/humans/ballista.tscn" id="4_en87n"]
+
+[resource]
+script = ExtResource("1_gqjm7")
+team_name = "Humans"
+units = Array[PackedScene]([ExtResource("2_eoojl"), ExtResource("3_j6ynk"), ExtResource("4_en87n")])
+battlefields = Array[PackedScene]([ExtResource("1_fw8qg"), ExtResource("2_dur07"), ExtResource("3_rrmhc")])
+metadata/_custom_type_script = "uid://clvfy8mjj8pl3"

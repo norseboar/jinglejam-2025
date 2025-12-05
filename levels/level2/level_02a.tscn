@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_76cyo"]
 [ext_resource type="Texture2D" uid="uid://clxoa2k34d7wk" path="res://assets/backgrounds/nature-wood-background-dirty-detail.jpg" id="2_shmfd"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_n0nyl"]
-[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_marker.tscn" id="4_q3kqr"]
+[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="4_q3kqr"]
 [ext_resource type="PackedScene" uid="uid://bbp51u1lohgx" path="res://units/humans/knight.tscn" id="5_jnosn"]
 
 [node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background")]

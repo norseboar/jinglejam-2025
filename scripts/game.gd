@@ -13,16 +13,20 @@ var army: Array = []  # Array of ArmyUnit
 # Gold system
 @export var starting_gold := 20
 var gold: int = 0
+var total_gold_spent: int = 0  # Track gold spent for army value calculation
 
 # Level management
 ## Array of LevelPool resources. Each pool contains multiple level scene options for that level.
 @export var level_pools: Array[Resource] = []
+## Total number of levels/battles in the game (used for completion tracking)
+@export var total_levels: int = 10
 var current_level_index := 0
 var selected_level_scene: PackedScene = null  # The specific scene chosen from the pool
 
 # Upgrade screen
 @export var upgrade_background: Texture2D
 var enemies_faced: Array = []  # Captured at end of battle for upgrade screen
+var current_enemy_army: Array[ArmyUnit] = []  # Generated enemy army for current battle
 
 # Current level references (set when level loads)
 var current_level: LevelRoot = null
@@ -35,6 +39,9 @@ var is_draft_mode: bool = true
 # Starting roster for draft phase
 @export var starting_roster: Roster
 
+## Array of full rosters for enemy army generation
+@export var full_rosters: Array[Roster] = []
+
 # Node references (assign in inspector)
 @export var background_rect: TextureRect
 @export var gameplay: Node2D
@@ -45,12 +52,16 @@ var is_draft_mode: bool = true
 @export var hud: HUD
 @export var ui_layer: CanvasLayer  # Where levels get loaded (same layer as HUD for drag-drop)
 
+## Title screen scene path (loaded at runtime to avoid circular reference with titlescreen preloading game)
+@export var title_screen_path: String = "res://scenes/titlescreen.tscn"
+
 
 func _ready() -> void:
 	hud.start_battle_requested.connect(_on_start_battle_requested)
+	hud.auto_deploy_requested.connect(_on_auto_deploy_requested)
 	hud.upgrade_confirmed.connect(_on_upgrade_confirmed)
 	hud.show_upgrade_screen_requested.connect(_on_show_upgrade_screen_requested)
-	hud.battle_select_advance.connect(_on_battle_select_advance)
+	hud.battle_select_advance_data.connect(_on_battle_select_advance)
 	hud.draft_complete.connect(_on_draft_complete)
 	unit_placed.connect(_on_unit_placed)
 	army_unit_placed.connect(_on_army_unit_placed)
@@ -87,6 +98,7 @@ func spend_gold(amount: int) -> bool:
 	if gold < amount:
 		return false
 	gold -= amount
+	total_gold_spent += amount  # Track spending
 	gold_changed.emit(gold)
 	return true
 
@@ -94,6 +106,126 @@ func spend_gold(amount: int) -> bool:
 func can_afford(amount: int) -> bool:
 	"""Check if player has enough gold."""
 	return gold >= amount
+
+
+func calculate_army_value() -> int:
+	"""
+	Calculate the total value of the player's army.
+	Value = current gold + sum of (base_recruit_cost + upgrade_cost * upgrades) for each unit.
+	"""
+	var value := gold
+
+	for army_unit in army:
+		if army_unit.unit_scene == null:
+			continue
+
+		# Get unit costs by instantiating temporarily
+		var instance := army_unit.unit_scene.instantiate() as Unit
+		if instance == null:
+			continue
+
+		var base_cost := instance.base_recruit_cost
+		var upgrade_cost := instance.upgrade_cost
+		instance.queue_free()
+
+		# Add base cost
+		value += base_cost
+
+		# Add upgrade costs (full price, not discounted)
+		var total_upgrades := 0
+		for count in army_unit.upgrades.values():
+			total_upgrades += count
+		value += upgrade_cost * total_upgrades
+
+	return value
+
+
+func generate_battle_options() -> Array[BattleOptionData]:
+	"""Generate two battle options from random rosters with scaled armies."""
+	var result: Array[BattleOptionData] = []
+
+	if full_rosters.size() < 2:
+		push_error("Need at least 2 full rosters for battle generation!")
+		return result
+
+	# Calculate player army value
+	var army_value := calculate_army_value()
+
+	# Generate multipliers
+	var low_multiplier := randf_range(0.5, 1.0)
+	var high_multiplier := randf_range(1.0, 1.5)
+	var low_target := int(army_value * low_multiplier)
+	var high_target := int(army_value * high_multiplier)
+
+	print("Player army value: %d" % army_value)
+	print("Target values - Low: %d (%.1fx), High: %d (%.1fx)" % [low_target, low_multiplier, high_target, high_multiplier])
+
+	# Pick 2 random rosters
+	var roster_indices: Array[int] = []
+	for i in range(full_rosters.size()):
+		roster_indices.append(i)
+	roster_indices.shuffle()
+
+	var roster_a: Roster = full_rosters[roster_indices[0]]
+	var roster_b: Roster = full_rosters[roster_indices[1]]
+
+	# Randomly assign low/high targets
+	var targets := [low_target, high_target]
+	targets.shuffle()
+
+	# Generate option A
+	var battlefield_a: PackedScene = roster_a.battlefields.pick_random() if not roster_a.battlefields.is_empty() else null
+	if battlefield_a == null:
+		push_error("Roster '%s' has no battlefields!" % roster_a.team_name)
+		return result
+
+	var slot_count_a := _count_enemy_slots(battlefield_a)
+	var army_a := ArmyGenerator.generate_army(roster_a, targets[0], slot_count_a)
+	var value_a := ArmyGenerator.calculate_army_value(army_a)
+	print("Generated '%s' army worth %d gold (target: %d)" % [roster_a.team_name, value_a, targets[0]])
+	result.append(BattleOptionData.create(roster_a, battlefield_a, army_a, targets[0]))
+
+	# Generate option B
+	var battlefield_b: PackedScene = roster_b.battlefields.pick_random() if not roster_b.battlefields.is_empty() else null
+	if battlefield_b == null:
+		push_error("Roster '%s' has no battlefields!" % roster_b.team_name)
+		return result
+
+	var slot_count_b := _count_enemy_slots(battlefield_b)
+	var army_b := ArmyGenerator.generate_army(roster_b, targets[1], slot_count_b)
+	var value_b := ArmyGenerator.calculate_army_value(army_b)
+	print("Generated '%s' army worth %d gold (target: %d)" % [roster_b.team_name, value_b, targets[1]])
+	result.append(BattleOptionData.create(roster_b, battlefield_b, army_b, targets[1]))
+
+	return result
+
+
+func _count_enemy_slots(battlefield_scene: PackedScene) -> int:
+	"""Count the number of EnemySpawnSlots in a battlefield scene."""
+	if battlefield_scene == null:
+		return 6  # Default fallback
+
+	var instance := battlefield_scene.instantiate()
+	if instance == null:
+		return 6
+
+	var count := 0
+	var spawn_slots: Array[EnemySpawnSlot] = []
+	_find_enemy_spawn_slots_recursive(instance, spawn_slots)
+	count = spawn_slots.size()
+
+	instance.queue_free()
+	return count if count > 0 else 6  # Fallback to 6 if no slots found
+
+
+func _find_enemy_spawn_slots_recursive(node: Node, result: Array[EnemySpawnSlot]) -> void:
+	"""Recursively find all EnemySpawnSlot nodes in the scene tree, preserving hierarchy order."""
+	if node is EnemySpawnSlot:
+		result.append(node)
+	
+	# Process children in hierarchy order (get_children() preserves scene tree order)
+	for child in node.get_children():
+		_find_enemy_spawn_slots_recursive(child, result)
 
 
 func _process(_delta: float) -> void:
@@ -131,11 +263,15 @@ func _end_battle(victory: bool) -> void:
 			child.set_state("idle")
 
 	# Capture enemy data for upgrade screen (only if victory and not last level, defeat will restart)
-	if victory and current_level_index < level_pools.size() - 1:
+	if victory and current_level_index < total_levels - 1:
 		_capture_enemies_faced()
 	
 	# Show battle end modal (which leads to upgrade screen on victory, or restart on defeat/last level)
-	hud.show_battle_end_modal(victory, current_level_index + 1, level_pools.size())
+	hud.show_battle_end_modal(victory, current_level_index + 1, total_levels)
+	
+	# Update auto-deploy button state (should be disabled during upgrade phase)
+	if hud:
+		hud._update_auto_deploy_button_state()
 
 
 func load_level(index: int) -> void:
@@ -207,9 +343,12 @@ func load_level_scene(level_scene: PackedScene) -> void:
 
 	# Reset all spawn slots to unoccupied
 	_reset_spawn_slots()
-	
-	# Spawn enemies from level markers
-	_spawn_enemies_from_level()
+
+	# Spawn enemies - use generated army if available, otherwise use EnemyMarkers
+	if not current_enemy_army.is_empty():
+		_spawn_enemies_from_generated_army()
+	else:
+		_spawn_enemies_from_level()
 
 	# Update HUD
 	phase = "preparation"
@@ -218,6 +357,10 @@ func load_level_scene(level_scene: PackedScene) -> void:
 	# Populate tray from army data
 	if army.size() > 0:
 		hud.set_tray_from_army(army)
+	
+	# Update auto-deploy button state
+	if hud:
+		hud._update_auto_deploy_button_state()
 
 
 func _spawn_enemies_from_level() -> void:
@@ -257,10 +400,74 @@ func _spawn_enemies_from_level() -> void:
 		enemy.enemy_unit_died.connect(_on_enemy_unit_died)
 
 
+func _spawn_enemies_from_generated_army() -> void:
+	"""Spawn enemies from the current_enemy_army using EnemySpawnSlots."""
+	if current_level == null:
+		push_warning("current_level is null in _spawn_enemies_from_generated_army")
+		return
+
+	if current_enemy_army.is_empty():
+		push_warning("current_enemy_army is empty")
+		return
+
+	# Collect spawn slots - use configured container if available, otherwise search entire scene
+	var spawn_slots: Array[EnemySpawnSlot] = []
+	if current_level.enemy_spawn_slots_container:
+		# Use configured container - get_children() preserves hierarchy order
+		for child in current_level.enemy_spawn_slots_container.get_children():
+			if child is EnemySpawnSlot:
+				spawn_slots.append(child)
+	else:
+		# Search entire scene tree for EnemySpawnSlot nodes
+		# Recursive search preserves hierarchy order (depth-first traversal)
+		_find_enemy_spawn_slots_recursive(current_level, spawn_slots)
+
+	if spawn_slots.is_empty():
+		push_warning("No EnemySpawnSlot nodes found in EnemySpawnSlots")
+		return
+
+	# Spawn units at slots (army is already sorted by priority)
+	for i in range(mini(current_enemy_army.size(), spawn_slots.size())):
+		var army_unit := current_enemy_army[i]
+		var slot := spawn_slots[i]
+
+		if army_unit.unit_scene == null:
+			push_error("Generated army unit at index %d has no unit_scene!" % i)
+			continue
+
+		var enemy: Unit = army_unit.unit_scene.instantiate() as Unit
+		if enemy == null:
+			push_error("Failed to instantiate enemy unit at index %d!" % i)
+			continue
+
+		# Configure enemy
+		enemy.is_enemy = true
+		enemy.enemy_container = player_units
+		enemy.global_position = slot.global_position
+		enemy.upgrades = army_unit.upgrades.duplicate()
+
+		enemy_units.add_child(enemy)
+		enemy.apply_upgrades()
+
+		# Connect death signal
+		enemy.enemy_unit_died.connect(_on_enemy_unit_died)
+
+
 func _capture_enemies_faced() -> void:
-	"""Capture all enemies from current level for the upgrade screen."""
+	"""Capture enemies for the upgrade screen - uses generated army if available."""
 	enemies_faced.clear()
 
+	# If we have a generated army, use that
+	if not current_enemy_army.is_empty():
+		for army_unit in current_enemy_army:
+			enemies_faced.append({
+				"unit_type": army_unit.unit_type,
+				"unit_scene": army_unit.unit_scene,
+				"upgrades": army_unit.upgrades.duplicate()
+			})
+		return
+
+	# Fallback: read from EnemyMarkers (for non-generated levels)
 	if current_level == null:
 		return
 
@@ -347,11 +554,13 @@ func _on_unit_placed(_unit_type: String) -> void:
 	# Update HUD to reflect placed unit count
 	if hud:
 		hud.update_placed_count(player_units.get_child_count())
+		hud._update_auto_deploy_button_state()
 
 
 func _on_army_unit_placed(slot_index: int) -> void:
 	if hud:
 		hud.clear_tray_slot(slot_index)
+		hud._update_auto_deploy_button_state()
 
 
 func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
@@ -476,6 +685,10 @@ func _on_start_battle_requested() -> void:
 	for child in enemy_units.get_children():
 		if child is Unit:
 			child.set_state("moving")
+	
+	# Update auto-deploy button state (should be disabled during battle)
+	if hud:
+		hud._update_auto_deploy_button_state()
 
 
 func _on_show_upgrade_screen_requested() -> void:
@@ -488,16 +701,140 @@ func _on_show_upgrade_screen_requested() -> void:
 	hud.show_upgrade_screen(true, army, enemies_faced)  # Only called on victory
 
 
-func _on_battle_select_advance(level_scene: PackedScene) -> void:
-	"""Handle battle select advance - load the chosen level."""
-	load_level_scene(level_scene)
+func _on_battle_select_advance(option_data: BattleOptionData) -> void:
+	"""Handle battle select advance - load the chosen battlefield with generated army."""
+	current_enemy_army = option_data.army
+	load_level_scene(option_data.battlefield)
+
+
+func _return_to_title_screen() -> void:
+	"""Return to the title screen when game is completed."""
+	if not ResourceLoader.exists(title_screen_path):
+		push_error("Title screen scene path does not exist: %s" % title_screen_path)
+		return
+	
+	var scene := load(title_screen_path) as PackedScene
+	if scene == null:
+		push_error("Failed to load title screen scene from path: %s" % title_screen_path)
+		return
+	
+	# Defer scene change to avoid input handling errors during transition
+	call_deferred("_change_to_title_screen", scene)
+
+
+func _change_to_title_screen(scene: PackedScene) -> void:
+	"""Actually perform the scene change (called deferred)."""
+	get_tree().change_scene_to_packed(scene)
+
+
+func _on_auto_deploy_requested() -> void:
+	"""Handle auto-deploy request from HUD - automatically place all unplaced units."""
+	if phase != "preparation":
+		return
+	
+	# Get unplaced units
+	var unplaced_units: Array[Dictionary] = []  # Array of {army_index: int, army_unit: ArmyUnit}
+	for i in range(army.size()):
+		var army_unit: ArmyUnit = army[i]
+		if not army_unit.placed and army_unit.unit_scene != null:
+			unplaced_units.append({"army_index": i, "army_unit": army_unit})
+	
+	if unplaced_units.is_empty():
+		return  # No units to deploy
+	
+	# Sort by priority (high priority first)
+	unplaced_units.sort_custom(_compare_units_by_priority)
+	
+	# Get available spawn slots (back to front)
+	var spawn_slots: Array[SpawnSlot] = []
+	if current_level:
+		var spawn_slots_container := current_level.get_node_or_null("PlayerSpawnSlots")
+		if spawn_slots_container:
+			# Get all spawn slots and filter for unoccupied ones
+			for child in spawn_slots_container.get_children():
+				if child is SpawnSlot:
+					var slot := child as SpawnSlot
+					if not slot.is_occupied:
+						spawn_slots.append(slot)
+	
+	if spawn_slots.is_empty():
+		return  # No available slots
+	
+	# Reverse slots to go back to front
+	spawn_slots.reverse()
+	
+	# Place units starting from the back
+	var slots_used: int = min(unplaced_units.size(), spawn_slots.size())
+	for i in range(slots_used):
+		var unit_data: Dictionary = unplaced_units[i]
+		var slot: SpawnSlot = spawn_slots[i]
+		place_unit_from_army(unit_data["army_index"], slot)
+
+
+func _compare_units_by_priority(a: Dictionary, b: Dictionary) -> bool:
+	"""Compare function for sorting units by priority (higher priority first)."""
+	var unit_a: ArmyUnit = a["army_unit"]
+	var unit_b: ArmyUnit = b["army_unit"]
+	
+	# Get priority from unit scenes
+	var priority_a := _get_unit_priority(unit_a.unit_scene)
+	var priority_b := _get_unit_priority(unit_b.unit_scene)
+	
+	return priority_a > priority_b
+
+
+func _get_unit_priority(unit_scene: PackedScene) -> int:
+	"""Get the priority from a unit scene."""
+	if unit_scene == null:
+		return 0
+	var instance := unit_scene.instantiate() as Unit
+	if instance == null:
+		return 0
+	var p := instance.priority
+	instance.queue_free()
+	return p
 
 
 func _on_draft_complete() -> void:
-	"""Handle draft completion - start first battle directly."""
+	"""Handle draft completion - start first battle directly (no battle select)."""
 	is_draft_mode = false
-	# Load first level directly (no level select)
-	load_level(0)
+	current_enemy_army.clear()  # Ensure clean state
+	
+	# Generate one random battle option for first battle
+	if full_rosters.is_empty():
+		push_error("No full rosters available for first battle!")
+		return
+	
+	# Filter out rosters with the same name as starting roster
+	var available_rosters: Array[Roster] = []
+	for roster in full_rosters:
+		if starting_roster and roster.team_name == starting_roster.team_name:
+			continue  # Skip rosters matching starting roster name
+		available_rosters.append(roster)
+	
+	if available_rosters.is_empty():
+		push_warning("All rosters match starting roster name, using any roster")
+		available_rosters = full_rosters
+	
+	# Pick one random roster from available ones
+	var roster: Roster = available_rosters.pick_random()
+	if roster.battlefields.is_empty():
+		push_error("Roster '%s' has no battlefields!" % roster.team_name)
+		return
+	
+	# Pick random battlefield from roster
+	var battlefield: PackedScene = roster.battlefields.pick_random()
+	
+	# Calculate player army value and generate enemy army
+	var army_value := calculate_army_value()
+	var target_value := int(army_value * randf_range(0.7, 1.0))  # First battle slightly easier
+	
+	var slot_count := _count_enemy_slots(battlefield)
+	var enemy_army := ArmyGenerator.generate_army(roster, target_value, slot_count)
+	
+	# Load battle directly
+	current_enemy_army = enemy_army
+	load_level_scene(battlefield)
 
 
 func _on_upgrade_confirmed(victory: bool) -> void:
@@ -505,30 +842,30 @@ func _on_upgrade_confirmed(victory: bool) -> void:
 	hud.hide_upgrade_screen()
 	
 	if victory:
-		# Advance to next level if not already at the last level
-		if current_level_index < level_pools.size() - 1:
-			current_level_index += 1
-			
-			# Clear old level and units before showing battle select
-			_clear_all_units()
-			if current_level:
-				current_level.queue_free()
-				current_level = null
-			
-			# Show battle select screen with options from next level's pool
-			var options := get_random_level_options(current_level_index, 2)
-			if options.size() > 0:
-				hud.show_battle_select(options)
-			else:
-				# Fallback: load first scene from pool
-				load_level(current_level_index)
+		# Check if all levels completed
+		if current_level_index >= total_levels - 1:
+			# All levels completed - return to title screen
+			_return_to_title_screen()
+			return
+		
+		# Clear the generated army for next battle
+		current_enemy_army.clear()
+
+		# Advance level index (used for tracking progress)
+		current_level_index += 1
+
+		# Clear old level and units before showing battle select
+		_clear_all_units()
+		if current_level:
+			current_level.queue_free()
+			current_level = null
+
+		# Generate new battle options
+		var options := generate_battle_options()
+		if options.size() >= 2:
+			hud.show_battle_select_generated(options)
 		else:
-			# Completed all levels - restart at level 1
-			current_level_index = 0
-			army.clear()  # Reset army for new run
-			load_level(current_level_index)
+			push_error("Failed to generate battle options!")
 	else:
-		# On defeat, reset everything
-		army.clear()  # Clear army so it reinitializes
-		current_level_index = 0
-		load_level(current_level_index)
+		# On defeat, return to title screen
+		_return_to_title_screen()

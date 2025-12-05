@@ -3,9 +3,10 @@ class_name HUD
 
 # Signals
 signal start_battle_requested
+signal auto_deploy_requested  # Emitted when auto-deploy button is clicked
 signal upgrade_confirmed(victory: bool)
 signal show_upgrade_screen_requested  # Emitted when battle end button is clicked (victory)
-signal battle_select_advance(level_scene: PackedScene)
+signal battle_select_advance_data(option_data: BattleOptionData)  # Emits BattleOptionData
 signal draft_complete()
 
 # Node references (assign in inspector)
@@ -13,6 +14,7 @@ signal draft_complete()
 @export var tray_panel: Control
 @export var unit_tray: GridContainer
 @export var go_button: BaseButton
+@export var auto_deploy_button: BaseButton  # Auto-deploy button (add in editor next to Go button)
 @export var gold_label: Label
 
 # Battle end modal (shown first, then leads to upgrade screen)
@@ -38,6 +40,10 @@ func _ready() -> void:
 	if go_button:
 		go_button.pressed.connect(_on_go_button_pressed)
 	
+	# Connect auto-deploy button
+	if auto_deploy_button:
+		auto_deploy_button.pressed.connect(_on_auto_deploy_button_pressed)
+	
 	# Connect battle end button
 	if battle_end_button:
 		battle_end_button.pressed.connect(_on_battle_end_button_pressed)
@@ -47,9 +53,9 @@ func _ready() -> void:
 		upgrade_screen.continue_pressed.connect(_on_upgrade_screen_continue_pressed)
 		upgrade_screen.draft_complete.connect(_on_draft_complete)
 	
-	# Connect battle select screen signal
+	# Connect battle select screen signals
 	if battle_select_screen:
-		battle_select_screen.advance_pressed.connect(_on_battle_select_advance_pressed)
+		battle_select_screen.advance_pressed.connect(_on_battle_select_advance_pressed_data)
 	
 	# Ensure modal is hidden initially
 	if battle_end_modal:
@@ -95,6 +101,9 @@ func set_phase(phase: String, level: int) -> void:
 			go_button.disabled = (placed_unit_count == 0)
 		else:
 			go_button.disabled = true
+	
+	# Update auto-deploy button state
+	_update_auto_deploy_button_state()
 
 
 func set_tray_unit_scenes(unit_scenes: Array[PackedScene]) -> void:
@@ -262,6 +271,44 @@ func _on_go_button_pressed() -> void:
 		start_battle_requested.emit()
 
 
+func _on_auto_deploy_button_pressed() -> void:
+	"""Handle auto-deploy button press."""
+	if current_phase == "preparation":
+		auto_deploy_requested.emit()
+
+
+func _update_auto_deploy_button_state() -> void:
+	"""Update the auto-deploy button enabled/disabled state."""
+	if not auto_deploy_button:
+		return
+	
+	# Disable if battle is happening
+	if current_phase == "battle":
+		auto_deploy_button.disabled = true
+		return
+	
+	# Disable if not in preparation phase
+	if current_phase != "preparation":
+		auto_deploy_button.disabled = true
+		return
+	
+	# Check if there are any unplaced units by checking the Game's army
+	var game := get_tree().get_first_node_in_group("game") as Game
+	if not game:
+		auto_deploy_button.disabled = true
+		return
+	
+	var has_unplaced_units := false
+	for army_unit in game.army:
+		var unit: ArmyUnit = army_unit as ArmyUnit
+		if unit and not unit.placed and unit.unit_scene != null:
+			has_unplaced_units = true
+			break
+	
+	# Enable if there are unplaced units, disable otherwise
+	auto_deploy_button.disabled = not has_unplaced_units
+
+
 func _on_battle_end_button_pressed() -> void:
 	"""Handle battle end button - shows upgrade screen (or restarts if defeat or last level victory)."""
 	# Hide modal
@@ -311,16 +358,22 @@ func show_battle_select(scenes: Array[PackedScene]) -> void:
 		battle_select_screen.show_battle_select(scenes)
 
 
+func show_battle_select_generated(data_list: Array) -> void:
+	"""Show the battle select screen with generated battle options."""
+	if battle_select_screen:
+		battle_select_screen.show_battle_select_generated(data_list)
+
+
 func hide_battle_select() -> void:
 	"""Hide the battle select screen."""
 	if battle_select_screen:
 		battle_select_screen.hide_battle_select()
 
 
-func _on_battle_select_advance_pressed(level_scene: PackedScene) -> void:
-	"""Handle advance from battle select screen."""
+func _on_battle_select_advance_pressed_data(option_data: BattleOptionData) -> void:
+	"""Handle advance from battle select screen with generated data."""
 	hide_battle_select()
-	battle_select_advance.emit(level_scene)
+	battle_select_advance_data.emit(option_data)
 
 
 func hide_hud_elements() -> void:
@@ -359,6 +412,9 @@ func update_placed_count(count: int) -> void:
 			go_button.disabled = (placed_unit_count == 0)
 		else:
 			go_button.disabled = true
+	
+	# Update auto-deploy button state
+	_update_auto_deploy_button_state()
 
 
 func clear_tray_slot(index: int) -> void:

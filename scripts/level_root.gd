@@ -10,6 +10,9 @@ class_name LevelRoot
 ## The name of the enemy army for this level (shown in battle select screen)
 @export var army_name: String = "Enemy Army"
 
+## Container node holding EnemySpawnSlot markers (optional - if not set, will search entire scene)
+@export var enemy_spawn_slots_container: Node2D
+
 func _ready() -> void:
 	hide_editor_background()
 

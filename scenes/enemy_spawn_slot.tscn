@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bbde4iyw8daot"]
+
+[ext_resource type="Texture2D" uid="uid://b31oq7excrdy7" path="res://assets/sprites/ui/unit-slot.png" id="2_dvt6p"]
+[ext_resource type="Script" uid="uid://dlrficdbgxf5i" path="res://scripts/enemy_spawn_slot.gd" id="3_vd7av"]
+
+[node name="EnemySpawnSlot" type="Marker2D"]
+script = ExtResource("3_vd7av")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_dvt6p")
+offset = Vector2(16, 16)

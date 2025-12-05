@@ -587,3 +587,4 @@ func _on_draft_complete() -> void:
 - [ ] "Continue" button shows after battles (not "Start Battle")
 - [ ] No console errors
 
+
