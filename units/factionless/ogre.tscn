@@ -1,13 +1,13 @@
 [gd_scene load_steps=6 format=3 uid="uid://cylo0gvp21l7i"]
 
-[ext_resource type="Script" uid="uid://bwvnqebjgqrsx" path="res://scripts/unit.gd" id="1_7g665"]
-[ext_resource type="SpriteFrames" uid="uid://dut5wdvjr0ypa" path="res://assets/spriteframes/ogre.tres" id="2_t42t4"]
+[ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_t42t4"]
+[ext_resource type="SpriteFrames" uid="uid://dd2c8w3eqrp0h" path="res://assets/spriteframes/ogre.tres" id="2_t42t4"]
 [ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_p8eyf"]
 [ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_kmeiw"]
 [ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_08g5t"]
 
 [node name="Unit" type="Node2D"]
-script = ExtResource("1_7g665")
+script = ExtResource("1_t42t4")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_t42t4")

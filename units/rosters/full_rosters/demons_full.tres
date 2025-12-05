@@ -1,12 +1,16 @@
-[gd_resource type="Resource" script_class="Roster" load_steps=5 format=3 uid="uid://cweq82v4c5xjm"]
+[gd_resource type="Resource" script_class="Roster" load_steps=8 format=3 uid="uid://cweq82v4c5xjm"]
 
 [ext_resource type="PackedScene" uid="uid://ddg0d0euvs07d" path="res://battlefields/bridge.tscn" id="1_6dujo"]
 [ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="1_yh7ya"]
 [ext_resource type="PackedScene" uid="uid://dbfnx1ed8abot" path="res://battlefields/grass.tscn" id="2_qbits"]
 [ext_resource type="PackedScene" uid="uid://d0cewvge382qj" path="res://battlefields/mossy_rock.tscn" id="3_vymiy"]
+[ext_resource type="PackedScene" uid="uid://cy4o1pvxheyss" path="res://units/demons/demon_spear.tscn" id="5_qbits"]
+[ext_resource type="PackedScene" uid="uid://cylo0gvp21l7i" path="res://units/factionless/ogre.tscn" id="6_yayv7"]
+[ext_resource type="PackedScene" uid="uid://d8emyhc2jsnq" path="res://units/factionless/blue_ogre.tscn" id="7_8hc7m"]
 
 [resource]
 script = ExtResource("1_yh7ya")
 team_name = "Demons"
+units = Array[PackedScene]([ExtResource("5_qbits"), ExtResource("6_yayv7"), ExtResource("7_8hc7m")])
 battlefields = Array[PackedScene]([ExtResource("1_6dujo"), ExtResource("2_qbits"), ExtResource("3_vymiy")])
 metadata/_custom_type_script = "uid://clvfy8mjj8pl3"

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://c0d47vd87vlmt"]
+[gd_scene load_steps=15 format=3 uid="uid://c0d47vd87vlmt"]
 
 [ext_resource type="Script" uid="uid://b4vx32mrylism" path="res://scripts/hud.gd" id="1_hqnrr"]
 [ext_resource type="Texture2D" uid="uid://cuyaqmy0d44ys" path="res://assets/sprites/ui/bottom_panel.png" id="2_bo48s"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://224hb5iqorv7" path="res://assets/sprites/ui/fight_button/fight_button_80x42.png" id="5_gss2c"]
 [ext_resource type="Texture2D" uid="uid://cr0jj48q2688x" path="res://assets/sprites/ui/deploy_button/deploy_button_highlight.png" id="6_erw67"]
 [ext_resource type="Texture2D" uid="uid://hp0p6bqlua4x" path="res://assets/sprites/ui/fight_button/fight_button_80x41.png" id="6_h022r"]
+[ext_resource type="Script" uid="uid://d4eh8dp6lwy7d" path="res://scripts/tinted_button.gd" id="7_4d46k"]
 [ext_resource type="Texture2D" uid="uid://c6eydxw58l61v" path="res://assets/sprites/ui/next_button/next_button_80x40.png" id="7_4jqwt"]
 [ext_resource type="Texture2D" uid="uid://boqvm3pbcc2x6" path="res://assets/sprites/ui/next_button/next_button_pressed.png" id="8_kicr4"]
 [ext_resource type="Texture2D" uid="uid://2rhn2jh2rt6r" path="res://assets/sprites/ui/next_button/next_button_highlight.png" id="9_mj13f"]
@@ -99,14 +100,17 @@ size_flags_vertical = 4
 texture_normal = ExtResource("4_0h1do")
 texture_pressed = ExtResource("5_4d46k")
 texture_hover = ExtResource("6_erw67")
+script = ExtResource("7_4d46k")
 
 [node name="GoButton" type="TextureButton" parent="TrayPanel/Control/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+disabled = true
 texture_normal = ExtResource("4_oj5la")
 texture_pressed = ExtResource("5_gss2c")
 texture_hover = ExtResource("6_h022r")
+script = ExtResource("7_4d46k")
 
 [node name="Gold" type="Label" parent="TrayPanel/Control"]
 layout_mode = 0
@@ -118,6 +122,7 @@ theme_override_colors/font_color = Color(0.42352942, 0.11372549, 0.105882354, 1)
 text = "Gold: 10"
 
 [node name="BattleEndModal" type="ColorRect" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

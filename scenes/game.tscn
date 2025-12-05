@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=27 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="1_ca42v"]
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -24,6 +24,7 @@
 [ext_resource type="Texture2D" uid="uid://domaspt406cjf" path="res://assets/sprites/ui/buy_button/buy_button.png" id="18_37s47"]
 [ext_resource type="Texture2D" uid="uid://belfmhbyw1w1s" path="res://assets/sprites/ui/buy_button/buy_button_pressed.png" id="19_bt5mj"]
 [ext_resource type="Texture2D" uid="uid://cadwb1i3siefs" path="res://assets/sprites/ui/buy_button/buy_button_highlight.png" id="20_e1j6l"]
+[ext_resource type="Script" uid="uid://d4eh8dp6lwy7d" path="res://scripts/tinted_button.gd" id="23_pl11u"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trtic"]
 bg_color = Color(0.099985994, 0.09998601, 0.099985965, 1)
@@ -104,7 +105,6 @@ upgrade_screen = NodePath("UpgradeScreen")
 battle_select_screen = NodePath("BattleSelectScreen")
 
 [node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "start_battle_button", "editor_background", "upgrade_instructions", "upgrade_data", "hp_button", "damage_button", "upgrade_price_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_price_label", "gold_label", "draft_label", "recruit_label")]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -266,6 +266,7 @@ layout_mode = 2
 texture_normal = ExtResource("18_37s47")
 texture_pressed = ExtResource("19_bt5mj")
 texture_hover = ExtResource("20_e1j6l")
+script = ExtResource("23_pl11u")
 
 [node name="UpgradeGroup2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
@@ -281,6 +282,7 @@ layout_mode = 2
 texture_normal = ExtResource("18_37s47")
 texture_pressed = ExtResource("19_bt5mj")
 texture_hover = ExtResource("20_e1j6l")
+script = ExtResource("23_pl11u")
 
 [node name="EnemyArmy" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control"]
 layout_mode = 1
@@ -391,6 +393,7 @@ size_flags_vertical = 4
 texture_normal = ExtResource("18_37s47")
 texture_pressed = ExtResource("19_bt5mj")
 texture_hover = ExtResource("20_e1j6l")
+script = ExtResource("23_pl11u")
 
 [node name="CenterPanel" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
 layout_mode = 1
@@ -421,12 +424,14 @@ layout_mode = 2
 texture_normal = ExtResource("13_264po")
 texture_pressed = ExtResource("14_1kice")
 texture_hover = ExtResource("15_5newe")
+script = ExtResource("23_pl11u")
 
 [node name="FirstBattleButton" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/CenterPanel/VBoxContainer"]
 layout_mode = 2
 texture_normal = ExtResource("13_264po")
 texture_pressed = ExtResource("14_1kice")
 texture_hover = ExtResource("15_5newe")
+script = ExtResource("23_pl11u")
 
 [node name="BattleSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("options_container", "advance_button")]
 visible = false

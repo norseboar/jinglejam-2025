@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://cw7r2mxu6d3c"]
+
+[ext_resource type="Script" uid="uid://bwvnqebjgqrsx" path="res://scripts/unit.gd" id="1_4f7vi"]
+[ext_resource type="SpriteFrames" uid="uid://djkxbys6oii26" path="res://assets/spriteframes/demon_spear.tres" id="2_76dd0"]
+[ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_0bv7l"]
+[ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="3_76dd0"]
+[ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_lorq2"]
+[ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_5ljvd"]
+
+[node name="Unit" type="Node2D"]
+script = ExtResource("1_4f7vi")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2_76dd0")
+animation = &"attack"
+frame = 3
+frame_progress = 0.012974915
+script = ExtResource("3_76dd0")
+max_hp = 30
+damage = 10
+speed = 150.0
+attack_range = 20.0
+targets_high_priority = true
+
+[node name="UpgradeMarkers" type="Node2D" parent="."]
+position = Vector2(0, -2)
+
+[node name="Marker1" type="Sprite2D" parent="UpgradeMarkers"]
+position = Vector2(0, -11)
+texture = ExtResource("3_0bv7l")
+
+[node name="Marker2" type="Sprite2D" parent="UpgradeMarkers"]
+position = Vector2(0, -11)
+texture = ExtResource("4_lorq2")
+
+[node name="Marker3" type="Sprite2D" parent="UpgradeMarkers"]
+position = Vector2(0, -11)
+texture = ExtResource("5_5ljvd")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
