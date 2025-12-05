@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=21 format=3 uid="uid://djkxbys6oii26"]
+[gd_resource type="SpriteFrames" load_steps=25 format=3 uid="uid://djkxbys6oii26"]
 
 [ext_resource type="Texture2D" uid="uid://c3xafum0icr1x" path="res://assets/sprites/demons/demons_spear.png" id="1_48f74"]
 
@@ -78,6 +78,22 @@ region = Rect2(128, 0, 64, 64)
 atlas = ExtResource("1_48f74")
 region = Rect2(192, 0, 64, 64)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_48f74"]
+atlas = ExtResource("1_48f74")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hrh1q"]
+atlas = ExtResource("1_48f74")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a7p48"]
+atlas = ExtResource("1_48f74")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l1yph"]
+atlas = ExtResource("1_48f74")
+region = Rect2(192, 0, 64, 64)
+
 [resource]
 animations = [{
 "frames": [{
@@ -149,6 +165,23 @@ animations = [{
 "texture": SubResource("AtlasTexture_q3wx5")
 }],
 "loop": true,
-"name": &"idle & move",
+"name": &"idle",
 "speed": 9.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_48f74")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hrh1q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a7p48")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l1yph")
+}],
+"loop": true,
+"name": &"move",
+"speed": 5.0
 }]

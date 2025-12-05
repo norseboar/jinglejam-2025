@@ -11,8 +11,7 @@ script = ExtResource("1_1v03s")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_ndutp")
-animation = &"idle & move"
-frame_progress = 0.7583589
+animation = &"move"
 
 [node name="UpgradeMarkers" type="Node2D" parent="."]
 position = Vector2(0, -2)
