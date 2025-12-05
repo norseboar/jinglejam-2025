@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dglhowo45qkr4"]
+
+[ext_resource type="SpriteFrames" uid="uid://nd74ucxl148b" path="res://assets/spriteframes/satchel_vfx.tres" id="1_khrfs"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D"]
+sprite_frames = ExtResource("1_khrfs")
+frame = 5
+frame_progress = 1.0

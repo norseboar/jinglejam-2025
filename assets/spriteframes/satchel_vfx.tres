@@ -1,0 +1,53 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3 uid="uid://nd74ucxl148b"]
+
+[ext_resource type="Texture2D" uid="uid://dhhbapp4xbelp" path="res://assets/sprites/dwarves/satchel_vfx.png" id="1_7onw3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7xlbq"]
+atlas = ExtResource("1_7onw3")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t8k3t"]
+atlas = ExtResource("1_7onw3")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_alcbs"]
+atlas = ExtResource("1_7onw3")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ymrmg"]
+atlas = ExtResource("1_7onw3")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1m4bg"]
+atlas = ExtResource("1_7onw3")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g16t4"]
+atlas = ExtResource("1_7onw3")
+region = Rect2(160, 0, 32, 32)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7xlbq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t8k3t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_alcbs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ymrmg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1m4bg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g16t4")
+}],
+"loop": false,
+"name": &"default",
+"speed": 13.0
+}]

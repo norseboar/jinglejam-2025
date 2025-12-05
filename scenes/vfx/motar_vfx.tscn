@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b15ykhsliiwx4"]
+
+[ext_resource type="SpriteFrames" uid="uid://ccermlmjkhydw" path="res://assets/spriteframes/mortar_vfx.tres" id="1_pkaeo"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D"]
+sprite_frames = ExtResource("1_pkaeo")
+frame = 6
+frame_progress = 1.0
