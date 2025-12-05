@@ -34,7 +34,10 @@ signal player_unit_died(army_index: int)  # Emitted by player units with army_in
 	preload("res://assets/sfx/sword_impact/Shield Impacts Sword 2.wav"),
 	preload("res://assets/sfx/sword_impact/Shield Impacts Sword 3.wav"),
 	preload("res://assets/sfx/sword_impact/Shield Impacts Sword 5.wav")
-]  # List of damage sound effects to randomly choose from
+]  # List of damage sound effects to randomly choose from (for melee units)
+
+@export var fire_sounds: Array[AudioStream] = []  # List of fire sound effects for ranged units (plays on attack frame)
+@export var impact_sounds: Array[AudioStream] = []  # List of impact sound effects for ranged units (plays when projectile hits)
 
 # State
 var current_hp := 3
@@ -45,6 +48,7 @@ var time_since_attack := 0.0 # timer for attack cooldown
 var is_attacking := false    # true when attack animation is playing
 var has_triggered_frame_damage := false  # Prevents multiple damage triggers per attack
 var army_index := -1         # Index in Game.army array, or -1 if not from army
+var is_first_attack_in_combat := true  # Track if this is the first attack in current combat
 
 # Upgrades
 var upgrades: Dictionary = {}  # e.g., { "hp": 2, "damage": 1 }
@@ -206,7 +210,13 @@ func _check_for_targets() -> void:
 		# If we're in attack range, start fighting
 		if distance_to_target <= attack_range:
 			set_state("fighting")
-			time_since_attack = 0.0  # Reset cooldown timer when entering combat
+			# Reset cooldown timer when entering combat
+			# For non-swordsman units with attack cooldown, add random delay for first attack
+			if not self is Swordsman and attack_cooldown > 0.0 and is_first_attack_in_combat:
+				# Random delay between 0 and attack_cooldown for first attack only
+				time_since_attack = randf() * attack_cooldown
+			else:
+				time_since_attack = 0.0
 		# Otherwise, we'll keep moving towards them (state stays "moving")
 
 
@@ -242,6 +252,7 @@ func _do_fighting(delta: float) -> void:
 			if time_since_attack >= attack_cooldown:
 				# Cooldown complete - attack
 				time_since_attack = 0.0
+				is_first_attack_in_combat = false  # Mark that we've done our first attack
 				_attack_target()
 
 
@@ -310,19 +321,22 @@ func _on_animation_frame_changed() -> void:
 		_trigger_attack_damage()
 
 
+## Virtual method - subclasses override to customize behavior on attack frame
+## Melee units: play damage sound and deal damage
+## Ranged units: play fire sound and spawn projectile
 func _trigger_attack_damage() -> void:
-	"""Encapsulates playing attack sound and dealing damage. Called on the attack damage frame."""
+	"""Called on the attack damage frame. Default behavior handles melee attacks."""
 	has_triggered_frame_damage = true
-	_apply_attack_damage()
+	_execute_attack()
 
 
 ## Virtual method - subclasses override this to implement their attack type
-func _apply_attack_damage() -> void:
-	# Default melee behavior - deal damage directly to target
-	if target != null and is_instance_valid(target) and target.has_method("take_damage"):
-		target.take_damage(damage, armor_piercing)
-		# Play damage sound when damage is applied
-		_play_damage_sound()
+## Melee units: deal damage directly to target
+## Ranged units: spawn projectiles (damage happens when projectiles hit)
+## Default implementation does nothing - subclasses must override
+func _execute_attack() -> void:
+	# Base implementation does nothing - subclasses override
+	pass
 
 
 func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:
@@ -410,6 +424,36 @@ func _play_damage_sound() -> void:
 	# Pick a random sound from the array
 	var random_index := randi() % damage_sounds.size()
 	var sound: AudioStream = damage_sounds[random_index]
+	if sound != null:
+		audio_player.stream = sound
+		audio_player.play()
+
+
+func _play_fire_sound() -> void:
+	"""Play a random fire sound effect from the fire_sounds array."""
+	if fire_sounds.is_empty():
+		return
+	if audio_player == null:
+		return
+	
+	# Pick a random sound from the array
+	var random_index := randi() % fire_sounds.size()
+	var sound: AudioStream = fire_sounds[random_index]
+	if sound != null:
+		audio_player.stream = sound
+		audio_player.play()
+
+
+func _play_impact_sound() -> void:
+	"""Play a random impact sound effect from the impact_sounds array."""
+	if impact_sounds.is_empty():
+		return
+	if audio_player == null:
+		return
+	
+	# Pick a random sound from the array
+	var random_index := randi() % impact_sounds.size()
+	var sound: AudioStream = impact_sounds[random_index]
 	if sound != null:
 		audio_player.stream = sound
 		audio_player.play()

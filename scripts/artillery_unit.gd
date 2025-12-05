@@ -14,8 +14,17 @@ var _artillery_target_position := Vector2.ZERO
 var _current_target_marker: Node2D = null
 
 
+## Override to play fire sound and spawn target marker on attack frame
+func _trigger_attack_damage() -> void:
+	"""Play fire sound and start artillery attack sequence on the attack frame."""
+	has_triggered_frame_damage = true
+	_play_fire_sound()
+	_execute_attack()
+
+
 ## Override to spawn target marker, wait, then spawn falling projectile
-func _apply_attack_damage() -> void:
+## Damage happens when projectile impacts (in ArtilleryProjectile._on_impact())
+func _execute_attack() -> void:
 	if target == null or not is_instance_valid(target):
 		return
 	
@@ -63,9 +72,11 @@ func _spawn_artillery_projectile() -> void:
 	projectile.global_position = Vector2(_artillery_target_position.x, spawn_y)
 	
 	# Setup projectile
-	projectile.setup(_artillery_target_position, enemy_container, damage, aoe_radius, armor_piercing)
+	projectile.setup(_artillery_target_position, enemy_container, damage, aoe_radius, armor_piercing, is_enemy)
 	projectile.speed = projectile_speed
 	projectile.target_marker = _current_target_marker
+	# Pass impact sound callback to projectile
+	projectile.impact_sound_callback = _play_impact_sound
 	
 	# Clear our reference (projectile now owns the marker)
 	_current_target_marker = null

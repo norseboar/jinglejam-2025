@@ -21,8 +21,16 @@ func _ready() -> void:
 	super._ready()
 
 
-## Override to spawn a projectile instead of dealing direct damage
-func _apply_attack_damage() -> void:
+## Override to play fire sound and spawn projectile on attack frame
+func _trigger_attack_damage() -> void:
+	"""Play fire sound and spawn projectile on the attack frame."""
+	has_triggered_frame_damage = true
+	_play_fire_sound()
+	_execute_attack()
+
+
+## Override to spawn a projectile (damage happens when projectile hits)
+func _execute_attack() -> void:
 	if target == null or not is_instance_valid(target):
 		return
 	
@@ -45,6 +53,8 @@ func _apply_attack_damage() -> void:
 	# Calculate direction to target
 	var direction := (target.global_position - global_position).normalized()
 	
-	# Setup projectile
-	projectile.setup(direction, enemy_container, damage, armor_piercing)
+	# Setup projectile with impact sound callback
+	projectile.setup(direction, enemy_container, damage, armor_piercing, is_enemy)
 	projectile.speed = projectile_speed
+	# Pass impact sound callback to projectile
+	projectile.impact_sound_callback = _play_impact_sound

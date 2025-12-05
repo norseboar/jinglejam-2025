@@ -10,6 +10,8 @@ var damage := 1  # Set by unit that creates this projectile
 var direction := Vector2.RIGHT
 var enemy_container: Node2D = null  # Container of valid targets
 var armor_piercing := false  # Set by unit that creates this projectile
+var impact_sound_callback: Callable  # Callback to play impact sound (set by unit)
+var fired_by_enemy := false  # true if fired by enemy unit, false if fired by player unit
 
 @onready var visible_notifier: VisibleOnScreenNotifier2D = $VisibleOnScreenNotifier2D
 
@@ -41,12 +43,21 @@ func _check_for_hits() -> void:
 		
 		# Skip dead or dying units
 		if enemy is Unit:
-			if enemy.current_hp <= 0 or enemy.state == "dying":
+			var unit_enemy := enemy as Unit
+			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
 				continue
+			
+			# Only hit units with opposite team (prevent friendly fire)
+			# If fired by enemy, only hit player units (is_enemy = false)
+			# If fired by player, only hit enemy units (is_enemy = true)
+			if unit_enemy.is_enemy == fired_by_enemy:
+				continue  # Same team, skip
 		
 		var distance := position.distance_to(enemy.position)
 		if distance < hit_radius:
-			# Hit! Deal damage and destroy projectile
+			# Hit! Play impact sound, deal damage, and destroy projectile
+			if impact_sound_callback.is_valid():
+				impact_sound_callback.call()
 			if enemy.has_method("take_damage"):
 				enemy.take_damage(damage, armor_piercing)
 			queue_free()
@@ -54,11 +65,12 @@ func _check_for_hits() -> void:
 
 
 ## Initialize the projectile with direction and target container
-func setup(dir: Vector2, targets: Node2D, dmg: int, pierce: bool = false) -> void:
+func setup(dir: Vector2, targets: Node2D, dmg: int, pierce: bool = false, fired_by_enemy_unit: bool = false) -> void:
 	direction = dir.normalized()
 	enemy_container = targets
 	damage = dmg
 	armor_piercing = pierce
+	fired_by_enemy = fired_by_enemy_unit
 	
 	# Rotate sprite to face direction
 	rotation = direction.angle()

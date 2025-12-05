@@ -10,6 +10,8 @@ var armor_piercing := false  # Set by spawning unit
 
 var target_position := Vector2.ZERO  # Where the projectile will land
 var enemy_container: Node2D = null  # Container of valid targets
+var impact_sound_callback: Callable  # Callback to play impact sound (set by unit)
+var fired_by_enemy := false  # true if fired by enemy unit, false if fired by player unit
 
 var target_marker: Node2D = null  # Reference to the marker to remove on impact
 
@@ -24,6 +26,10 @@ func _process(delta: float) -> void:
 
 
 func _on_impact() -> void:
+	# Play impact sound
+	if impact_sound_callback.is_valid():
+		impact_sound_callback.call()
+	
 	# Deal AOE damage to all enemies in radius
 	if enemy_container != null:
 		for enemy in enemy_container.get_children():
@@ -36,8 +42,15 @@ func _on_impact() -> void:
 			
 			# Skip dead or dying units
 			if enemy is Unit:
-				if enemy.current_hp <= 0 or enemy.state == "dying":
+				var unit_enemy := enemy as Unit
+				if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
 					continue
+				
+				# Only hit units with opposite team (prevent friendly fire)
+				# If fired by enemy, only hit player units (is_enemy = false)
+				# If fired by player, only hit enemy units (is_enemy = true)
+				if unit_enemy.is_enemy == fired_by_enemy:
+					continue  # Same team, skip
 			
 			# Check if enemy is within AOE radius
 			var distance := target_position.distance_to(enemy.position)
@@ -54,12 +67,13 @@ func _on_impact() -> void:
 
 
 ## Initialize the artillery projectile
-func setup(target_pos: Vector2, targets: Node2D, dmg: int, radius: float, pierce: bool = false) -> void:
+func setup(target_pos: Vector2, targets: Node2D, dmg: int, radius: float, pierce: bool = false, fired_by_enemy_unit: bool = false) -> void:
 	target_position = target_pos
 	enemy_container = targets
 	damage = dmg
 	aoe_radius = radius
 	armor_piercing = pierce
+	fired_by_enemy = fired_by_enemy_unit
 	
 	# Position at target X, but off-screen above (will be set by spawner)
 	position.x = target_pos.x
