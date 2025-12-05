@@ -44,15 +44,6 @@ func _spawn_target_marker() -> void:
 
 
 func _spawn_artillery_projectile() -> void:
-	# Check if battle is still active - don't spawn if battle ended
-	var game := get_tree().get_first_node_in_group("game") as Game
-	if game != null and game.phase != "battle":
-		# Battle ended, clean up marker and don't spawn projectile
-		if _current_target_marker != null and is_instance_valid(_current_target_marker):
-			_current_target_marker.queue_free()
-		_current_target_marker = null
-		return
-	
 	# Spawn projectile
 	var projectile: ArtilleryProjectile = projectile_scene.instantiate() as ArtilleryProjectile
 	if projectile == null:

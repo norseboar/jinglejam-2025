@@ -17,6 +17,7 @@ attack_cooldown = 3.0
 armor_piercing = true
 display_name = "Dwarf Satcheler"
 description = "Shortrange frontline that packs a big punch"
+damage_sounds = Array[AudioStream]([])
 
 [node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = ExtResource("4_t1dey")
@@ -25,5 +26,5 @@ autoplay = "idle"
 frame = 6
 frame_progress = 1.0
 
-[node name="UpgradeMarkers" parent="." index="1"]
+[node name="UpgradeMarkers" parent="." index="2"]
 position = Vector2(0, -4)

@@ -9,6 +9,7 @@ script = ExtResource("1_e8w7h")
 max_hp = 30
 damage = 10
 attack_range = 20.0
+attack_damage_frame = 4
 display_name = "Squire"
 description = "Lightly-armored soldier"
 base_recruit_cost = 5

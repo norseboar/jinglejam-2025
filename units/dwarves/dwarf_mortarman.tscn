@@ -17,16 +17,17 @@ max_hp = 50
 damage = 40
 speed = 0.0
 attack_range = 990.0
-attack_cooldown = 4.0
+attack_cooldown = 2.0
 priority = 2
 armor_piercing = true
 display_name = "Dwarf Mortarman"
 description = "Slow but powerful artillery"
+damage_sounds = Array[AudioStream]([])
 
 [node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = ExtResource("3_ccyet")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="UpgradeMarkers" parent="." index="1"]
+[node name="UpgradeMarkers" parent="." index="2"]
 position = Vector2(0, -4)

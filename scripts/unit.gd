@@ -11,7 +11,8 @@ signal player_unit_died(army_index: int)  # Emitted by player units with army_in
 @export var speed := 100.0           # pixels per second
 @export var attack_range := 50.0     # radius to attack enemies
 @export var detection_range := 2000.0 # radius to detect enemies (very large to cover screen)
-@export var attack_cooldown := 1.0   # seconds between attacks
+@export var attack_cooldown := 0.0   # seconds to wait in idle after attack animation completes (0 = no cooldown)
+@export var attack_damage_frame := 0 # Frame number in attack animation when damage is dealt
 @export var priority := 1            # Priority for targeting (higher = more important)
 @export var armor := 0               # Damage reduction (subtracted from incoming damage)
 @export var armor_piercing := false  # If true, attacks ignore enemy armor
@@ -42,6 +43,7 @@ var state := "idle"          # "idle" | "moving" | "fighting" | "dying"
 var target: Node2D = null    # current attack target
 var time_since_attack := 0.0 # timer for attack cooldown
 var is_attacking := false    # true when attack animation is playing
+var has_triggered_frame_damage := false  # Prevents multiple damage triggers per attack
 var army_index := -1         # Index in Game.army array, or -1 if not from army
 
 # Upgrades
@@ -62,6 +64,8 @@ func _ready() -> void:
 	if animated_sprite:
 		animated_sprite.flip_h = is_enemy
 		_safe_play_animation("idle")
+		# Connect to frame_changed signal to detect attack damage frame
+		animated_sprite.frame_changed.connect(_on_animation_frame_changed)
 
 
 func _process(delta: float) -> void:
@@ -202,7 +206,7 @@ func _check_for_targets() -> void:
 		# If we're in attack range, start fighting
 		if distance_to_target <= attack_range:
 			set_state("fighting")
-			time_since_attack = attack_cooldown  # Attack immediately when entering combat
+			time_since_attack = 0.0  # Reset cooldown timer when entering combat
 		# Otherwise, we'll keep moving towards them (state stays "moving")
 
 
@@ -226,43 +230,40 @@ func _do_fighting(delta: float) -> void:
 		set_state("moving")
 		return
 
-	# Attack on cooldown (only if not already attacking)
+	# Attack if not already attacking and cooldown is ready
+	# If attack_cooldown is 0, attack immediately. Otherwise wait for cooldown after animation.
 	if not is_attacking:
-		time_since_attack += delta
-		if time_since_attack >= attack_cooldown:
-			time_since_attack = 0.0
+		if attack_cooldown <= 0.0:
+			# No cooldown - attack immediately
 			_attack_target()
+		else:
+			# Count cooldown timer during idle (after attack animation completes)
+			time_since_attack += delta
+			if time_since_attack >= attack_cooldown:
+				# Cooldown complete - attack
+				time_since_attack = 0.0
+				_attack_target()
 
 
 func _attack_target() -> void:
 	if target == null or not is_instance_valid(target) or is_attacking:
 		return
 
-	# Set attacking flag and play animation
+	# Set attacking flag and reset frame damage trigger
 	is_attacking = true
+	has_triggered_frame_damage = false
 	
-	# Calculate animation speed to match attack cooldown
-	var anim_speed_scale := _calculate_attack_animation_speed()
-	animated_sprite.speed_scale = anim_speed_scale
+	# Play attack animation at normal speed (no scaling)
+	animated_sprite.speed_scale = 1.0
 	_safe_play_animation("attack")
 
-	# Get animation duration (accounting for speed scale)
-	var anim_duration := _get_attack_animation_duration() / anim_speed_scale
+	# Get animation duration at normal speed
+	var anim_duration := _get_attack_animation_duration()
 	
 	if anim_duration > 0:
 		get_tree().create_timer(anim_duration).timeout.connect(_on_attack_animation_finished)
 	else:
 		_on_attack_animation_finished()
-
-
-func _calculate_attack_animation_speed() -> float:
-	var base_duration := _get_attack_animation_duration()
-	if base_duration <= 0 or attack_cooldown <= 0:
-		return 1.0
-	# Scale animation to fit within attack cooldown
-	# Leave a small buffer so animation completes before next attack
-	var target_duration := attack_cooldown * 0.9
-	return base_duration / target_duration
 
 
 func _get_attack_animation_duration() -> float:
@@ -283,17 +284,36 @@ func _get_attack_animation_duration() -> float:
 
 
 func _on_attack_animation_finished() -> void:
+	"""Called when attack animation completes. Resets state and switches back to idle."""
 	is_attacking = false
 	
-	# Reset animation speed scale
-	animated_sprite.speed_scale = 1.0
-	
-	# Call virtual method for actual attack effect (subclasses override this)
-	_apply_attack_damage()
-	
-	# Switch back to idle animation while waiting for next attack
+	# Switch back to idle animation
+	# If attack_cooldown > 0, we'll wait in idle for that duration before next attack
 	if state == "fighting" and animated_sprite:
 		_safe_play_animation("idle")
+		# Reset cooldown timer - it will count up during idle animation
+		if attack_cooldown > 0.0:
+			time_since_attack = 0.0
+
+
+func _on_animation_frame_changed() -> void:
+	"""Called when AnimatedSprite2D frame changes. Checks if we're on the attack damage frame."""
+	if not is_attacking:
+		return
+	
+	# Only trigger on attack animation
+	if animated_sprite.animation != "attack":
+		return
+	
+	# Check if we're on the damage frame and haven't triggered yet
+	if animated_sprite.frame == attack_damage_frame and not has_triggered_frame_damage:
+		_trigger_attack_damage()
+
+
+func _trigger_attack_damage() -> void:
+	"""Encapsulates playing attack sound and dealing damage. Called on the attack damage frame."""
+	has_triggered_frame_damage = true
+	_apply_attack_damage()
 
 
 ## Virtual method - subclasses override this to implement their attack type

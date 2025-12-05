@@ -10,6 +10,7 @@ damage = 2
 speed = 50.0
 attack_range = 20.0
 attack_cooldown = 2.0
+attack_damage_frame = 5
 armor = 5
 display_name = "Knight"
 description = "Heavily armored warrior"

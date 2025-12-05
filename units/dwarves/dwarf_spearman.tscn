@@ -6,16 +6,17 @@
 
 [node name="Dwarf_spearman" instance=ExtResource("1_pw30i")]
 script = ExtResource("2_66k5u")
-max_hp = 7
-speed = 15.0
+max_hp = 50
+damage = 10
+speed = 50.0
 attack_range = 20.0
 attack_cooldown = 2.5
+attack_damage_frame = 5
 armor_piercing = true
 display_name = "Dwarf Spearman"
 description = "Uses armor-piercing spear"
+damage_sounds = Array[AudioStream]([])
 
 [node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = ExtResource("3_u18bb")
-animation = &"walk"
 autoplay = "idle"
-frame_progress = 0.4577869

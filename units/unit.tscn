@@ -13,6 +13,8 @@ script = ExtResource("1_33c7x")
 sprite_frames = ExtResource("1_6k8ya")
 animation = &"attack"
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+
 [node name="UpgradeMarkers" type="Node2D" parent="."]
 position = Vector2(0, 2)
 
@@ -27,5 +29,3 @@ texture = ExtResource("2_6k8ya")
 [node name="Marker3" type="Sprite2D" parent="UpgradeMarkers"]
 position = Vector2(0, -11)
 texture = ExtResource("3_mgebg")
-
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
