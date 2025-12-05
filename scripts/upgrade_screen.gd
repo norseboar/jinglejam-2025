@@ -3,11 +3,13 @@ class_name UpgradeScreen
 
 # Signals
 signal continue_pressed(victory: bool)
+signal draft_complete()
 
 # Node references (assign in inspector)
 @export var army_slot_group: UnitSlotGroup
 @export var enemy_slot_group: UnitSlotGroup
 @export var continue_button: BaseButton
+@export var start_battle_button: BaseButton
 
 # Editor-only background for placement reference (hidden at runtime)
 @export var editor_background: CanvasItem
@@ -17,14 +19,16 @@ signal continue_pressed(victory: bool)
 @export var upgrade_data: Node
 @export var hp_button: BaseButton
 @export var damage_button: BaseButton
-@export var upgrade_label: Label
+@export var upgrade_price_label: Label
 
 # Recruit pane references
 @export var recruit_instructions: Node
 @export var recruit_data: Node
 @export var recruit_button: BaseButton
-@export var recruit_label: Label
+@export var recruit_price_label: Label
 @export var gold_label: Label
+@export var draft_label: Label
+@export var recruit_label: Label
 
 # State
 var current_victory_state: bool = false
@@ -33,6 +37,9 @@ var current_victory_state: bool = false
 var selected_army_index: int = -1
 var selected_enemy_index: int = -1
 var recruited_indices: Array[int] = []
+
+var is_draft_mode: bool = false
+var draft_roster: Array = []  # Array of ArmyUnit created from roster
 
 # References to slot arrays (populated when screen shows)
 var army_slots: Array[UnitSlot] = []
@@ -47,7 +54,11 @@ func _ready() -> void:
 	# Connect continue button
 	if continue_button:
 		continue_button.pressed.connect(_on_continue_button_pressed)
-	
+
+	# Connect start battle button
+	if start_battle_button:
+		start_battle_button.pressed.connect(_on_start_battle_button_pressed)
+
 	# Connect upgrade pane buttons
 	if hp_button:
 		hp_button.pressed.connect(_on_hp_button_pressed)
@@ -102,8 +113,79 @@ func show_upgrade_screen(victory: bool, player_army: Array, enemies_faced: Array
 	if game:
 		update_gold_display(game.gold)
 
+	# Set recruit mode (not draft)
+	is_draft_mode = false
+	_update_mode_display()
+
 	# Show upgrade screen
 	visible = true
+
+
+func show_draft_screen(roster: Roster) -> void:
+	"""Show the upgrade screen in draft mode with roster units to buy."""
+	is_draft_mode = true
+	current_victory_state = true  # Not really relevant for draft
+
+	# Store empty army reference (draft starts with no units)
+	var game := _get_game()
+	if game:
+		army_ref = game.army
+	else:
+		army_ref = []
+
+	# Convert roster to ArmyUnit array for the enemy tray
+	draft_roster.clear()
+	if roster:
+		for unit_scene in roster.units:
+			var army_unit := ArmyUnit.new()
+			army_unit.unit_scene = unit_scene
+			army_unit.unit_type = unit_scene.resource_path.get_file().get_basename()
+			army_unit.placed = false
+			army_unit.upgrades = {}
+			draft_roster.append(army_unit)
+
+	# Use draft_roster as the "enemies" to recruit from
+	enemies_faced_ref = draft_roster
+
+	# Reset selection state
+	selected_army_index = -1
+	selected_enemy_index = -1
+	recruited_indices.clear()
+
+	# Populate trays
+	_populate_army_tray(army_slot_group, army_ref)
+	_populate_enemy_tray(enemy_slot_group, draft_roster)
+
+	# Reset panes to instruction state
+	_refresh_upgrade_pane()
+	_refresh_recruit_pane()
+
+	# Update gold display
+	if game:
+		update_gold_display(game.gold)
+
+	# Update label and buttons for draft mode
+	_update_mode_display()
+
+	# Show screen
+	visible = true
+
+
+func _update_mode_display() -> void:
+	"""Update labels and buttons based on draft vs recruit mode."""
+	# Show/hide appropriate label
+	if draft_label:
+		draft_label.visible = is_draft_mode
+	if recruit_label:
+		recruit_label.visible = not is_draft_mode
+
+	# Show/hide appropriate button
+	if start_battle_button:
+		start_battle_button.visible = is_draft_mode
+		# Disable until army has at least 1 unit
+		start_battle_button.disabled = army_ref.size() < 1
+	if continue_button:
+		continue_button.visible = not is_draft_mode
 
 
 func hide_upgrade_screen() -> void:
@@ -163,17 +245,17 @@ func _populate_enemy_tray(slot_group: UnitSlotGroup, units: Array) -> void:
 		# Create ArmyUnit from enemy data and set on slot
 		if slot_index < units.size():
 			var unit_data = units[slot_index]
-			# Convert enemy data to ArmyUnit using the static method
+			# Convert enemy data to ArmyUnit
 			var army_unit: ArmyUnit = null
 			if unit_data is Dictionary:
 				army_unit = ArmyUnit.create_from_enemy(unit_data)
+			elif unit_data is ArmyUnit:
+				# If it's already an ArmyUnit, use it directly
+				army_unit = unit_data
 			else:
-				# If it's already an ArmyUnit-like object, create from it
-				army_unit = ArmyUnit.new()
-				army_unit.unit_scene = unit_data.unit_scene
-				army_unit.unit_type = unit_data.get("unit_type", "") if unit_data.has("unit_type") else ""
-				army_unit.upgrades = unit_data.get("upgrades", {}).duplicate() if unit_data.has("upgrades") else {}
-				army_unit.placed = false
+				# Unexpected type - log error and skip
+				push_error("Unexpected unit_data type in _populate_enemy_tray: %s" % typeof(unit_data))
+				army_unit = null
 			
 			slot.set_unit(army_unit)
 		else:
@@ -261,9 +343,9 @@ func _refresh_upgrade_pane() -> void:
 	if unit_summary:
 		unit_summary.show_unit_from_scene(army_unit.unit_scene, army_unit.upgrades)
 
-	# Update upgrade label
-	if upgrade_label:
-		upgrade_label.text = "Upgrade: %d Gold" % upgrade_cost
+	# Update upgrade price label
+	if upgrade_price_label:
+		upgrade_price_label.text = "Upgrade: %d Gold" % upgrade_cost
 
 	# Disable buttons if maxed or can't afford
 	var maxed := total_upgrades >= 3
@@ -308,15 +390,17 @@ func _refresh_recruit_pane() -> void:
 	if unit_summary:
 		unit_summary.show_unit_from_scene(enemy_scene, enemy_upgrades)
 
-	# Calculate recruit cost: base_recruit_cost + (upgrade_cost * total_upgrades)
+	# Calculate recruit cost: base_recruit_cost + (upgrade_cost * total_upgrades) with upgrades half off (rounded up)
 	var base_cost := _get_unit_base_recruit_cost(enemy_scene)
 	var upgrade_cost := _get_unit_upgrade_cost(enemy_scene)
 	var total_upgrades := _get_total_upgrades(enemy_upgrades)
-	var recruit_cost := base_cost + (upgrade_cost * total_upgrades)
+	var full_upgrade_cost := upgrade_cost * total_upgrades
+	var discounted_upgrade_cost := int(ceil(full_upgrade_cost / 2.0))
+	var recruit_cost := base_cost + discounted_upgrade_cost
 	
-	# Update recruit label
-	if recruit_label:
-		recruit_label.text = "Recruit: %d Gold" % recruit_cost
+	# Update recruit price label
+	if recruit_price_label:
+		recruit_price_label.text = "Recruit: %d Gold" % recruit_cost
 
 	# Check if already recruited
 	if selected_enemy_index in recruited_indices:
@@ -345,6 +429,33 @@ func _get_total_upgrades(upgrades: Dictionary) -> int:
 	for count in upgrades.values():
 		total += count
 	return total
+
+
+func _find_next_available_enemy_index(start_index: int) -> int:
+	"""Find the next available enemy unit index, checking adjacent slots first, then wrapping around."""
+	if enemies_faced_ref.is_empty():
+		return -1
+	
+	var total_enemies := enemies_faced_ref.size()
+	
+	# First, try the next slot
+	var next_index := (start_index + 1) % total_enemies
+	if next_index != start_index and next_index not in recruited_indices:
+		return next_index
+	
+	# Then try the previous slot
+	var prev_index := (start_index - 1 + total_enemies) % total_enemies
+	if prev_index != start_index and prev_index not in recruited_indices:
+		return prev_index
+	
+	# If adjacent slots are taken, search for any available unit
+	for i in range(total_enemies):
+		var check_index := (start_index + i + 1) % total_enemies
+		if check_index not in recruited_indices:
+			return check_index
+	
+	# No available units
+	return -1
 
 
 func update_gold_display(amount: int) -> void:
@@ -464,11 +575,13 @@ func _on_recruit_button_pressed() -> void:
 		enemy_scene = enemy_data.unit_scene
 		enemy_upgrades = enemy_data.upgrades
 
-	# Calculate recruit cost
+	# Calculate recruit cost: base_recruit_cost + (upgrade_cost * total_upgrades) with upgrades half off (rounded up)
 	var base_cost := _get_unit_base_recruit_cost(enemy_scene)
 	var upgrade_cost := _get_unit_upgrade_cost(enemy_scene)
 	var total_upgrades := _get_total_upgrades(enemy_upgrades)
-	var recruit_cost := base_cost + (upgrade_cost * total_upgrades)
+	var full_upgrade_cost := upgrade_cost * total_upgrades
+	var discounted_upgrade_cost := int(ceil(full_upgrade_cost / 2.0))
+	var recruit_cost := base_cost + discounted_upgrade_cost
 	
 	# Spend gold
 	var game := _get_game()
@@ -487,16 +600,31 @@ func _on_recruit_button_pressed() -> void:
 	# Refresh army tray to show the newly recruited unit
 	_populate_army_tray(army_slot_group, army_ref)
 
-	# Hide the recruited enemy from the enemy tray
-	if selected_enemy_index >= 0 and selected_enemy_index < enemy_slots.size():
-		enemy_slots[selected_enemy_index].set_unit(null)
-		enemy_slots[selected_enemy_index].set_selected(false)
+	# Store the previously selected index before clearing
+	var previous_index := selected_enemy_index
 
-	# Clear enemy selection
-	selected_enemy_index = -1
+	# Hide the recruited enemy from the enemy tray
+	if previous_index >= 0 and previous_index < enemy_slots.size():
+		enemy_slots[previous_index].set_unit(null)
+		enemy_slots[previous_index].set_selected(false)
+
+	# Find and select the next available unit (adjacent to the one just recruited)
+	var next_index := _find_next_available_enemy_index(previous_index)
+	if next_index >= 0:
+		selected_enemy_index = next_index
+		# Select the slot visually
+		if next_index < enemy_slots.size():
+			enemy_slots[next_index].set_selected(true)
+	else:
+		# No available units, clear selection
+		selected_enemy_index = -1
 
 	# Refresh pane immediately (updates button states and text)
 	_refresh_recruit_pane()
+
+	# Update start battle button state (may now have enough units)
+	if is_draft_mode and start_battle_button:
+		start_battle_button.disabled = army_ref.size() < 1
 
 
 func _get_game() -> Game:
@@ -514,3 +642,12 @@ func _on_continue_button_pressed() -> void:
 	"""Handle continue button press on upgrade screen."""
 	hide_upgrade_screen()
 	continue_pressed.emit(current_victory_state)
+
+
+func _on_start_battle_button_pressed() -> void:
+	"""Handle Start Battle button press in draft mode."""
+	if army_ref.size() < 1:
+		return  # Need at least 1 unit
+
+	hide_upgrade_screen()
+	draft_complete.emit()

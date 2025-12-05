@@ -21,7 +21,7 @@ attack_cooldown = 4.0
 priority = 2
 armor_piercing = true
 display_name = "Dwarf Mortarman"
-description = "Long range with a thunderous impact"
+description = "Slow but powerful artillery"
 
 [node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = ExtResource("3_ccyet")

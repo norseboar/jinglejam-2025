@@ -6,6 +6,7 @@ signal start_battle_requested
 signal upgrade_confirmed(victory: bool)
 signal show_upgrade_screen_requested  # Emitted when battle end button is clicked (victory)
 signal battle_select_advance(level_scene: PackedScene)
+signal draft_complete()
 
 # Node references (assign in inspector)
 @export var phase_label: Label
@@ -44,6 +45,7 @@ func _ready() -> void:
 	# Connect upgrade screen continue signal
 	if upgrade_screen:
 		upgrade_screen.continue_pressed.connect(_on_upgrade_screen_continue_pressed)
+		upgrade_screen.draft_complete.connect(_on_draft_complete)
 	
 	# Connect battle select screen signal
 	if battle_select_screen:
@@ -236,13 +238,23 @@ func show_upgrade_screen(victory: bool, player_army: Array, enemies_faced: Array
 	# Hide battle end modal
 	if battle_end_modal:
 		battle_end_modal.visible = false
-	
+
+	# Hide HUD elements (tray, phase label, etc.)
+	hide_hud_elements()
+
+	# Delegate to upgrade screen
+	if upgrade_screen:
+		upgrade_screen.show_upgrade_screen(victory, player_army, enemies_faced)
+
+
+func show_draft_screen(roster: Roster) -> void:
+	"""Show the upgrade screen in draft mode."""
 	# Hide HUD elements (tray, phase label, etc.)
 	hide_hud_elements()
 	
 	# Delegate to upgrade screen
 	if upgrade_screen:
-		upgrade_screen.show_upgrade_screen(victory, player_army, enemies_faced)
+		upgrade_screen.show_draft_screen(roster)
 
 
 func _on_go_button_pressed() -> void:
@@ -274,6 +286,14 @@ func _on_battle_end_button_pressed() -> void:
 func _on_upgrade_screen_continue_pressed(victory: bool) -> void:
 	"""Handle continue signal from upgrade screen."""
 	upgrade_confirmed.emit(victory)
+
+
+func _on_draft_complete() -> void:
+	"""Forward draft complete signal from upgrade screen."""
+	# Hide upgrade screen (which reshows HUD elements)
+	hide_upgrade_screen()
+	# Forward signal to game
+	draft_complete.emit()
 
 
 func hide_upgrade_screen() -> void:

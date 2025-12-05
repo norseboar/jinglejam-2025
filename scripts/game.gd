@@ -27,11 +27,13 @@ var enemies_faced: Array = []  # Captured at end of battle for upgrade screen
 # Current level references (set when level loads)
 var current_level: LevelRoot = null
 
+var is_draft_mode: bool = true
+
 # Scene references
 # (Removed unused swordsman_scene and archer_scene - units come from starting_unit_scenes and EnemyMarker.unit_scene)
 
-# Starting units for the tray (can have duplicates)
-@export var starting_unit_scenes: Array[PackedScene] = []
+# Starting roster for draft phase
+@export var starting_roster: Roster
 
 # Node references (assign in inspector)
 @export var background_rect: TextureRect
@@ -49,6 +51,7 @@ func _ready() -> void:
 	hud.upgrade_confirmed.connect(_on_upgrade_confirmed)
 	hud.show_upgrade_screen_requested.connect(_on_show_upgrade_screen_requested)
 	hud.battle_select_advance.connect(_on_battle_select_advance)
+	hud.draft_complete.connect(_on_draft_complete)
 	unit_placed.connect(_on_unit_placed)
 	army_unit_placed.connect(_on_army_unit_placed)
 	
@@ -56,17 +59,21 @@ func _ready() -> void:
 	gold = starting_gold
 	gold_changed.emit(gold)
 	
-	load_level(current_level_index)
+	# Start in draft mode
+	_show_draft_screen()
 
 
-func _init_army() -> void:
+func _show_draft_screen() -> void:
+	"""Show the draft screen at game start."""
+	# Set upgrade background
+	if background_rect and upgrade_background:
+		background_rect.texture = upgrade_background
+	
+	# Initialize empty army
 	army.clear()
-	for scene in starting_unit_scenes:
-		var slot := ArmyUnit.new()
-		slot.unit_scene = scene
-		slot.unit_type = scene.resource_path.get_file().get_basename()
-		slot.placed = false
-		army.append(slot)
+	
+	# Show draft screen via HUD
+	hud.show_draft_screen(starting_roster)
 
 
 func add_gold(amount: int) -> void:
@@ -163,16 +170,9 @@ func load_level_scene(level_scene: PackedScene) -> void:
 		push_error("level_scene is null!")
 		return
 	
-	# Only initialize army on first level or after it was cleared (defeat)
-	if army.size() == 0:
-		_init_army()
-		# Reset gold when starting new run
-		gold = starting_gold
-		gold_changed.emit(gold)
-	else:
-		# Reset placed status for new level (units can be placed again)
-		for army_unit in army:
-			army_unit.placed = false
+	# Reset placed status for new level (units can be placed again)
+	for army_unit in army:
+		army_unit.placed = false
 	
 	# Clear all units
 	_clear_all_units()
@@ -258,36 +258,25 @@ func _spawn_enemies_from_level() -> void:
 
 
 func _capture_enemies_faced() -> void:
-	"""Capture unique enemy types from current level for the upgrade screen."""
+	"""Capture all enemies from current level for the upgrade screen."""
 	enemies_faced.clear()
-	
+
 	if current_level == null:
 		return
-	
+
 	var enemy_markers := current_level.get_node_or_null("EnemyMarkers")
 	if enemy_markers == null:
 		return
-	
-	# Track seen combinations to deduplicate
-	var seen: Dictionary = {}  # key: "unit_type|upgrades_hash" -> bool
-	
+
 	for marker in enemy_markers.get_children():
 		if not marker is EnemyMarker:
 			continue
-		
+
 		var enemy_marker := marker as EnemyMarker
 		if enemy_marker.unit_scene == null:
 			continue
-		
-		# Create a unique key from unit type and upgrades
+
 		var unit_type: String = enemy_marker.unit_scene.resource_path.get_file().get_basename()
-		var upgrades_str: String = str(enemy_marker.upgrades)
-		var key: String = unit_type + "|" + upgrades_str
-		
-		if seen.has(key):
-			continue
-		
-		seen[key] = true
 		enemies_faced.append({
 			"unit_type": unit_type,
 			"unit_scene": enemy_marker.unit_scene,
@@ -409,18 +398,26 @@ func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
 	unit_placed.emit(army_unit.unit_type)
 
 
-func recruit_enemy(enemy_data: Dictionary) -> void:
-	"""Add an enemy to the player's army."""
+func recruit_enemy(enemy_data) -> void:
+	"""Add an enemy to the player's army. Accepts Dictionary or ArmyUnit."""
 	if army.size() >= 10:
 		push_warning("Cannot recruit: army is full")
 		return
 
 	var new_unit := ArmyUnit.new()
-	new_unit.unit_scene = enemy_data.get("unit_scene")
-	new_unit.unit_type = enemy_data.get("unit_type", "unknown")
+	if enemy_data is Dictionary:
+		new_unit.unit_scene = enemy_data.get("unit_scene")
+		new_unit.unit_type = enemy_data.get("unit_type", "unknown")
+		new_unit.upgrades = enemy_data.get("upgrades", {}).duplicate()
+	elif enemy_data is ArmyUnit:
+		new_unit.unit_scene = enemy_data.unit_scene
+		new_unit.unit_type = enemy_data.unit_type
+		new_unit.upgrades = enemy_data.upgrades.duplicate()
+	else:
+		push_error("recruit_enemy: unexpected type %s" % typeof(enemy_data))
+		return
+	
 	new_unit.placed = false
-	new_unit.upgrades = enemy_data.get("upgrades", {}).duplicate()
-
 	army.append(new_unit)
 
 
@@ -494,6 +491,13 @@ func _on_show_upgrade_screen_requested() -> void:
 func _on_battle_select_advance(level_scene: PackedScene) -> void:
 	"""Handle battle select advance - load the chosen level."""
 	load_level_scene(level_scene)
+
+
+func _on_draft_complete() -> void:
+	"""Handle draft completion - start first battle directly."""
+	is_draft_mode = false
+	# Load first level directly (no level select)
+	load_level(0)
 
 
 func _on_upgrade_confirmed(victory: bool) -> void:
