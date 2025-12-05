@@ -21,10 +21,12 @@ start_button = NodePath("HBoxContainer/play")
 quit_button = NodePath("HBoxContainer/exit")
 
 [node name="bg_test" type="TextureRect" parent="."]
-layout_mode = 0
-offset_right = 640.0
-offset_bottom = 360.0
-scale = Vector2(1.9961426, 1.9961426)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("3_tt55a")
 expand_mode = 3
 

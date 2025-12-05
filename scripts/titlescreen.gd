@@ -26,4 +26,3 @@ func _load_game_scene() -> void:
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
-
