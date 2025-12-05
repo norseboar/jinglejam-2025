@@ -1,17 +1,20 @@
-[gd_scene load_steps=5 format=3 uid="uid://dhrjnricjo8lf"]
+[gd_scene load_steps=6 format=3 uid="uid://dhrjnricjo8lf"]
 
 [ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_t1dey"]
 [ext_resource type="Script" uid="uid://c36sx2wogsgew" path="res://scripts/archer.gd" id="2_rhl77"]
-[ext_resource type="PackedScene" uid="uid://thp8cavfgw4e" path="res://units/dwarves/projectile_mortar.tscn" id="3_fnv0c"]
+[ext_resource type="PackedScene" uid="uid://pwmae7tfvrj3" path="res://units/dwarves/projectile_grenade.tscn" id="3_t1dey"]
+[ext_resource type="PackedScene" uid="uid://dglhowo45qkr4" path="res://scenes/vfx/satchel_vfx.tscn" id="4_rhl77"]
 [ext_resource type="SpriteFrames" uid="uid://d1sgs5255jqyd" path="res://assets/spriteframes/dwarf_satcheler.tres" id="4_t1dey"]
 
 [node name="dwarf_satcheler" instance=ExtResource("1_t1dey")]
 script = ExtResource("2_rhl77")
-projectile_scene = ExtResource("3_fnv0c")
-projectile_speed = 400.0
+projectile_scene = ExtResource("3_t1dey")
+projectile_speed = 200.0
+splash_radius = 8.0
+impact_animation_scene = ExtResource("4_rhl77")
 max_hp = 20
 damage = 40
-speed = 1.0
+speed = 50.0
 attack_range = 20.0
 attack_cooldown = 3.0
 armor_piercing = true

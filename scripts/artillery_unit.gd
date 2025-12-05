@@ -7,7 +7,8 @@ class_name ArtilleryUnit
 @export var projectile_speed := 400.0  # Fall speed of the projectile
 @export var target_marker_scene: PackedScene
 @export var hit_delay := 1.5  # Seconds between animation finish and projectile spawn
-@export var aoe_radius := 100.0  # Radius of impact damage
+@export var splash_radius := 100.0  # Radius for splash damage (0 = no splash, direct hit only)
+@export var impact_animation_scene: PackedScene = null  # Optional scene to instantiate on impact
 
 # Stored target position for the artillery strike
 var _artillery_target_position := Vector2.ZERO
@@ -72,9 +73,10 @@ func _spawn_artillery_projectile() -> void:
 	projectile.global_position = Vector2(_artillery_target_position.x, spawn_y)
 	
 	# Setup projectile
-	projectile.setup(_artillery_target_position, enemy_container, damage, aoe_radius, armor_piercing, is_enemy)
+	projectile.setup(_artillery_target_position, enemy_container, damage, splash_radius, armor_piercing, is_enemy)
 	projectile.speed = projectile_speed
 	projectile.target_marker = _current_target_marker
+	projectile.impact_animation_scene = impact_animation_scene
 	# Pass impact sound callback to projectile
 	projectile.impact_sound_callback = _play_impact_sound
 	

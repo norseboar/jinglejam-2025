@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://b2gg7627166nr"]
+[gd_scene load_steps=7 format=3 uid="uid://b2gg7627166nr"]
 
 [ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_ccyet"]
 [ext_resource type="Script" uid="uid://cehfsnecuy0pa" path="res://scripts/artillery_unit.gd" id="2_xgns3"]
 [ext_resource type="PackedScene" uid="uid://thp8cavfgw4e" path="res://units/dwarves/projectile_mortar.tscn" id="3_7n0xh"]
 [ext_resource type="SpriteFrames" uid="uid://kil0yya47sgr" path="res://assets/spriteframes/dwarf_mortarman.tres" id="3_ccyet"]
 [ext_resource type="PackedScene" uid="uid://bmxoi03d6ndhn" path="res://units/dwarves/target_marker.tscn" id="4_817ri"]
+[ext_resource type="PackedScene" uid="uid://b15ykhsliiwx4" path="res://scenes/vfx/mortar_vfx.tscn" id="5_a5k0m"]
 
 [node name="Dwarf_mortarman" instance=ExtResource("1_ccyet")]
 script = ExtResource("2_xgns3")
@@ -12,7 +13,8 @@ projectile_scene = ExtResource("3_7n0xh")
 projectile_speed = 200.0
 target_marker_scene = ExtResource("4_817ri")
 hit_delay = 1.5
-aoe_radius = 16.0
+splash_radius = 16.0
+impact_animation_scene = ExtResource("5_a5k0m")
 max_hp = 50
 damage = 40
 speed = 0.0

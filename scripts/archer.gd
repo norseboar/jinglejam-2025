@@ -5,6 +5,8 @@ class_name Archer
 
 @export var projectile_scene: PackedScene
 @export var projectile_speed := 400.0
+@export var splash_radius := 0.0  # Radius for splash damage (0 = no splash, direct hit only)
+@export var impact_animation_scene: PackedScene = null  # Optional scene to instantiate on impact
 
 
 func _ready() -> void:
@@ -56,5 +58,7 @@ func _execute_attack() -> void:
 	# Setup projectile with impact sound callback
 	projectile.setup(direction, enemy_container, damage, armor_piercing, is_enemy)
 	projectile.speed = projectile_speed
+	projectile.splash_radius = splash_radius
+	projectile.impact_animation_scene = impact_animation_scene
 	# Pass impact sound callback to projectile
 	projectile.impact_sound_callback = _play_impact_sound

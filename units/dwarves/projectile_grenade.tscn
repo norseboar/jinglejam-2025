@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://pwmae7tfvrj3"]
+
+[ext_resource type="Script" uid="uid://6l48pknbh2il" path="res://scripts/projectile.gd" id="1_qk6sa"]
+[ext_resource type="Texture2D" uid="uid://dfxdwvvq1rmed" path="res://assets/sprites/dwarves/grenade.png" id="2_qk6sa"]
+
+[node name="Projectile" type="Node2D"]
+script = ExtResource("1_qk6sa")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(-1, 1)
+texture = ExtResource("2_qk6sa")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]

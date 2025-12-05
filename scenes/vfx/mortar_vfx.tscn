@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://b15ykhsliiwx4"]
+
+[ext_resource type="SpriteFrames" uid="uid://dwo7q81cs6jsd" path="res://assets/spriteframes/mortar_vfx.tres" id="1_o10pb"]
+[ext_resource type="Script" uid="uid://dy2btsg3gbwbw" path="res://scripts/impact_animation.gd" id="2_qdwp1"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D"]
+sprite_frames = ExtResource("1_o10pb")
+script = ExtResource("2_qdwp1")

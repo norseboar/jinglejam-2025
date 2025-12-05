@@ -6,6 +6,8 @@ class_name Projectile
 var speed := 400.0  # Set by unit that creates this projectile
 var damage := 1  # Set by unit that creates this projectile
 @export var hit_radius := 20.0  # How close to an enemy to count as a hit
+var splash_radius := 0.0  # Radius for splash damage (0 = no splash, direct hit only)
+var impact_animation_scene: PackedScene = null  # Optional scene to instantiate on impact
 
 var direction := Vector2.RIGHT
 var enemy_container: Node2D = null  # Container of valid targets
@@ -55,13 +57,90 @@ func _check_for_hits() -> void:
 		
 		var distance := position.distance_to(enemy.position)
 		if distance < hit_radius:
-			# Hit! Play impact sound, deal damage, and destroy projectile
-			if impact_sound_callback.is_valid():
-				impact_sound_callback.call()
+			# Hit! Deal damage and destroy projectile
+			_on_impact(position)
+			return
+
+
+func _on_impact(impact_position: Vector2) -> void:
+	# Play impact sound
+	if impact_sound_callback.is_valid():
+		impact_sound_callback.call()
+	
+	# Spawn impact animation if provided
+	if impact_animation_scene != null:
+		var anim_instance := impact_animation_scene.instantiate()
+		if anim_instance != null:
+			get_parent().add_child(anim_instance)
+			anim_instance.global_position = impact_position
+	
+	# Deal damage
+	if splash_radius > 0.0:
+		# Splash damage - damage everything in radius
+		_deal_splash_damage(impact_position)
+	else:
+		# Direct hit - find the closest enemy and damage it
+		var closest_enemy = null
+		var closest_distance := hit_radius
+		
+		for enemy in enemy_container.get_children():
+			if not is_instance_valid(enemy):
+				continue
+			
+			# Skip other projectiles
+			if enemy is Projectile or enemy is ArtilleryProjectile:
+				continue
+			
+			# Skip dead or dying units
+			if enemy is Unit:
+				var unit_enemy := enemy as Unit
+				if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+					continue
+				
+				# Only hit units with opposite team
+				if unit_enemy.is_enemy == fired_by_enemy:
+					continue
+			
+			var distance := impact_position.distance_to(enemy.position)
+			if distance < closest_distance:
+				closest_distance = distance
+				closest_enemy = enemy
+		
+		if closest_enemy != null and closest_enemy.has_method("take_damage"):
+			closest_enemy.take_damage(damage, armor_piercing)
+	
+	# Destroy the projectile
+	queue_free()
+
+
+func _deal_splash_damage(impact_position: Vector2) -> void:
+	"""Deal splash damage to all enemies within splash_radius."""
+	if enemy_container == null:
+		return
+	
+	for enemy in enemy_container.get_children():
+		if not is_instance_valid(enemy):
+			continue
+		
+		# Skip other projectiles
+		if enemy is Projectile or enemy is ArtilleryProjectile:
+			continue
+		
+		# Skip dead or dying units
+		if enemy is Unit:
+			var unit_enemy := enemy as Unit
+			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+				continue
+			
+			# Only hit units with opposite team
+			if unit_enemy.is_enemy == fired_by_enemy:
+				continue
+		
+		# Check if enemy is within splash radius
+		var distance := impact_position.distance_to(enemy.position)
+		if distance <= splash_radius:
 			if enemy.has_method("take_damage"):
 				enemy.take_damage(damage, armor_piercing)
-			queue_free()
-			return
 
 
 ## Initialize the projectile with direction and target container
