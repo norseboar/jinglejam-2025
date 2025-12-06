@@ -435,7 +435,6 @@ texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
 [node name="BattleSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("options_container", "advance_button")]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -444,7 +443,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("13_kvuet")
 options_container = NodePath("Panel/HBoxContainer")
-advance_button = NodePath("Panel/Button")
+advance_button = NodePath("Panel/PanelContainer/VBoxContainer/Button")
 battle_option_scene = ExtResource("14_trtic")
 
 [node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen"]
@@ -460,20 +459,43 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_trtic")
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 20.0
-offset_top = 64.0
-offset_right = -20.0
-offset_bottom = 264.0
+offset_left = 18.0
+offset_top = 42.0
+offset_right = -22.0
+offset_bottom = 242.0
 grow_horizontal = 2
 alignment = 1
 
-[node name="Button" type="Button" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel"]
-layout_mode = 0
-offset_left = 266.0
-offset_top = 292.5
-offset_right = 375.0
-offset_bottom = 323.5
-text = "Next Battle"
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -82.0
+offset_top = -107.5
+offset_right = 82.0
+offset_bottom = -10.5
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/PanelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Select a challenger"
+horizontal_alignment = 1
+
+[node name="Button" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("13_264po")
+texture_pressed = ExtResource("14_1kice")
+texture_hover = ExtResource("15_5newe")
+script = ExtResource("23_pl11u")
 
 [node name="Gameplay" type="Node2D" parent="SubViewportContainer/SubViewport"]
 
