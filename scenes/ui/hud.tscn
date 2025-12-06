@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c0d47vd87vlmt"]
+[gd_scene load_steps=16 format=3 uid="uid://c0d47vd87vlmt"]
 
 [ext_resource type="Script" uid="uid://b4vx32mrylism" path="res://scripts/hud.gd" id="1_hqnrr"]
 [ext_resource type="Texture2D" uid="uid://cuyaqmy0d44ys" path="res://assets/sprites/ui/bottom_panel.png" id="2_bo48s"]
@@ -13,10 +13,11 @@
 [ext_resource type="Texture2D" uid="uid://c6eydxw58l61v" path="res://assets/sprites/ui/next_button/next_button_80x40.png" id="7_4jqwt"]
 [ext_resource type="Texture2D" uid="uid://boqvm3pbcc2x6" path="res://assets/sprites/ui/next_button/next_button_pressed.png" id="8_kicr4"]
 [ext_resource type="Texture2D" uid="uid://2rhn2jh2rt6r" path="res://assets/sprites/ui/next_button/next_button_highlight.png" id="9_mj13f"]
+[ext_resource type="Script" uid="uid://dbmau6olq1lnw" path="res://scripts/tray_panel.gd" id="10_fbprx"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0mwgc"]
 
-[node name="HUD" type="Control" node_paths=PackedStringArray("phase_label", "tray_panel", "unit_tray", "go_button", "auto_deploy_button", "gold_label", "battle_end_modal", "battle_end_label", "battle_end_button")]
+[node name="HUD" type="Control" node_paths=PackedStringArray("phase_label", "tray_panel", "unit_tray", "go_button", "auto_deploy_button", "gold_label", "gold_container", "battle_group", "battle_end_modal", "battle_end_label", "battle_end_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,17 +28,27 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_hqnrr")
-phase_label = NodePath("PanelContainer/PhaseLabel")
-tray_panel = NodePath("TrayPanel")
-unit_tray = NodePath("TrayPanel/Control/HBoxContainer/UnitSlotGroup")
-go_button = NodePath("TrayPanel/Control/HBoxContainer/VBoxContainer/GoButton")
-auto_deploy_button = NodePath("TrayPanel/Control/HBoxContainer/VBoxContainer/AutodeployButton")
-gold_label = NodePath("PanelContainer2/Gold")
+phase_label = NodePath("BattleGroup/PanelContainer/PhaseLabel")
+tray_panel = NodePath("BattleGroup/TrayPanel")
+unit_tray = NodePath("BattleGroup/TrayPanel/Control/HBoxContainer/UnitSlotGroup")
+go_button = NodePath("BattleGroup/TrayPanel/Control/HBoxContainer/VBoxContainer/GoButton")
+auto_deploy_button = NodePath("BattleGroup/TrayPanel/Control/HBoxContainer/VBoxContainer/AutodeployButton")
+gold_label = NodePath("BattleGroup/GoldContainer/Gold")
+gold_container = NodePath("BattleGroup/GoldContainer")
+battle_group = NodePath("BattleGroup")
 battle_end_modal = NodePath("BattleEndModal")
 battle_end_label = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/BattleEndLabel")
 battle_end_button = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/ConfirmButton")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="BattleGroup" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="BattleGroup"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -48,7 +59,7 @@ offset_right = 88.5
 offset_bottom = 39.0
 grow_horizontal = 2
 
-[node name="PhaseLabel" type="Label" parent="PanelContainer"]
+[node name="PhaseLabel" type="Label" parent="BattleGroup/PanelContainer"]
 layout_mode = 2
 theme_override_constants/line_spacing = 3
 theme_override_constants/paragraph_spacing = 0
@@ -57,23 +68,23 @@ text = "Level 1 -- Preparation Phase"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PanelContainer2" type="PanelContainer" parent="."]
+[node name="GoldContainer" type="PanelContainer" parent="BattleGroup"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -81.0
-offset_top = 8.0
+offset_top = 16.0
 offset_right = -8.0
-offset_bottom = 61.0
+offset_bottom = 69.0
 grow_horizontal = 0
 
-[node name="Gold" type="Label" parent="PanelContainer2"]
+[node name="Gold" type="Label" parent="BattleGroup/GoldContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42352942, 0.11372549, 0.105882354, 1)
 text = "Gold: 10"
 
-[node name="TrayPanel" type="MarginContainer" parent="."]
+[node name="TrayPanel" type="MarginContainer" parent="BattleGroup"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -85,15 +96,16 @@ offset_top = -90.0
 offset_right = 320.0
 grow_horizontal = 2
 grow_vertical = 0
+script = ExtResource("10_fbprx")
 
-[node name="TextureRect" type="TextureRect" parent="TrayPanel"]
+[node name="TextureRect" type="TextureRect" parent="BattleGroup/TrayPanel"]
 layout_mode = 2
 texture = ExtResource("2_bo48s")
 
-[node name="Control" type="Control" parent="TrayPanel"]
+[node name="Control" type="Control" parent="BattleGroup/TrayPanel"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TrayPanel/Control"]
+[node name="HBoxContainer" type="HBoxContainer" parent="BattleGroup/TrayPanel/Control"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -104,16 +116,16 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="UnitSlotGroup" parent="TrayPanel/Control/HBoxContainer" instance=ExtResource("4_8qguk")]
+[node name="UnitSlotGroup" parent="BattleGroup/TrayPanel/Control/HBoxContainer" instance=ExtResource("4_8qguk")]
 layout_mode = 2
 enable_drag_drop = true
 selection_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TrayPanel/Control/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="BattleGroup/TrayPanel/Control/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="AutodeployButton" type="TextureButton" parent="TrayPanel/Control/HBoxContainer/VBoxContainer"]
+[node name="AutodeployButton" type="TextureButton" parent="BattleGroup/TrayPanel/Control/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -122,7 +134,7 @@ texture_pressed = ExtResource("5_4d46k")
 texture_hover = ExtResource("6_erw67")
 script = ExtResource("7_4d46k")
 
-[node name="GoButton" type="TextureButton" parent="TrayPanel/Control/HBoxContainer/VBoxContainer"]
+[node name="GoButton" type="TextureButton" parent="BattleGroup/TrayPanel/Control/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4

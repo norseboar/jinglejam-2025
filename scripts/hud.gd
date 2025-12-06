@@ -11,11 +11,13 @@ signal draft_complete()
 
 # Node references (assign in inspector)
 @export var phase_label: Label
-@export var tray_panel: Control
+@export var tray_panel: TrayPanel
 @export var unit_tray: GridContainer
 @export var go_button: BaseButton
 @export var auto_deploy_button: BaseButton  # Auto-deploy button (add in editor next to Go button)
 @export var gold_label: Label
+@export var gold_container: Control
+@export var battle_group: Control
 
 # Battle end modal (shown first, then leads to upgrade screen)
 @export var battle_end_modal: ColorRect
@@ -88,6 +90,8 @@ func set_phase(phase: String, level: int) -> void:
 				phase_text = "Level %d – Preparation Phase" % level
 			"battle":
 				phase_text = "Level %d – Battle Phase" % level
+			"battle_end":
+				phase_text = "Level %d – Battle End" % level
 			"upgrade":
 				phase_text = "Level %d – Upgrade Phase" % level
 			_:
@@ -104,6 +108,9 @@ func set_phase(phase: String, level: int) -> void:
 	
 	# Update auto-deploy button state
 	_update_auto_deploy_button_state()
+	
+	# Update visibility/animations based on phase
+	_update_phase_visibility()
 
 
 func set_tray_unit_scenes(unit_scenes: Array[PackedScene]) -> void:
@@ -384,18 +391,23 @@ func _on_battle_select_advance_pressed_data(option_data: BattleOptionData) -> vo
 
 func hide_hud_elements() -> void:
 	"""Hide HUD UI elements (tray, phase label, etc.) when upgrade screen is shown."""
-	if tray_panel:
-		tray_panel.visible = false
-	if phase_label:
-		phase_label.get_parent().visible = false  # Hide the PanelContainer parent of phase_label
+	if battle_group:
+		battle_group.visible = false
+	else:
+		if tray_panel:
+			if tray_panel is TrayPanel:
+				(tray_panel as TrayPanel).hide_immediately()
+			else:
+				tray_panel.visible = false
+		if phase_label:
+			phase_label.get_parent().visible = false  # Hide the PanelContainer parent of phase_label
+	if gold_container:
+		gold_container.visible = false
 
 
 func show_hud_elements() -> void:
 	"""Show HUD UI elements after upgrade screen is closed."""
-	if tray_panel:
-		tray_panel.visible = true
-	if phase_label:
-		phase_label.get_parent().visible = true  # Show the PanelContainer parent of phase_label
+	_update_phase_visibility()
 
 
 func update_placed_count(count: int) -> void:
@@ -443,6 +455,46 @@ func update_gold_display(amount: int) -> void:
 	"""Update the gold label text."""
 	if gold_label:
 		gold_label.text = "Gold: %d" % amount
+
+
+func _update_phase_visibility() -> void:
+	"""Handle visibility/animation for HUD elements based on the current phase."""
+	var is_battle_phase := current_phase == "battle" or current_phase == "battle_end"
+	var is_battle_mode := current_phase == "preparation" or is_battle_phase
+	
+	if battle_group:
+		battle_group.visible = is_battle_mode
+	else:
+		# Fallback to show/hide individual elements when no battle_group is provided
+		if phase_label:
+			phase_label.get_parent().visible = is_battle_mode
+		if tray_panel and not is_battle_phase:
+			tray_panel.visible = is_battle_mode
+	
+	if gold_container:
+		gold_container.visible = is_battle_phase
+	
+	_update_tray_panel(is_battle_mode, is_battle_phase)
+
+
+func _update_tray_panel(is_battle_mode: bool, is_battle_phase: bool) -> void:
+	if not tray_panel:
+		return
+	
+	if tray_panel is TrayPanel:
+		var tray := tray_panel as TrayPanel
+		
+		if not is_battle_mode:
+			tray.hide_immediately()
+			return
+		
+		if is_battle_phase:
+			tray.slide_out()
+		else:
+			tray.slide_in()
+	else:
+		# Fallback if tray_panel is not a TrayPanel script
+		tray_panel.visible = is_battle_mode and not is_battle_phase
 
 
 func get_gold_counter_position() -> Vector2:

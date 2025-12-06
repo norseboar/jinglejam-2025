@@ -264,7 +264,11 @@ func _clear_all_units() -> void:
 
 
 func _end_battle(victory: bool) -> void:
-	phase = "upgrade"
+	phase = "battle_end"
+	
+	# Update HUD state to reflect the battle-end phase (keep battle UI while modal shows)
+	if hud:
+		hud.set_phase(phase, current_level_index + 1)
 
 	# Stop all units (but don't reset dying units - they need to stay "dying" to prevent double gold)
 	for child in player_units.get_children():
@@ -653,10 +657,10 @@ func _count_living_units(container: Node2D) -> int:
 	return count
 
 
-func _on_enemy_unit_died(gold_reward: int, position: Vector2) -> void:
+func _on_enemy_unit_died(gold_reward: int, death_position: Vector2) -> void:
 	"""Handle enemy unit death and award gold."""
 	# Spawn coin animation
-	_spawn_coin_animation(position)
+	_spawn_coin_animation(death_position)
 	
 	# Award gold (will be updated when coin reaches counter, but we can award immediately)
 	add_gold(gold_reward)
@@ -744,6 +748,10 @@ func _on_start_battle_requested() -> void:
 
 func _on_show_upgrade_screen_requested() -> void:
 	"""Handle request to show upgrade screen (after battle end modal button clicked on victory)."""
+	phase = "upgrade"
+	if hud:
+		hud.set_phase(phase, current_level_index + 1)
+	
 	# Swap to upgrade background
 	if background_rect and upgrade_background:
 		background_rect.texture = upgrade_background
