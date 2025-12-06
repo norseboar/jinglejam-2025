@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://c0d47vd87vlmt"]
+[gd_scene load_steps=19 format=3 uid="uid://c0d47vd87vlmt"]
 
 [ext_resource type="Script" uid="uid://b4vx32mrylism" path="res://scripts/hud.gd" id="1_hqnrr"]
 [ext_resource type="Texture2D" uid="uid://cuyaqmy0d44ys" path="res://assets/sprites/ui/bottom_panel.png" id="2_bo48s"]
@@ -14,6 +14,9 @@
 [ext_resource type="Texture2D" uid="uid://boqvm3pbcc2x6" path="res://assets/sprites/ui/next_button/next_button_pressed.png" id="8_kicr4"]
 [ext_resource type="Texture2D" uid="uid://2rhn2jh2rt6r" path="res://assets/sprites/ui/next_button/next_button_highlight.png" id="9_mj13f"]
 [ext_resource type="Script" uid="uid://dbmau6olq1lnw" path="res://scripts/tray_panel.gd" id="10_fbprx"]
+[ext_resource type="Script" uid="uid://gfq4k1nlmm6l" path="res://scripts/sound_toggle_button.gd" id="15_o6xly"]
+[ext_resource type="Texture2D" uid="uid://b7b1e3yxh1rsw" path="res://assets/sprites/ui/sound_on.png" id="16_we3sy"]
+[ext_resource type="Texture2D" uid="uid://b2lh0ksx8dc3u" path="res://assets/sprites/ui/sound_off.png" id="17_65nxt"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0mwgc"]
 
@@ -197,3 +200,18 @@ texture_normal = ExtResource("7_4jqwt")
 texture_pressed = ExtResource("8_kicr4")
 texture_hover = ExtResource("9_mj13f")
 stretch_mode = 5
+
+[node name="SoundToggle" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("15_o6xly")
+sound_on_texture = ExtResource("16_we3sy")
+sound_off_texture = ExtResource("17_65nxt")

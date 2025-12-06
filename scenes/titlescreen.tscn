@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dspj2kekx0lyk"]
+[gd_scene load_steps=13 format=3 uid="uid://dspj2kekx0lyk"]
 
 [ext_resource type="Script" uid="uid://cklegvw7v1gri" path="res://scripts/titlescreen.gd" id="1_8or72"]
 [ext_resource type="SpriteFrames" uid="uid://b85k4lu2jac3j" path="res://assets/spriteframes/titlescreen.tres" id="2_84han"]
@@ -7,8 +7,11 @@
 [ext_resource type="Texture2D" uid="uid://da64cd73sw671" path="res://assets/sprites/ui/start_button/start_button_pressed.png" id="4_8or72"]
 [ext_resource type="Texture2D" uid="uid://l8cgt1m3s036" path="res://assets/sprites/ui/start_button/start_button_highlight.png" id="5_hcbn3"]
 [ext_resource type="Texture2D" uid="uid://dget5nnbnp0b4" path="res://assets/sprites/ui/quit_button/quit_button.png" id="9_ybki2"]
+[ext_resource type="Script" uid="uid://gfq4k1nlmm6l" path="res://scripts/sound_toggle_button.gd" id="10_8or72"]
 [ext_resource type="Texture2D" uid="uid://djifl7loku358" path="res://assets/sprites/ui/quit_button/quit_button_pressed.png" id="10_lsij0"]
+[ext_resource type="Texture2D" uid="uid://b7b1e3yxh1rsw" path="res://assets/sprites/ui/sound_on.png" id="11_hcbn3"]
 [ext_resource type="Texture2D" uid="uid://dsresxld07fmo" path="res://assets/sprites/ui/quit_button/quit_button_highlight.png" id="11_y7yat"]
+[ext_resource type="Texture2D" uid="uid://b2lh0ksx8dc3u" path="res://assets/sprites/ui/sound_off.png" id="12_ybki2"]
 
 [node name="titlescreen" type="Control" node_paths=PackedStringArray("start_button", "quit_button")]
 layout_mode = 3
@@ -22,7 +25,7 @@ start_button = NodePath("PanelContainer/HBoxContainer/play")
 quit_button = NodePath("PanelContainer/HBoxContainer/exit")
 
 [node name="bg_test" type="AnimatedSprite2D" parent="."]
-position = Vector2(640, 419.1)
+position = Vector2(640, 367)
 scale = Vector2(1.1851852, 1.1580555)
 sprite_frames = ExtResource("2_84han")
 autoplay = "default"
@@ -43,21 +46,19 @@ text = "Fucking amazing game name
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
-anchors_preset = 3
+anchors_preset = 1
 anchor_left = 1.0
-anchor_top = 1.0
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -290.0
-offset_top = -205.0
+offset_left = -298.0
+offset_bottom = 213.0
 grow_horizontal = 0
-grow_vertical = 0
+theme_override_constants/margin_top = 32
 theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_bottom = 32
 
 [node name="Label2" type="Label" parent="MarginContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9019608, 0.827451, 0.64705884, 1)
+theme_override_colors/font_color = Color(0.42352942, 0.11372549, 0.105882354, 1)
 theme_override_font_sizes/font_size = 42
 text = "Jinglejam2025
 programmer - norseboar
@@ -101,3 +102,22 @@ size_flags_vertical = 4
 texture_normal = ExtResource("9_ybki2")
 texture_pressed = ExtResource("10_lsij0")
 texture_hover = ExtResource("11_y7yat")
+
+[node name="SoundButton" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -180.0
+offset_right = -116.0
+offset_bottom = -116.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(3, 3)
+texture_normal = ExtResource("11_hcbn3")
+script = ExtResource("10_8or72")
+sound_on_texture = ExtResource("11_hcbn3")
+sound_off_texture = ExtResource("12_ybki2")
