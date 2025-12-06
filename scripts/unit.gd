@@ -209,8 +209,14 @@ func _check_for_targets() -> void:
 		# If we're in attack range, start fighting
 		if distance_to_target <= attack_range:
 			set_state("fighting")
-			# Reset cooldown timer when entering combat so first attack happens immediately
-			time_since_attack = attack_cooldown  # Set to cooldown value so attack happens immediately
+			# Reset cooldown timer when entering combat
+			# Ranged units (not Swordsman) get a random delay for first attack to stagger them
+			if self is Archer or self is ArtilleryUnit:
+				# Random delay between 0 and attack_cooldown for first attack
+				time_since_attack = randf() * attack_cooldown
+			else:
+				# Melee units (Swordsman) attack immediately
+				time_since_attack = attack_cooldown  # Set to cooldown value so attack happens immediately
 		# Otherwise, we'll keep moving towards them (state stays "moving")
 
 
@@ -327,9 +333,23 @@ func _execute_attack() -> void:
 	pass
 
 
+func _is_combat_active() -> bool:
+	"""Check if combat is still active by finding the Game node and checking phase."""
+	var game: Game = get_tree().get_first_node_in_group("game") as Game
+	if game == null:
+		# If we can't find the game node, assume combat is active (fail-safe)
+		return true
+	
+	return game.phase == "battle"
+
+
 func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:
 	# Ignore damage if already dead/dying
 	if state == "dying" or current_hp <= 0:
+		return
+	
+	# Don't take damage if combat is over
+	if not _is_combat_active():
 		return
 	
 	# Apply armor reduction unless attacker has armor piercing

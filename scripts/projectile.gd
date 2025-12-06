@@ -74,6 +74,11 @@ func _on_impact(impact_position: Vector2) -> void:
 			get_parent().add_child(anim_instance)
 			anim_instance.global_position = impact_position
 	
+	# Don't deal damage if combat is over
+	if not _is_combat_active():
+		queue_free()
+		return
+	
 	# Deal damage
 	if splash_radius > 0.0:
 		# Splash damage - damage everything in radius
@@ -113,9 +118,23 @@ func _on_impact(impact_position: Vector2) -> void:
 	queue_free()
 
 
+func _is_combat_active() -> bool:
+	"""Check if combat is still active by finding the Game node and checking phase."""
+	var game: Game = get_tree().get_first_node_in_group("game") as Game
+	if game == null:
+		# If we can't find the game node, assume combat is active (fail-safe)
+		return true
+	
+	return game.phase == "battle"
+
+
 func _deal_splash_damage(impact_position: Vector2) -> void:
 	"""Deal splash damage to all enemies within splash_radius."""
 	if enemy_container == null:
+		return
+	
+	# Don't deal damage if combat is over
+	if not _is_combat_active():
 		return
 	
 	for enemy in enemy_container.get_children():
