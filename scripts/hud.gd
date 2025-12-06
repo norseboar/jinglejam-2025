@@ -145,6 +145,12 @@ func set_tray_unit_scenes(unit_scenes: Array[PackedScene]) -> void:
 func set_tray_from_army(army_units: Array) -> void:
 	"""Populate the tray from army slot data."""
 	placed_unit_count = 0
+	
+	# Reset slot modulation to normal (in case they were grayed out from previous level)
+	for slot in tray_slots:
+		if slot:
+			slot.modulate = Color(1, 1, 1, 1)
+			slot.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	if not unit_tray:
 		return

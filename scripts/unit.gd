@@ -48,7 +48,6 @@ var time_since_attack := 0.0 # timer for attack cooldown
 var is_attacking := false    # true when attack animation is playing
 var has_triggered_frame_damage := false  # Prevents multiple damage triggers per attack
 var army_index := -1         # Index in Game.army array, or -1 if not from army
-var is_first_attack_in_combat := true  # Track if this is the first attack in current combat
 
 # Upgrades
 var upgrades: Dictionary = {}  # e.g., { "hp": 2, "damage": 1 }
@@ -210,13 +209,8 @@ func _check_for_targets() -> void:
 		# If we're in attack range, start fighting
 		if distance_to_target <= attack_range:
 			set_state("fighting")
-			# Reset cooldown timer when entering combat
-			# For non-swordsman units with attack cooldown, add random delay for first attack
-			if not self is Swordsman and attack_cooldown > 0.0 and is_first_attack_in_combat:
-				# Random delay between 0 and attack_cooldown for first attack only
-				time_since_attack = randf() * attack_cooldown
-			else:
-				time_since_attack = 0.0
+			# Reset cooldown timer when entering combat so first attack happens immediately
+			time_since_attack = attack_cooldown  # Set to cooldown value so attack happens immediately
 		# Otherwise, we'll keep moving towards them (state stays "moving")
 
 
@@ -240,20 +234,14 @@ func _do_fighting(delta: float) -> void:
 		set_state("moving")
 		return
 
-	# Attack if not already attacking and cooldown is ready
-	# If attack_cooldown is 0, attack immediately. Otherwise wait for cooldown after animation.
+	# Attack immediately when not attacking, then wait for cooldown after attack completes
 	if not is_attacking:
-		if attack_cooldown <= 0.0:
-			# No cooldown - attack immediately
+		# If no cooldown, or cooldown has passed since last attack finished, attack immediately
+		if attack_cooldown <= 0.0 or time_since_attack >= attack_cooldown:
 			_attack_target()
 		else:
 			# Count cooldown timer during idle (after attack animation completes)
 			time_since_attack += delta
-			if time_since_attack >= attack_cooldown:
-				# Cooldown complete - attack
-				time_since_attack = 0.0
-				is_first_attack_in_combat = false  # Mark that we've done our first attack
-				_attack_target()
 
 
 func _attack_target() -> void:

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://o45r26gtfs6n"
+path="res://.godot/imported/Cannon shots 10.wav-f231d8ecc4acb9e9cfe4ffb52af9432c.sample"
+
+[deps]
+
+source_file="res://assets/sfx/mortar_fire/Cannon shots 10.wav"
+dest_files=["res://.godot/imported/Cannon shots 10.wav-f231d8ecc4acb9e9cfe4ffb52af9432c.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

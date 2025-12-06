@@ -6,6 +6,10 @@ signal unit_placed(unit_type: String)
 signal army_unit_placed(slot_index: int)
 signal gold_changed(new_amount: int)
 
+# Debug flag for enemy army generation
+const DEBUG_DRAFT_ASSUME_GOLD := false  # If true, assume 10 gold when calculating army value for enemy generation
+const DEBUG_DRAFT_GOLD_AMOUNT := 10  # Amount of gold to assume when debug flag is enabled
+
 # Game state
 var phase := "preparation"  # "preparation" | "battle" | "upgrade"
 var army: Array = []  # Array of ArmyUnit
@@ -113,7 +117,12 @@ func calculate_army_value() -> int:
 	Calculate the total value of the player's army.
 	Value = current gold + sum of (base_recruit_cost + upgrade_cost * upgrades) for each unit.
 	"""
-	var value := gold
+	# Use debug gold if flag is enabled
+	var gold_to_use := gold
+	if DEBUG_DRAFT_ASSUME_GOLD:
+		gold_to_use = DEBUG_DRAFT_GOLD_AMOUNT
+	
+	var value := gold_to_use
 
 	for army_unit in army:
 		if army_unit.unit_scene == null:
@@ -696,6 +705,13 @@ func _on_show_upgrade_screen_requested() -> void:
 	# Swap to upgrade background
 	if background_rect and upgrade_background:
 		background_rect.texture = upgrade_background
+	
+	# Clear leftover units from the battle
+	_clear_all_units()
+	
+	# Hide the level (if present)
+	if current_level:
+		current_level.visible = false
 	
 	# Show upgrade screen with army and enemy data
 	hud.show_upgrade_screen(true, army, enemies_faced)  # Only called on victory

@@ -8,4 +8,4 @@
 [resource]
 script = ExtResource("1_ubd7u")
 team_name = "Humans"
-units = Array[PackedScene]([ExtResource("2_lwg47"), ExtResource("2_lwg47"), ExtResource("3_qllg4"), ExtResource("3_qllg4"), ExtResource("4_qrpoa"), ExtResource("4_qrpoa"), ExtResource("4_qrpoa"), ExtResource("4_qrpoa")])
+units = Array[PackedScene]([ExtResource("2_lwg47"), ExtResource("2_lwg47"), ExtResource("3_qllg4"), ExtResource("3_qllg4"), ExtResource("4_qrpoa"), ExtResource("4_qrpoa"), ExtResource("4_qrpoa"), ExtResource("4_qrpoa"), ExtResource("2_lwg47"), ExtResource("3_qllg4")])
