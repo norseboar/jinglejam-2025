@@ -5,7 +5,7 @@ signal advance_pressed(option_data: BattleOptionData)
 
 # Node references (assign in inspector)
 @export var options_container: Container  # HBoxContainer or similar
-@export var advance_button: Button
+@export var advance_button: BaseButton
 
 # Scene to instantiate for each option
 @export var battle_option_scene: PackedScene
