@@ -55,6 +55,9 @@ var upgrades: Dictionary = {}  # e.g., { "hp": 2, "damage": 1 }
 # Reference to the container holding enemies (set by Game.gd when spawning)
 var enemy_container: Node2D = null
 
+# Reference to the container holding friendly units (set by Game.gd when spawning)
+var friendly_container: Node2D = null
+
 # Node references
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
@@ -347,16 +350,16 @@ func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:
 	# Ignore damage if already dead/dying
 	if state == "dying" or current_hp <= 0:
 		return
-	
+
 	# Don't take damage if combat is over
 	if not _is_combat_active():
 		return
-	
+
 	# Apply armor reduction unless attacker has armor piercing
 	var final_damage := amount
 	if not attacker_armor_piercing:
 		final_damage = max(0, amount - armor)
-	
+
 	current_hp -= final_damage
 
 	# Visual feedback: flash the sprite red
@@ -367,6 +370,25 @@ func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:
 
 	if current_hp <= 0:
 		die()
+
+
+func receive_heal(amount: int) -> void:
+	# Ignore heal if already dead/dying
+	if state == "dying" or current_hp <= 0:
+		return
+
+	# No-op if already at full health
+	if current_hp >= max_hp:
+		return
+
+	# Heal the unit, clamping to max_hp
+	current_hp = min(current_hp + amount, max_hp)
+
+	# Visual feedback: flash the sprite green
+	if animated_sprite:
+		animated_sprite.modulate = Color.GREEN
+		# Reset color after a short delay
+		get_tree().create_timer(0.1).timeout.connect(_reset_color)
 
 
 func _reset_color() -> void:

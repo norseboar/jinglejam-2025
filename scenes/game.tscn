@@ -8,8 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://qguwsk400gqy" path="res://assets/backgrounds/chess_table.jpg" id="5_p57ef"]
 [ext_resource type="PackedScene" uid="uid://c0d47vd87vlmt" path="res://scenes/ui/hud.tscn" id="6_p57ef"]
 [ext_resource type="Script" uid="uid://bwkdnef87rpc7" path="res://scripts/upgrade_screen.gd" id="7_0tnpc"]
+[ext_resource type="Resource" uid="uid://dvenpd2yimxv5" path="res://units/rosters/starting_rosters/demons.tres" id="7_e1j6l"]
 [ext_resource type="Texture2D" uid="uid://cv4fsh4q3oll" path="res://assets/backgrounds/reward_bg.jpg" id="7_gee14"]
-[ext_resource type="Resource" uid="uid://cptdpd3b8m1h0" path="res://units/rosters/starting_rosters/dwarves.tres" id="7_pl11u"]
 [ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="8_pl11u"]
 [ext_resource type="Resource" uid="uid://cqbdneupe6hhs" path="res://units/rosters/full_rosters/dwarves_full.tres" id="10_qnb83"]
 [ext_resource type="PackedScene" uid="uid://qu7tcqixa2mi" path="res://scenes/ui/unit_summary.tscn" id="11_kvpfn"]
@@ -42,7 +42,7 @@ starting_gold = 50
 level_pools = Array[Resource]([ExtResource("2_dinhu"), ExtResource("3_kvuet"), ExtResource("4_trtic")])
 total_levels = 7
 upgrade_background = ExtResource("7_gee14")
-starting_roster = ExtResource("7_pl11u")
+starting_roster = ExtResource("7_e1j6l")
 full_rosters = Array[ExtResource("8_pl11u")]([ExtResource("10_qnb83"), ExtResource("11_sww3w")])
 background_rect = NodePath("BackgroundRect")
 gameplay = NodePath("SubViewportContainer/SubViewport/Gameplay")

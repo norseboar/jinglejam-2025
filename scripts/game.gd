@@ -406,6 +406,7 @@ func _spawn_enemies_from_level() -> void:
 		# Configure enemy properties BEFORE adding to scene tree (so _ready() sees correct values)
 		enemy.is_enemy = true
 		enemy.enemy_container = player_units
+		enemy.friendly_container = enemy_units
 		enemy.global_position = enemy_marker.global_position
 		enemy.upgrades = enemy_marker.upgrades.duplicate()  # Copy upgrades
 		
@@ -459,6 +460,7 @@ func _spawn_enemies_from_generated_army() -> void:
 		# Configure enemy
 		enemy.is_enemy = true
 		enemy.enemy_container = player_units
+		enemy.friendly_container = enemy_units
 		enemy.global_position = slot.global_position
 		enemy.upgrades = army_unit.upgrades.duplicate()
 
@@ -605,6 +607,7 @@ func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
 	player_units.add_child(unit)
 	unit.is_enemy = false
 	unit.enemy_container = enemy_units
+	unit.friendly_container = player_units
 	unit.global_position = slot.get_slot_center()
 	unit.upgrades = army_unit.upgrades.duplicate()  # Copy upgrades
 	unit.army_index = army_index  # Track which army slot this unit came from

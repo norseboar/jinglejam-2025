@@ -54,7 +54,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_oumt7")
 }],
-"loop": true,
+"loop": false,
 "name": &"idle",
 "speed": 12.0
 }]

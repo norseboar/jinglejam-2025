@@ -8,8 +8,8 @@
 
 ## Status
 
-- [ ] Task 1: Enable heal targeting
-- [ ] Task 2: Implement healer logic
+- [x] Task 1: Enable heal targeting
+- [x] Task 2: Implement healer logic
 - [ ] Task 3: Wire scenes & rosters
 
 ---
@@ -26,7 +26,7 @@
 
 ## Tasks
 
-### Task 1: Enable heal targeting
+### ✅ Task 1: Enable heal targeting
 
 **Files:** `scripts/unit.gd`, `scripts/game.gd`
 
@@ -43,7 +43,7 @@
 
 ---
 
-### Task 2: Implement healer logic
+### ✅ Task 2: Implement healer logic
 
 **Files:** `scripts/healer.gd`, `scripts/unit.gd` (override calls), optional `units/demons/healing_vfx.tscn` reference
 
@@ -87,4 +87,3 @@
 - [ ] Heal amount and cooldown are configurable and respected; healer never spawns projectiles or damages enemies.
 - [ ] Rosters/draft/auto-deploy include the healer and spawning works for player/enemy sides without errors.
 - [ ] No regressions to existing unit combat behavior.
-

@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://cuvby1b737c0w"]
+
+[ext_resource type="Script" uid="uid://cndk3otdr1x8c" path="res://scripts/healer.gd" id="1_w1g8w"]
+[ext_resource type="AudioStream" uid="uid://ddiujl58sj6d6" path="res://assets/sfx/demons/Dark Heal A.wav" id="2_c0hlw"]
+[ext_resource type="SpriteFrames" uid="uid://cssgylvptdirv" path="res://assets/spriteframes/demons_healer.tres" id="2_nlkpr"]
+[ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_c0hlw"]
+[ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_vnq4l"]
+[ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_ad8s3"]
+
+[node name="Unit" type="Node2D"]
+script = ExtResource("1_w1g8w")
+heal_amount = 50
+max_hp = 10
+damage = 0
+attack_range = 60.0
+attack_cooldown = 2.0
+attack_damage_frame = 4
+targets_high_priority = true
+display_name = "Demon Healer"
+description = "Healer"
+damage_sounds = Array[AudioStream]([])
+fire_sounds = Array[AudioStream]([ExtResource("2_c0hlw")])
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2_nlkpr")
+animation = &"attack"
+autoplay = "idle"
+frame = 5
+frame_progress = 1.0
+
+[node name="UpgradeMarkers" type="Node2D" parent="."]
+position = Vector2(0, -2)
+
+[node name="Marker1" type="Sprite2D" parent="UpgradeMarkers"]
+position = Vector2(0, -11)
+texture = ExtResource("3_c0hlw")
+
+[node name="Marker2" type="Sprite2D" parent="UpgradeMarkers"]
+position = Vector2(0, -11)
+texture = ExtResource("4_vnq4l")
+
+[node name="Marker3" type="Sprite2D" parent="UpgradeMarkers"]
+position = Vector2(0, -11)
+texture = ExtResource("5_ad8s3")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]

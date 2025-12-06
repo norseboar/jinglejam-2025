@@ -6,4 +6,6 @@
 texture_filter = 1
 sprite_frames = ExtResource("1_j4avj")
 animation = &"idle"
-frame_progress = 0.73153853
+autoplay = "idle"
+frame = 3
+frame_progress = 0.79113185
