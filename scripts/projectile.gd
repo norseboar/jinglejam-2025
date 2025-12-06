@@ -15,6 +15,26 @@ var armor_piercing := false  # Set by unit that creates this projectile
 var impact_sound_callback: Callable  # Callback to play impact sound (set by unit)
 var fired_by_enemy := false  # true if fired by enemy unit, false if fired by player unit
 
+# Optional sine-wave motion perpendicular to travel direction
+@export var sine_amplitude: float = 0.0
+@export var sine_frequency: float = 0.0  # cycles per second
+
+# Optional travel-to-point arc motion
+var use_target_position: bool = false
+var target_position: Vector2 = Vector2.ZERO
+var arc_amplitude: float = 0.0
+var ignore_collisions_until_target: bool = false
+var aoe_only: bool = false  # When true, skip direct-hit damage on impact
+
+# Internal state for motion paths
+var _time_alive: float = 0.0
+var _start_position: Vector2 = Vector2.ZERO
+var _target_direction: Vector2 = Vector2.ZERO
+var _target_distance: float = 0.0
+var _distance_traveled: float = 0.0
+var _last_sine_offset: Vector2 = Vector2.ZERO
+var _last_arc_offset: Vector2 = Vector2.ZERO
+
 @onready var visible_notifier: VisibleOnScreenNotifier2D = $VisibleOnScreenNotifier2D
 
 
@@ -24,11 +44,12 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	# Move in the set direction
-	position += direction * speed * delta
+	_time_alive += delta
 	
-	# Check for hits
-	_check_for_hits()
+	if use_target_position:
+		_process_target_motion(delta)
+	else:
+		_process_directional_motion(delta)
 
 
 func _check_for_hits() -> void:
@@ -64,7 +85,7 @@ func _check_for_hits() -> void:
 			return
 
 
-func _on_impact(impact_position: Vector2) -> void:
+func _on_impact(impact_position: Vector2, force_splash: bool = false) -> void:
 	# Play impact sound
 	if impact_sound_callback.is_valid():
 		impact_sound_callback.call()
@@ -82,7 +103,7 @@ func _on_impact(impact_position: Vector2) -> void:
 		return
 	
 	# Deal damage
-	if splash_radius > 0.0:
+	if splash_radius > 0.0 or force_splash or aoe_only:
 		# Splash damage - damage everything in radius
 		_deal_splash_damage(impact_position)
 	else:
@@ -165,12 +186,90 @@ func _deal_splash_damage(impact_position: Vector2) -> void:
 
 
 ## Initialize the projectile with direction and target container
-func setup(dir: Vector2, targets: Node2D, dmg: int, pierce: bool = false, fired_by_enemy_unit: bool = false) -> void:
+func setup(dir: Vector2, targets: Node2D, dmg: int, pierce: bool = false, fired_by_enemy_unit: bool = false, use_target: bool = false, target_pos: Vector2 = Vector2.ZERO, arc_amp: float = 0.0, ignore_until_target: bool = false, force_aoe_only: bool = false) -> void:
 	direction = dir.normalized()
 	enemy_container = targets
 	damage = dmg
 	armor_piercing = pierce
 	fired_by_enemy = fired_by_enemy_unit
+	use_target_position = use_target
+	target_position = target_pos
+	arc_amplitude = arc_amp
+	ignore_collisions_until_target = ignore_until_target
+	aoe_only = force_aoe_only
+	_start_position = global_position
+	_last_sine_offset = Vector2.ZERO
+	_last_arc_offset = Vector2.ZERO
+	
+	if use_target_position:
+		_target_direction = (target_position - _start_position).normalized()
+		_target_distance = _start_position.distance_to(target_position)
+		direction = _target_direction
 	
 	# Rotate sprite to face direction
 	rotation = direction.angle()
+
+
+func _process_directional_motion(delta: float) -> void:
+	var displacement: Vector2 = direction * speed * delta
+	
+	if sine_amplitude != 0.0 and sine_frequency > 0.0:
+		var omega := TAU * sine_frequency
+		var perp := Vector2(-direction.y, direction.x)
+		var phase := _time_alive * omega
+		var current_sine := perp * sine_amplitude * sin(phase)
+		var sine_adjust := current_sine - _last_sine_offset
+		_last_sine_offset = current_sine
+		displacement += sine_adjust
+	
+	position += displacement
+	_check_for_hits()
+
+
+func _process_target_motion(delta: float) -> void:
+	if _target_distance <= 0.0:
+		_on_impact(global_position, true)
+		return
+	
+	var desired_forward := speed * delta
+	var target_remaining := _target_distance - _distance_traveled
+	var omega := 0.0
+	if sine_frequency > 0.0:
+		omega = TAU * sine_frequency
+	var t_next := _time_alive + delta
+	
+	var arc_perp := Vector2.UP  # keep arc upward in screen space
+	var sine_perp := Vector2(-_target_direction.y, _target_direction.x)  # sine remains perpendicular to travel
+	
+	# First guess progress using desired forward
+	var progress_guess := clampf((_distance_traveled + desired_forward) / _target_distance, 0.0, 1.0)
+	var arc_offset_new := Vector2.ZERO
+	if arc_amplitude != 0.0:
+		arc_offset_new = arc_perp * sin(PI * progress_guess) * arc_amplitude
+	
+	var sine_offset_new := Vector2.ZERO
+	if sine_amplitude != 0.0 and omega != 0.0:
+		sine_offset_new = sine_perp * sine_amplitude * sin(t_next * omega)
+	
+	var offset_delta := (arc_offset_new - _last_arc_offset) + (sine_offset_new - _last_sine_offset)
+	var forward_mag := sqrt(max((desired_forward * desired_forward) - offset_delta.length_squared(), 0.0))
+	forward_mag = min(forward_mag, target_remaining)
+	
+	var progress := clampf((_distance_traveled + forward_mag) / _target_distance, 0.0, 1.0)
+	if arc_amplitude != 0.0:
+		arc_offset_new = arc_perp * sin(PI * progress) * arc_amplitude
+		offset_delta = (arc_offset_new - _last_arc_offset) + (sine_offset_new - _last_sine_offset)
+		forward_mag = sqrt(max((desired_forward * desired_forward) - offset_delta.length_squared(), 0.0))
+		forward_mag = min(forward_mag, target_remaining)
+		progress = clampf((_distance_traveled + forward_mag) / _target_distance, 0.0, 1.0)
+	
+	var displacement := _target_direction * forward_mag + offset_delta
+	position += displacement
+	_distance_traveled += forward_mag
+	_last_arc_offset = arc_offset_new
+	_last_sine_offset = sine_offset_new
+	
+	if progress >= 1.0 or _distance_traveled >= _target_distance:
+		_on_impact(target_position, true)
+	elif not ignore_collisions_until_target:
+		_check_for_hits()

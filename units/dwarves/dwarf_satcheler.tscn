@@ -15,9 +15,13 @@
 [node name="dwarf_satcheler" instance=ExtResource("1_t1dey")]
 script = ExtResource("2_rhl77")
 projectile_scene = ExtResource("3_t1dey")
-projectile_speed = 200.0
+projectile_speed = 125.0
 splash_radius = 12.0
 impact_animation_scene = ExtResource("4_rhl77")
+projectile_use_target = true
+projectile_arc_amplitude = 30.0
+projectile_ignore_until_target = true
+projectile_force_aoe_only = false
 max_hp = 20
 damage = 40
 speed = 50.0

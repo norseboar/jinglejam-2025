@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cylo0gvp21l7i"]
+[gd_scene load_steps=7 format=3 uid="uid://cylo0gvp21l7i"]
 
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_t42t4"]
+[ext_resource type="AudioStream" uid="uid://bklc3p4acvet1" path="res://assets/sfx/ogre_club/HAMMER_Hit_Body_stereo.wav" id="2_4ly1c"]
 [ext_resource type="SpriteFrames" uid="uid://dd2c8w3eqrp0h" path="res://assets/spriteframes/ogre.tres" id="2_t42t4"]
 [ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_p8eyf"]
 [ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_kmeiw"]
@@ -8,13 +9,17 @@
 
 [node name="Unit" type="Node2D"]
 script = ExtResource("1_t42t4")
+max_hp = 100
+damage = 20
+attack_cooldown = 1.0
+attack_damage_frame = 5
+damage_sounds = Array[AudioStream]([ExtResource("2_4ly1c")])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_t42t4")
-animation = &"death"
+animation = &"attack"
 autoplay = "idle"
-frame = 7
-frame_progress = 1.0
+frame_progress = 0.5988431
 
 [node name="UpgradeMarkers" type="Node2D" parent="."]
 position = Vector2(2, -5)

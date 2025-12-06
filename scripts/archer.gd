@@ -7,6 +7,10 @@ class_name Archer
 @export var projectile_speed := 400.0
 @export var splash_radius := 0.0  # Radius for splash damage (0 = no splash, direct hit only)
 @export var impact_animation_scene: PackedScene = null  # Optional scene to instantiate on impact
+@export var projectile_use_target := false  # When true, send projectiles to a point instead of just a direction
+@export var projectile_arc_amplitude := 0.0
+@export var projectile_ignore_until_target := false
+@export var projectile_force_aoe_only := false
 
 
 func _ready() -> void:
@@ -56,7 +60,19 @@ func _execute_attack() -> void:
 	var direction := (target.global_position - global_position).normalized()
 	
 	# Setup projectile with impact sound callback
-	projectile.setup(direction, enemy_container, damage, armor_piercing, is_enemy)
+	var target_pos := target.global_position
+	projectile.setup(
+		direction,
+		enemy_container,
+		damage,
+		armor_piercing,
+		is_enemy,
+		projectile_use_target,
+		target_pos,
+		projectile_arc_amplitude,
+		projectile_ignore_until_target,
+		projectile_force_aoe_only
+	)
 	projectile.speed = projectile_speed
 	projectile.splash_radius = splash_radius
 	projectile.impact_animation_scene = impact_animation_scene
