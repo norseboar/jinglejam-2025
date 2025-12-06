@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://dspj2kekx0lyk"]
+[gd_scene load_steps=14 format=3 uid="uid://dspj2kekx0lyk"]
 
 [ext_resource type="Script" uid="uid://cklegvw7v1gri" path="res://scripts/titlescreen.gd" id="1_8or72"]
 [ext_resource type="SpriteFrames" uid="uid://b85k4lu2jac3j" path="res://assets/spriteframes/titlescreen.tres" id="2_84han"]
+[ext_resource type="Texture2D" uid="uid://wsvhwiqjpj24" path="res://assets/backgrounds/titlescreen.png" id="2_hcbn3"]
 [ext_resource type="Script" uid="uid://dmqtmshbm18um" path="res://scripts/autoscale_cover.gd" id="3_6ejck"]
 [ext_resource type="Texture2D" uid="uid://jeahgoje7i6c" path="res://assets/sprites/ui/start_button/start_button.png" id="3_v7hj3"]
 [ext_resource type="Texture2D" uid="uid://da64cd73sw671" path="res://assets/sprites/ui/start_button/start_button_pressed.png" id="4_8or72"]
@@ -24,12 +25,18 @@ script = ExtResource("1_8or72")
 start_button = NodePath("PanelContainer/HBoxContainer/play")
 quit_button = NodePath("PanelContainer/HBoxContainer/exit")
 
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 1080.0
+offset_bottom = 720.0
+texture = ExtResource("2_hcbn3")
+
 [node name="bg_test" type="AnimatedSprite2D" parent="."]
-position = Vector2(640, 367)
+position = Vector2(811, 248)
 scale = Vector2(1.1851852, 1.1580555)
 sprite_frames = ExtResource("2_84han")
 autoplay = "default"
-frame_progress = 0.47990283
+frame_progress = 0.9718359
 script = ExtResource("3_6ejck")
 
 [node name="titlescreen name" type="Label" parent="."]
