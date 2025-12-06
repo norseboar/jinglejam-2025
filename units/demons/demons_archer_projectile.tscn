@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bdw82wxhs38s0"]
+
+[ext_resource type="SpriteFrames" uid="uid://dhlhnorpxxmmr" path="res://assets/spriteframes/demons_archer_projectile.tres" id="1_wkcui"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D"]
+texture_filter = 1
+sprite_frames = ExtResource("1_wkcui")
+animation = &"idle"
+frame_progress = 0.09806683
