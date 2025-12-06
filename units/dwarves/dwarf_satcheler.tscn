@@ -19,7 +19,7 @@ attack_range = 20.0
 attack_cooldown = 3.0
 armor_piercing = true
 display_name = "Dwarf Satcheler"
-description = "Shortrange frontline that packs a big punch"
+description = "Shortrange arsonist"
 damage_sounds = Array[AudioStream]([])
 
 [node name="AnimatedSprite2D" parent="." index="0"]
