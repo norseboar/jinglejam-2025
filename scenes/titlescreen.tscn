@@ -24,7 +24,7 @@ quit_button = NodePath("PanelContainer/HBoxContainer/exit")
 position = Vector2(597, 360)
 sprite_frames = ExtResource("2_84han")
 autoplay = "default"
-frame_progress = 0.8964075
+frame_progress = 0.47990283
 
 [node name="titlescreen name" type="Label" parent="."]
 visible = false
@@ -45,15 +45,15 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -362.0
-offset_top = -252.0
-offset_right = -16.0
-offset_bottom = -55.0
+offset_left = -427.0
+offset_top = -201.0
+offset_right = -145.0
+offset_bottom = -4.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.9019608, 0.827451, 0.64705884, 1)
 theme_override_font_sizes/font_size = 42
-text = "jinglejam2025
+text = "Jinglejam2025
 programmer - norseboar
 art - pontax
 music - jakedle"
@@ -61,9 +61,9 @@ horizontal_alignment = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 0
-offset_left = 446.0
+offset_left = 428.0
 offset_top = 524.0
-offset_right = 654.0
+offset_right = 636.0
 offset_bottom = 596.0
 scale = Vector2(2, 2)
 
