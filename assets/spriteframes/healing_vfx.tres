@@ -1,0 +1,60 @@
+[gd_resource type="SpriteFrames" load_steps=9 format=3 uid="uid://bxrc3tg4tm4s3"]
+
+[ext_resource type="Texture2D" uid="uid://dfntu1jd00tsn" path="res://assets/sprites/demons/healing_vfx.png" id="1_h5vsu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pm7co"]
+atlas = ExtResource("1_h5vsu")
+region = Rect2(0, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7euus"]
+atlas = ExtResource("1_h5vsu")
+region = Rect2(32, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_70s87"]
+atlas = ExtResource("1_h5vsu")
+region = Rect2(64, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6tvqq"]
+atlas = ExtResource("1_h5vsu")
+region = Rect2(96, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7pj6s"]
+atlas = ExtResource("1_h5vsu")
+region = Rect2(128, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0k63s"]
+atlas = ExtResource("1_h5vsu")
+region = Rect2(160, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oumt7"]
+atlas = ExtResource("1_h5vsu")
+region = Rect2(192, 0, 32, 48)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pm7co")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7euus")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_70s87")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6tvqq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7pj6s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0k63s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oumt7")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 12.0
+}]
