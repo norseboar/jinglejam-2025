@@ -15,6 +15,7 @@ func _update_cover_scale() -> void:
 	position = vp_size * 0.5
 	var factor: float = max(vp_size.x / tex_size.x, vp_size.y / tex_size.y)
 	scale = base_scale * Vector2(factor, factor)
+	print("cover tex_size:", tex_size, " vp:", vp_size, " factor:", factor, " pos:", position)
 
 func _get_texture_size() -> Vector2:
 	# Sprite2D path

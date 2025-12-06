@@ -58,4 +58,3 @@ func _update_textures(muted: bool) -> void:
 			texture_pressed = sound_on_texture
 			texture_hover = sound_on_texture
 			texture_disabled = sound_on_texture
-

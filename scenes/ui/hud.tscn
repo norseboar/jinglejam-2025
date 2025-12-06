@@ -212,6 +212,7 @@ offset_left = -40.0
 offset_top = -40.0
 grow_horizontal = 0
 grow_vertical = 0
+texture_normal = ExtResource("16_we3sy")
 script = ExtResource("15_o6xly")
 sound_on_texture = ExtResource("16_we3sy")
 sound_off_texture = ExtResource("17_65nxt")
