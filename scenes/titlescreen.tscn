@@ -48,17 +48,19 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -288.0
-offset_top = -173.0
-offset_right = -50.0
-offset_bottom = -50.0
+offset_left = -362.0
+offset_top = -229.0
+offset_right = -16.0
+offset_bottom = -55.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.9019608, 0.827451, 0.64705884, 1)
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 42
 text = "jinglejam2025
 programmer - norseboar
-art - pontax"
+art - pontax
+music - jakedle"
+horizontal_alignment = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -67,12 +69,13 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -82.0
-offset_top = -101.0
-offset_right = 82.0
-offset_bottom = -61.0
+offset_left = -253.0
+offset_top = -161.0
+offset_right = -77.0
+offset_bottom = -121.0
 grow_horizontal = 2
 grow_vertical = 0
+scale = Vector2(3, 3)
 theme_override_constants/separation = 16
 alignment = 1
 

@@ -59,6 +59,9 @@ var is_draft_mode: bool = true
 ## Title screen scene path (loaded at runtime to avoid circular reference with titlescreen preloading game)
 @export var title_screen_path: String = "res://scenes/titlescreen.tscn"
 
+## Coin scene for gold collection animation
+@export var coin_scene: PackedScene = preload("res://scenes/ui/coin.tscn")
+
 
 func _ready() -> void:
 	hud.start_battle_requested.connect(_on_start_battle_requested)
@@ -650,9 +653,48 @@ func _count_living_units(container: Node2D) -> int:
 	return count
 
 
-func _on_enemy_unit_died(gold_reward: int) -> void:
+func _on_enemy_unit_died(gold_reward: int, position: Vector2) -> void:
 	"""Handle enemy unit death and award gold."""
+	# Spawn coin animation
+	_spawn_coin_animation(position)
+	
+	# Award gold (will be updated when coin reaches counter, but we can award immediately)
 	add_gold(gold_reward)
+
+
+func _spawn_coin_animation(start_position: Vector2) -> void:
+	"""Spawn a coin animation that moves from start_position to the gold counter."""
+	if coin_scene == null:
+		push_warning("coin_scene not assigned, cannot spawn coin animation")
+		return
+	
+	if hud == null:
+		push_warning("HUD not available, cannot spawn coin animation")
+		return
+	
+	# Get gold counter position from HUD
+	var target_position: Vector2 = hud.get_gold_counter_position()
+	
+	# Instantiate coin
+	var coin: CoinAnimation = coin_scene.instantiate() as CoinAnimation
+	if coin == null:
+		push_error("Failed to instantiate coin scene as CoinAnimation")
+		return
+	
+	# Add to UI layer so it renders above gameplay
+	if ui_layer:
+		ui_layer.add_child(coin)
+	else:
+		# Fallback to gameplay layer if ui_layer not available
+		if gameplay:
+			gameplay.add_child(coin)
+		else:
+			push_error("No suitable parent for coin animation")
+			coin.queue_free()
+			return
+	
+	# Start animation
+	coin.animate_to_target(start_position, target_position)
 
 
 func _on_player_unit_died(army_index: int) -> void:

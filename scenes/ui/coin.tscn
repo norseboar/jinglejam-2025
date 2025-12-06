@@ -1,8 +1,20 @@
-[gd_scene load_steps=2 format=3 uid="uid://dkgqasmr6tpvi"]
+[gd_scene load_steps=8 format=3 uid="uid://dgag7bim0dfg5"]
 
-[ext_resource type="SpriteFrames" uid="uid://2fv2ss6y5xcy" path="res://assets/spriteframes/coin.tres" id="1_501vx"]
+[ext_resource type="Script" uid="uid://xhr2hltddjyk" path="res://scripts/coin_animation.gd" id="1_coin_anim"]
+[ext_resource type="AudioStream" uid="uid://b57jpuneg83vs" path="res://assets/sfx/coins/Coin in purse shaking 2.wav" id="2_6hf7y"]
+[ext_resource type="AudioStream" uid="uid://dftvo5tbil2lf" path="res://assets/sfx/coins/Coin in purse shaking.wav" id="2_q3pqi"]
+[ext_resource type="SpriteFrames" uid="uid://brctuf68f6a6x" path="res://assets/spriteframes/coin.tres" id="2_spriteframes"]
+[ext_resource type="AudioStream" uid="uid://dmlh812cgkt4r" path="res://assets/sfx/coins/Coin in purse shaking 7.wav" id="3_rov02"]
+[ext_resource type="AudioStream" uid="uid://c53708uiyucka" path="res://assets/sfx/coins/Coin in purse shaking 8.wav" id="4_o1e4y"]
+[ext_resource type="AudioStream" uid="uid://wlbpxfg0bl6" path="res://assets/sfx/coins/Coin in purse shaking 9.wav" id="5_fnbs6"]
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D"]
-sprite_frames = ExtResource("1_501vx")
+[node name="CoinAnimation" type="Node2D"]
+script = ExtResource("1_coin_anim")
+move_duration = 1.0
+coin_sounds = Array[AudioStream]([ExtResource("2_6hf7y"), ExtResource("3_rov02"), ExtResource("4_o1e4y"), ExtResource("5_fnbs6"), ExtResource("2_q3pqi")])
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2_spriteframes")
 animation = &"idle"
-frame_progress = 0.581021
+frame = 7
+frame_progress = 0.5777748

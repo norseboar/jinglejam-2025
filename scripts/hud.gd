@@ -443,3 +443,13 @@ func update_gold_display(amount: int) -> void:
 	"""Update the gold label text."""
 	if gold_label:
 		gold_label.text = "Gold: %d" % amount
+
+
+func get_gold_counter_position() -> Vector2:
+	"""Get the global position of the gold counter (center of gold label)."""
+	if gold_label == null:
+		return Vector2.ZERO
+	
+	var pos := gold_label.global_position
+	# Return center of the label
+	return pos + Vector2(gold_label.size.x / 2, gold_label.size.y / 2)

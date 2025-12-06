@@ -2,7 +2,7 @@ extends Node2D
 class_name Unit
 
 # Signals
-signal enemy_unit_died(gold_reward: int)  # Emitted by enemies with gold_reward
+signal enemy_unit_died(gold_reward: int, position: Vector2)  # Emitted by enemies with gold_reward and position
 signal player_unit_died(army_index: int)  # Emitted by player units with army_index
 
 # Stats
@@ -386,7 +386,7 @@ func die() -> void:
 	
 	# Emit appropriate signal based on unit type
 	if is_enemy:
-		enemy_unit_died.emit(gold_reward)
+		enemy_unit_died.emit(gold_reward, global_position)
 	else:
 		# Emit signal for player unit death (to remove from army)
 		if army_index >= 0:
