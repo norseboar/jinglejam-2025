@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Roster" load_steps=5 format=3 uid="uid://cptdpd3b8m1h0"]
+
+[ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="1_2ta34"]
+[ext_resource type="PackedScene" uid="uid://dhrjnricjo8lf" path="res://units/dwarves/dwarf_satcheler.tscn" id="2_kh2n5"]
+[ext_resource type="PackedScene" uid="uid://dhf2ohsvwac2b" path="res://units/dwarves/dwarf_spearman.tscn" id="3_2ta34"]
+[ext_resource type="PackedScene" uid="uid://b2gg7627166nr" path="res://units/dwarves/dwarf_mortarman.tscn" id="4_7u1ot"]
+
+[resource]
+script = ExtResource("1_2ta34")
+team_name = "Dwarves"
+units = Array[PackedScene]([ExtResource("2_kh2n5"), ExtResource("2_kh2n5"), ExtResource("2_kh2n5"), ExtResource("2_kh2n5"), ExtResource("3_2ta34"), ExtResource("3_2ta34"), ExtResource("3_2ta34"), ExtResource("3_2ta34"), ExtResource("4_7u1ot"), ExtResource("4_7u1ot")])

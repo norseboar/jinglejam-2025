@@ -35,6 +35,8 @@ func _check_for_hits() -> void:
 	if enemy_container == null:
 		return
 	
+	var proj_pos := global_position
+	
 	for enemy in enemy_container.get_children():
 		if not is_instance_valid(enemy):
 			continue
@@ -55,10 +57,10 @@ func _check_for_hits() -> void:
 			if unit_enemy.is_enemy == fired_by_enemy:
 				continue  # Same team, skip
 		
-		var distance := position.distance_to(enemy.position)
+		var distance := proj_pos.distance_to(enemy.global_position)
 		if distance < hit_radius:
 			# Hit! Deal damage and destroy projectile
-			_on_impact(position)
+			_on_impact(proj_pos)
 			return
 
 
@@ -106,7 +108,7 @@ func _on_impact(impact_position: Vector2) -> void:
 				if unit_enemy.is_enemy == fired_by_enemy:
 					continue
 			
-			var distance := impact_position.distance_to(enemy.position)
+			var distance := impact_position.distance_to(enemy.global_position)
 			if distance < closest_distance:
 				closest_distance = distance
 				closest_enemy = enemy
@@ -156,7 +158,7 @@ func _deal_splash_damage(impact_position: Vector2) -> void:
 				continue
 		
 		# Check if enemy is within splash radius
-		var distance := impact_position.distance_to(enemy.position)
+		var distance := impact_position.distance_to(enemy.global_position)
 		if distance <= splash_radius:
 			if enemy.has_method("take_damage"):
 				enemy.take_damage(damage, armor_piercing)

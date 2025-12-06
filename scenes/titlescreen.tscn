@@ -174,7 +174,7 @@ texture_filter = 1
 position = Vector2(867, 236)
 sprite_frames = SubResource("SpriteFrames_5yi1n")
 autoplay = "default"
-frame_progress = 0.070612095
+frame_progress = 0.6641249
 
 [node name="titlescreen name" type="Label" parent="."]
 visible = false

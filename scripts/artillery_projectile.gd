@@ -74,7 +74,7 @@ func _on_impact() -> void:
 					if unit_enemy.is_enemy == fired_by_enemy:
 						continue
 				
-				var distance := target_position.distance_to(enemy.position)
+				var distance := target_position.distance_to(enemy.global_position)
 				if distance < closest_distance:
 					closest_distance = distance
 					closest_enemy = enemy
@@ -128,7 +128,7 @@ func _deal_splash_damage(impact_position: Vector2) -> void:
 				continue
 		
 		# Check if enemy is within splash radius
-		var distance := impact_position.distance_to(enemy.position)
+		var distance := impact_position.distance_to(enemy.global_position)
 		if distance <= splash_radius:
 			if enemy.has_method("take_damage"):
 				enemy.take_damage(damage, armor_piercing)

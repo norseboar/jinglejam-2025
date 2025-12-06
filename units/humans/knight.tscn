@@ -6,7 +6,7 @@
 [node name="Knight" instance=ExtResource("1_8k1n4")]
 script = ExtResource("1_8w6po")
 max_hp = 40
-damage = 2
+damage = 20
 speed = 50.0
 attack_range = 20.0
 attack_cooldown = 2.0

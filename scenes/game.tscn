@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=26 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="1_ca42v"]
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -8,10 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://qguwsk400gqy" path="res://assets/backgrounds/chess_table.jpg" id="5_p57ef"]
 [ext_resource type="PackedScene" uid="uid://c0d47vd87vlmt" path="res://scenes/ui/hud.tscn" id="6_p57ef"]
 [ext_resource type="Script" uid="uid://bwkdnef87rpc7" path="res://scripts/upgrade_screen.gd" id="7_0tnpc"]
-[ext_resource type="Resource" uid="uid://ccncwdniynkcg" path="res://units/rosters/starting_rosters/humans.tres" id="7_5newe"]
 [ext_resource type="Texture2D" uid="uid://cv4fsh4q3oll" path="res://assets/backgrounds/reward_bg.jpg" id="7_gee14"]
+[ext_resource type="Resource" uid="uid://cptdpd3b8m1h0" path="res://units/rosters/starting_rosters/dwarves.tres" id="7_pl11u"]
 [ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="8_pl11u"]
-[ext_resource type="Texture2D" uid="uid://csxttbukwfau0" path="res://assets/sprites/ui/background-frame.png" id="9_ir15t"]
 [ext_resource type="Resource" uid="uid://cqbdneupe6hhs" path="res://units/rosters/full_rosters/dwarves_full.tres" id="10_qnb83"]
 [ext_resource type="PackedScene" uid="uid://qu7tcqixa2mi" path="res://scenes/ui/unit_summary.tscn" id="11_kvpfn"]
 [ext_resource type="Resource" uid="uid://dcdd1vps5sd0k" path="res://units/rosters/full_rosters/humans_full.tres" id="11_sww3w"]
@@ -43,7 +42,7 @@ starting_gold = 50
 level_pools = Array[Resource]([ExtResource("2_dinhu"), ExtResource("3_kvuet"), ExtResource("4_trtic")])
 total_levels = 7
 upgrade_background = ExtResource("7_gee14")
-starting_roster = ExtResource("7_5newe")
+starting_roster = ExtResource("7_pl11u")
 full_rosters = Array[ExtResource("8_pl11u")]([ExtResource("10_qnb83"), ExtResource("11_sww3w")])
 background_rect = NodePath("BackgroundRect")
 gameplay = NodePath("SubViewportContainer/SubViewport/Gameplay")
@@ -83,20 +82,6 @@ size_2d_override_stretch = true
 render_target_update_mode = 4
 
 [node name="UI" type="CanvasLayer" parent="SubViewportContainer/SubViewport"]
-
-[node name="NinePatchRect" type="NinePatchRect" parent="SubViewportContainer/SubViewport/UI"]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("9_ir15t")
-region_rect = Rect2(0, 0, 32, 32)
-patch_margin_left = 6
-patch_margin_top = 6
-patch_margin_right = 6
-patch_margin_bottom = 6
 
 [node name="HUD" parent="SubViewportContainer/SubViewport/UI" node_paths=PackedStringArray("upgrade_screen", "battle_select_screen") instance=ExtResource("6_p57ef")]
 offset_right = 0.0

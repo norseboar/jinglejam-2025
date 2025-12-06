@@ -5,6 +5,7 @@
 
 [node name="Projectile" type="Node2D"]
 script = ExtResource("1_q3m7n")
+hit_radius = 4.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_softn")
