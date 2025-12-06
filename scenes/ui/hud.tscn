@@ -32,7 +32,7 @@ tray_panel = NodePath("TrayPanel")
 unit_tray = NodePath("TrayPanel/Control/HBoxContainer/UnitSlotGroup")
 go_button = NodePath("TrayPanel/Control/HBoxContainer/VBoxContainer/GoButton")
 auto_deploy_button = NodePath("TrayPanel/Control/HBoxContainer/VBoxContainer/AutodeployButton")
-gold_label = NodePath("TrayPanel/Control/Gold")
+gold_label = NodePath("PanelContainer2/Gold")
 battle_end_modal = NodePath("BattleEndModal")
 battle_end_label = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/BattleEndLabel")
 battle_end_button = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/ConfirmButton")
@@ -57,6 +57,22 @@ text = "Level 1 -- Preparation Phase"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="PanelContainer2" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -81.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 61.0
+grow_horizontal = 0
+
+[node name="Gold" type="Label" parent="PanelContainer2"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42352942, 0.11372549, 0.105882354, 1)
+text = "Gold: 10"
+
 [node name="TrayPanel" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 7
@@ -78,11 +94,15 @@ texture = ExtResource("2_bo48s")
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TrayPanel/Control"]
-layout_mode = 0
-offset_left = 80.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_top = 8.0
-offset_right = 340.0
-offset_bottom = 76.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
 
 [node name="UnitSlotGroup" parent="TrayPanel/Control/HBoxContainer" instance=ExtResource("4_8qguk")]
 layout_mode = 2
@@ -111,15 +131,6 @@ texture_normal = ExtResource("4_oj5la")
 texture_pressed = ExtResource("5_gss2c")
 texture_hover = ExtResource("6_h022r")
 script = ExtResource("7_4d46k")
-
-[node name="Gold" type="Label" parent="TrayPanel/Control"]
-layout_mode = 0
-offset_left = 578.0
-offset_top = 33.0
-offset_right = 619.0
-offset_bottom = 54.0
-theme_override_colors/font_color = Color(0.42352942, 0.11372549, 0.105882354, 1)
-text = "Gold: 10"
 
 [node name="BattleEndModal" type="ColorRect" parent="."]
 visible = false
