@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dkgqasmr6tpvi"]
+
+[ext_resource type="SpriteFrames" uid="uid://2fv2ss6y5xcy" path="res://assets/spriteframes/coin.tres" id="1_501vx"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D"]
+sprite_frames = ExtResource("1_501vx")
+animation = &"idle"
+frame_progress = 0.581021

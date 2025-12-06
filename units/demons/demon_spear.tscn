@@ -8,6 +8,13 @@
 
 [node name="Unit" type="Node2D"]
 script = ExtResource("1_1v03s")
+max_hp = 20
+damage = 20
+speed = 125.0
+attack_range = 20.0
+attack_cooldown = 2.0
+armor_piercing = true
+targets_high_priority = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_ndutp")
