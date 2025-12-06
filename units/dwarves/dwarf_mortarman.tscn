@@ -10,9 +10,9 @@
 [node name="Dwarf_mortarman" instance=ExtResource("1_ccyet")]
 script = ExtResource("2_xgns3")
 projectile_scene = ExtResource("3_7n0xh")
-projectile_speed = 200.0
+projectile_speed = 500.0
 target_marker_scene = ExtResource("4_817ri")
-hit_delay = 1.5
+hit_delay = 2.0
 splash_radius = 16.0
 impact_animation_scene = ExtResource("5_a5k0m")
 max_hp = 50
