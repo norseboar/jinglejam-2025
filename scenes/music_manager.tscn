@@ -1,15 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://d4fixwyjik5d4"]
+[gd_scene load_steps=6 format=3 uid="uid://d4fixwyjik5d4"]
 
 [ext_resource type="Script" uid="uid://n72rwn510xhl" path="res://scripts/music_manager.gd" id="1_jd6i5"]
 [ext_resource type="AudioStream" uid="uid://biace3ne3pt6x" path="res://assets/music/Yogs Game Jame Battle Track 5 - TItle Music Full Mix 80bpm.mp3" id="2_yodp2"]
 [ext_resource type="AudioStream" uid="uid://cl0jmyvfkfovs" path="res://assets/music/Yogs Game Jame Battle Track 5 - Buy Phase Full Mix 80bpm.mp3" id="3_xcw26"]
 [ext_resource type="AudioStream" uid="uid://01itfgmcgiq5" path="res://assets/music/Yogs Game Jame Battle Track 4 - Victory Sting.mp3" id="4_yodp2"]
+[ext_resource type="AudioStream" uid="uid://b74s3qawt2rhr" path="res://assets/music/Yogs Game Jame Battle Track 6 - Death Sting.mp3" id="5_xcw26"]
 
 [node name="MusicManager" type="Node"]
 script = ExtResource("1_jd6i5")
 title_music = ExtResource("2_yodp2")
 shop_music = ExtResource("3_xcw26")
 victory_jingle = ExtResource("4_yodp2")
-defeat_jingle = ExtResource("4_yodp2")
+defeat_jingle = ExtResource("5_xcw26")
 fade_out_duration = 2.0
 fade_in_duration = 0.5

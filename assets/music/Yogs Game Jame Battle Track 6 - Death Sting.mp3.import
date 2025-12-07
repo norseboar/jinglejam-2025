@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b74s3qawt2rhr"
+path="res://.godot/imported/Yogs Game Jame Battle Track 6 - Death Sting.mp3-57d62e9549da6c63775d9cdb16aad551.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Yogs Game Jame Battle Track 6 - Death Sting.mp3"
+dest_files=["res://.godot/imported/Yogs Game Jame Battle Track 6 - Death Sting.mp3-57d62e9549da6c63775d9cdb16aad551.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
