@@ -34,6 +34,7 @@ func _process(delta: float) -> void:
 
 
 func _do_movement(delta: float) -> void:
+
 	# Check for wounded allies
 	_check_for_targets()
 

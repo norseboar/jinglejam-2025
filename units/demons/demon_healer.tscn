@@ -23,10 +23,8 @@ fire_sounds = Array[AudioStream]([ExtResource("2_c0hlw")])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_nlkpr")
-animation = &"attack"
+animation = &"walk"
 autoplay = "idle"
-frame = 5
-frame_progress = 1.0
 
 [node name="UpgradeMarkers" type="Node2D" parent="."]
 position = Vector2(0, -2)
