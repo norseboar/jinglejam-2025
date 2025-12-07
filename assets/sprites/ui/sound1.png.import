@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0ac6n004k3fg"
-path="res://.godot/imported/sound_button3.png-7455171b6eaaf028d930745de00609fe.ctex"
+uid="uid://dfw3054d00mvj"
+path="res://.godot/imported/sound1.png-5612634658bf58394be8c9a3ce0c8982.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/sound_button3.png"
-dest_files=["res://.godot/imported/sound_button3.png-7455171b6eaaf028d930745de00609fe.ctex"]
+source_file="res://assets/sprites/ui/sound1.png"
+dest_files=["res://.godot/imported/sound1.png-5612634658bf58394be8c9a3ce0c8982.ctex"]
 
 [params]
 
