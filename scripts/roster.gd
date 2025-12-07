@@ -15,3 +15,6 @@ class_name Roster
 ## Chance to upgrade an existing unit vs adding a new unit during army generation (0.0 to 1.0)
 ## Higher values = fewer but more upgraded units. Lower values = more units with fewer upgrades.
 @export_range(0.0, 1.0) var upgrade_ratio := 0.3
+
+## Music track to play during battles against this faction
+@export var battle_music: AudioStream

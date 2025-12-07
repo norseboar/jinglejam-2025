@@ -119,6 +119,9 @@ func show_upgrade_screen(victory: bool, player_army: Array, enemies_faced: Array
 
 	# Show upgrade screen
 	visible = true
+	
+	# Play shop music (post-battle upgrade screen only, not draft)
+	MusicManager.play_track(MusicManager.shop_music)
 
 
 func show_draft_screen(roster: Roster) -> void:
@@ -169,6 +172,7 @@ func show_draft_screen(roster: Roster) -> void:
 
 	# Show screen
 	visible = true
+	# Note: Draft screen does NOT play shop music - title music continues
 
 
 func _update_mode_display() -> void:

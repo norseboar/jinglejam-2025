@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://biace3ne3pt6x"
+path="res://.godot/imported/Yogs Game Jame Battle Track 5 - TItle Music Full Mix 80bpm.mp3-f17e28773945ae3f2e1c7dec0ad27d56.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Yogs Game Jame Battle Track 5 - TItle Music Full Mix 80bpm.mp3"
+dest_files=["res://.godot/imported/Yogs Game Jame Battle Track 5 - TItle Music Full Mix 80bpm.mp3-f17e28773945ae3f2e1c7dec0ad27d56.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

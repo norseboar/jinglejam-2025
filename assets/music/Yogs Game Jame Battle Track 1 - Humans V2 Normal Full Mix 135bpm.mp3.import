@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bhosjqjsx6rks"
+path="res://.godot/imported/Yogs Game Jame Battle Track 1 - Humans V2 Normal Full Mix 135bpm.mp3-3073a72cd6169a15317374199160a6f8.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Yogs Game Jame Battle Track 1 - Humans V2 Normal Full Mix 135bpm.mp3"
+dest_files=["res://.godot/imported/Yogs Game Jame Battle Track 1 - Humans V2 Normal Full Mix 135bpm.mp3-3073a72cd6169a15317374199160a6f8.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

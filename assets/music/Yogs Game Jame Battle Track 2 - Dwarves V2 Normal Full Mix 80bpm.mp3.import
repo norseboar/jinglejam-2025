@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cwrhvio1w5yj4"
+path="res://.godot/imported/Yogs Game Jame Battle Track 2 - Dwarves V2 Normal Full Mix 80bpm.mp3-4bcd52f0bfd65ed3981289ef15e197b5.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Yogs Game Jame Battle Track 2 - Dwarves V2 Normal Full Mix 80bpm.mp3"
+dest_files=["res://.godot/imported/Yogs Game Jame Battle Track 2 - Dwarves V2 Normal Full Mix 80bpm.mp3-4bcd52f0bfd65ed3981289ef15e197b5.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

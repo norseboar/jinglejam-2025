@@ -16,6 +16,9 @@ func _ready() -> void:
 		start_button.pressed.connect(_on_start_pressed)
 	if quit_button:
 		quit_button.pressed.connect(_on_quit_pressed)
+	
+	# Play title music
+	MusicManager.play_track(MusicManager.title_music)
 
 func _on_start_pressed() -> void:
 	# Defer the scene change to allow the button to visually release first

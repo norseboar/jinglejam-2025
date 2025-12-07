@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://01itfgmcgiq5"
+path="res://.godot/imported/Yogs Game Jame Battle Track 4 - Victory Sting.mp3-408c01c42bae0d783294d4f1a9f3cc92.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Yogs Game Jame Battle Track 4 - Victory Sting.mp3"
+dest_files=["res://.godot/imported/Yogs Game Jame Battle Track 4 - Victory Sting.mp3-408c01c42bae0d783294d4f1a9f3cc92.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

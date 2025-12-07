@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cph5uigkkt6nb"
+path="res://.godot/imported/Yogs Game Jame Battle Track 3 - Demons Normal Full Mix 80bpm.mp3-286790217f91a3a5433a8e524afd0683.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Yogs Game Jame Battle Track 3 - Demons Normal Full Mix 80bpm.mp3"
+dest_files=["res://.godot/imported/Yogs Game Jame Battle Track 3 - Demons Normal Full Mix 80bpm.mp3-286790217f91a3a5433a8e524afd0683.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

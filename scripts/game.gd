@@ -31,6 +31,7 @@ var selected_level_scene: PackedScene = null  # The specific scene chosen from t
 @export var upgrade_background: Texture2D
 var enemies_faced: Array = []  # Captured at end of battle for upgrade screen
 var current_enemy_army: Array[ArmyUnit] = []  # Generated enemy army for current battle
+var current_enemy_roster: Roster = null  # Track roster for music
 
 # Current level references (set when level loads)
 var current_level: LevelRoot = null
@@ -45,6 +46,10 @@ var is_draft_mode: bool = true
 
 ## Array of full rosters for enemy army generation
 @export var full_rosters: Array[Roster] = []
+
+## Neutral units that can mix into enemy armies after a level threshold
+@export var neutral_roster: Roster
+@export var neutral_min_level: int = 0  # 1-based; 0 disables neutrals
 
 # Node references (assign in inspector)
 @export var background_rect: TextureRect
@@ -152,6 +157,18 @@ func calculate_army_value() -> int:
 	return value
 
 
+func _get_neutral_units_for_current_level() -> Array[PackedScene]:
+	"""Return neutral units if unlocked for the current battle number (1-based)."""
+	if neutral_roster == null:
+		return []
+	if neutral_min_level <= 0:
+		return []
+	var battle_number := current_level_index + 1
+	if battle_number < neutral_min_level:
+		return []
+	return neutral_roster.units
+
+
 func generate_battle_options() -> Array[BattleOptionData]:
 	"""Generate two battle options from random rosters with scaled armies."""
 	var result: Array[BattleOptionData] = []
@@ -181,6 +198,9 @@ func generate_battle_options() -> Array[BattleOptionData]:
 	var roster_a: Roster = full_rosters[roster_indices[0]]
 	var roster_b: Roster = full_rosters[roster_indices[1]]
 
+	var neutral_units := _get_neutral_units_for_current_level()
+	var neutral_first_pick_chance := 0.66 if not neutral_units.is_empty() else 0.0
+
 	# Randomly assign low/high targets
 	var targets := [low_target, high_target]
 	targets.shuffle()
@@ -192,7 +212,7 @@ func generate_battle_options() -> Array[BattleOptionData]:
 		return result
 
 	var slot_count_a := _count_enemy_slots(battlefield_a)
-	var army_a := ArmyGenerator.generate_army(roster_a, targets[0], slot_count_a)
+	var army_a := ArmyGenerator.generate_army(roster_a, targets[0], slot_count_a, neutral_units, neutral_first_pick_chance)
 	var value_a := ArmyGenerator.calculate_army_value(army_a)
 	print("Generated '%s' army worth %d gold (target: %d)" % [roster_a.team_name, value_a, targets[0]])
 	result.append(BattleOptionData.create(roster_a, battlefield_a, army_a, targets[0]))
@@ -204,7 +224,7 @@ func generate_battle_options() -> Array[BattleOptionData]:
 		return result
 
 	var slot_count_b := _count_enemy_slots(battlefield_b)
-	var army_b := ArmyGenerator.generate_army(roster_b, targets[1], slot_count_b)
+	var army_b := ArmyGenerator.generate_army(roster_b, targets[1], slot_count_b, neutral_units, neutral_first_pick_chance)
 	var value_b := ArmyGenerator.calculate_army_value(army_b)
 	print("Generated '%s' army worth %d gold (target: %d)" % [roster_b.team_name, value_b, targets[1]])
 	result.append(BattleOptionData.create(roster_b, battlefield_b, army_b, targets[1]))
@@ -281,6 +301,12 @@ func _end_battle(victory: bool) -> void:
 	# Capture enemy data for upgrade screen (only if victory and not last level, defeat will restart)
 	if victory and current_level_index < total_levels - 1:
 		_capture_enemies_faced()
+	
+	# Play victory or defeat jingle (and duck current music)
+	if victory:
+		MusicManager.play_jingle_and_duck(MusicManager.victory_jingle)
+	else:
+		MusicManager.play_jingle_and_duck(MusicManager.defeat_jingle)
 	
 	# Show battle end modal (which leads to upgrade screen on victory, or restart on defeat/last level)
 	hud.show_battle_end_modal(victory, current_level_index + 1, total_levels)
@@ -377,6 +403,9 @@ func load_level_scene(level_scene: PackedScene) -> void:
 	# Update auto-deploy button state
 	if hud:
 		hud._update_auto_deploy_button_state()
+	
+	# Play battle music
+	_play_battle_music()
 
 
 func _spawn_enemies_from_level() -> void:
@@ -772,6 +801,7 @@ func _on_show_upgrade_screen_requested() -> void:
 
 func _on_battle_select_advance(option_data: BattleOptionData) -> void:
 	"""Handle battle select advance - load the chosen battlefield with generated army."""
+	current_enemy_roster = option_data.roster  # Store for music
 	current_enemy_army = option_data.army
 	load_level_scene(option_data.battlefield)
 
@@ -899,11 +929,22 @@ func _on_draft_complete() -> void:
 	var target_value := int(army_value * randf_range(0.7, 1.0))  # First battle slightly easier
 	
 	var slot_count := _count_enemy_slots(battlefield)
-	var enemy_army := ArmyGenerator.generate_army(roster, target_value, slot_count)
+	var neutral_units := _get_neutral_units_for_current_level()
+	var neutral_first_pick_chance := 0.66 if not neutral_units.is_empty() else 0.0
+	var enemy_army := ArmyGenerator.generate_army(roster, target_value, slot_count, neutral_units, neutral_first_pick_chance)
 	
 	# Load battle directly
+	current_enemy_roster = roster  # Store for music
 	current_enemy_army = enemy_army
 	load_level_scene(battlefield)
+
+
+func _play_battle_music() -> void:
+	"""Play the battle music for the current enemy roster."""
+	if current_enemy_roster and current_enemy_roster.battle_music:
+		MusicManager.play_track(current_enemy_roster.battle_music)
+	else:
+		push_warning("No battle music available for current roster")
 
 
 func _on_upgrade_confirmed(victory: bool) -> void:

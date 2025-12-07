@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Roster" load_steps=8 format=3 uid="uid://cqbdneupe6hhs"]
+[gd_resource type="Resource" script_class="Roster" load_steps=9 format=3 uid="uid://cqbdneupe6hhs"]
 
 [ext_resource type="PackedScene" uid="uid://ddg0d0euvs07d" path="res://battlefields/bridge.tscn" id="1_1rylk"]
+[ext_resource type="AudioStream" uid="uid://cwrhvio1w5yj4" path="res://assets/music/Yogs Game Jame Battle Track 2 - Dwarves V2 Normal Full Mix 80bpm.mp3" id="1_7tqku"]
 [ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="1_14h1y"]
 [ext_resource type="PackedScene" uid="uid://dbfnx1ed8abot" path="res://battlefields/grass.tscn" id="2_7tqku"]
 [ext_resource type="PackedScene" uid="uid://b2gg7627166nr" path="res://units/dwarves/dwarf_mortarman.tscn" id="2_yt8qx"]
@@ -13,4 +14,5 @@ script = ExtResource("1_14h1y")
 team_name = "Dwarves"
 units = Array[PackedScene]([ExtResource("2_yt8qx"), ExtResource("3_lb7m3"), ExtResource("4_6xipv")])
 battlefields = Array[PackedScene]([ExtResource("1_1rylk"), ExtResource("2_7tqku"), ExtResource("3_hj8qy")])
+battle_music = ExtResource("1_7tqku")
 metadata/_custom_type_script = "uid://clvfy8mjj8pl3"

@@ -4,7 +4,13 @@ class_name ArmyGenerator
 const MAX_UPGRADES_PER_UNIT := 3
 
 
-static func generate_army(roster: Roster, target_gold: int, max_slots: int) -> Array[ArmyUnit]:
+static func generate_army(
+	roster: Roster,
+	target_gold: int,
+	max_slots: int,
+	neutral_units: Array[PackedScene] = [],
+	neutral_first_pick_chance: float = 0.0
+) -> Array[ArmyUnit]:
 	"""
 	Generate a random army from the given roster.
 
@@ -12,12 +18,26 @@ static func generate_army(roster: Roster, target_gold: int, max_slots: int) -> A
 		roster: The faction roster to pick units from
 		target_gold: Target gold value for the army (can go slightly negative)
 		max_slots: Maximum number of units (based on battlefield slot count)
+		neutral_units: Optional neutral units that can be mixed in
+		neutral_first_pick_chance: Chance that the first picked unit is neutral (0.0-1.0)
 
 	Returns:
 		Array of ArmyUnit sorted by unit priority (highest first)
 	"""
 	var army: Array[ArmyUnit] = []
 	var remaining_gold := target_gold
+	var roster_pool := roster.units.duplicate()
+	var neutral_pool := neutral_units.duplicate()
+	var combined_pool: Array[PackedScene] = []
+	if not roster_pool.is_empty():
+		combined_pool.append_array(roster_pool)
+	if not neutral_pool.is_empty():
+		combined_pool.append_array(neutral_pool)
+
+	var force_first_neutral := false
+	if not neutral_pool.is_empty() and neutral_first_pick_chance > 0.0:
+		force_first_neutral = randf() < neutral_first_pick_chance
+	var first_pick_done := false
 
 	while remaining_gold > 0:
 		var can_add := army.size() < max_slots
@@ -48,7 +68,15 @@ static func generate_army(roster: Roster, target_gold: int, max_slots: int) -> A
 			remaining_gold -= _get_upgrade_cost(unit_to_upgrade.unit_scene)
 		else:
 			# Add a new unit from the roster
-			var unit_scene: PackedScene = roster.units.pick_random()
+			if combined_pool.is_empty():
+				break  # No units available to add
+
+			var unit_scene: PackedScene = null
+			if not first_pick_done and force_first_neutral:
+				unit_scene = neutral_pool.pick_random()
+			else:
+				unit_scene = combined_pool.pick_random()
+
 			var army_unit := ArmyUnit.new()
 			army_unit.unit_scene = unit_scene
 			army_unit.unit_type = unit_scene.resource_path.get_file().get_basename()
@@ -56,6 +84,7 @@ static func generate_army(roster: Roster, target_gold: int, max_slots: int) -> A
 			army_unit.placed = false
 			army.append(army_unit)
 			remaining_gold -= _get_base_cost(unit_scene)
+			first_pick_done = true
 
 	# Sort by unit priority (highest first) for slot placement
 	army.sort_custom(_compare_by_priority)

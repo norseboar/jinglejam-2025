@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=27 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="1_ca42v"]
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="8_pl11u"]
 [ext_resource type="Resource" uid="uid://cqbdneupe6hhs" path="res://units/rosters/full_rosters/dwarves_full.tres" id="10_qnb83"]
 [ext_resource type="PackedScene" uid="uid://qu7tcqixa2mi" path="res://scenes/ui/unit_summary.tscn" id="11_kvpfn"]
+[ext_resource type="Resource" uid="uid://cweq82v4c5xjm" path="res://units/rosters/full_rosters/demons_full.tres" id="11_pl11u"]
 [ext_resource type="Resource" uid="uid://dcdd1vps5sd0k" path="res://units/rosters/full_rosters/humans_full.tres" id="11_sww3w"]
 [ext_resource type="Texture2D" uid="uid://c6eydxw58l61v" path="res://assets/sprites/ui/next_button/next_button_80x40.png" id="13_264po"]
 [ext_resource type="PackedScene" uid="uid://cu6uv6d63rbjb" path="res://scenes/ui/unit_slot_group.tscn" id="13_ca42v"]
@@ -43,7 +44,7 @@ level_pools = Array[Resource]([ExtResource("2_dinhu"), ExtResource("3_kvuet"), E
 total_levels = 7
 upgrade_background = ExtResource("7_gee14")
 starting_roster = ExtResource("7_e1j6l")
-full_rosters = Array[ExtResource("8_pl11u")]([ExtResource("10_qnb83"), ExtResource("11_sww3w")])
+full_rosters = Array[ExtResource("8_pl11u")]([ExtResource("10_qnb83"), ExtResource("11_sww3w"), ExtResource("11_pl11u")])
 background_rect = NodePath("BackgroundRect")
 gameplay = NodePath("SubViewportContainer/SubViewport/Gameplay")
 player_units = NodePath("SubViewportContainer/SubViewport/Gameplay/PlayerUnits")
