@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://dspj2kekx0lyk"]
+[gd_scene load_steps=33 format=3 uid="uid://dspj2kekx0lyk"]
 
 [ext_resource type="Script" uid="uid://cklegvw7v1gri" path="res://scripts/titlescreen.gd" id="1_8or72"]
 [ext_resource type="Texture2D" uid="uid://wsvhwiqjpj24" path="res://assets/backgrounds/titlescreen.png" id="2_hcbn3"]
@@ -8,10 +8,11 @@
 [ext_resource type="Texture2D" uid="uid://l8cgt1m3s036" path="res://assets/sprites/ui/start_button/start_button_highlight.png" id="5_hcbn3"]
 [ext_resource type="Texture2D" uid="uid://dget5nnbnp0b4" path="res://assets/sprites/ui/quit_button/quit_button.png" id="9_ybki2"]
 [ext_resource type="Script" uid="uid://gfq4k1nlmm6l" path="res://scripts/sound_toggle_button.gd" id="10_8or72"]
+[ext_resource type="Texture2D" uid="uid://shark2mcq5np" path="res://assets/sprites/ui/sound_button1.png" id="10_hcbn3"]
 [ext_resource type="Texture2D" uid="uid://djifl7loku358" path="res://assets/sprites/ui/quit_button/quit_button_pressed.png" id="10_lsij0"]
-[ext_resource type="Texture2D" uid="uid://b7b1e3yxh1rsw" path="res://assets/sprites/ui/sound_on.png" id="11_hcbn3"]
 [ext_resource type="Texture2D" uid="uid://dsresxld07fmo" path="res://assets/sprites/ui/quit_button/quit_button_highlight.png" id="11_y7yat"]
-[ext_resource type="Texture2D" uid="uid://b2lh0ksx8dc3u" path="res://assets/sprites/ui/sound_off.png" id="12_ybki2"]
+[ext_resource type="Texture2D" uid="uid://0ac6n004k3fg" path="res://assets/sprites/ui/sound_button3.png" id="11_ybki2"]
+[ext_resource type="Texture2D" uid="uid://dd8ea7xgtheij" path="res://assets/sprites/ui/sound_button2.png" id="12_lsij0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hcbn3"]
 atlas = ExtResource("3_8or72")
@@ -261,7 +262,9 @@ offset_bottom = -116.0
 grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(3, 3)
-texture_normal = ExtResource("11_hcbn3")
+texture_normal = ExtResource("10_hcbn3")
+texture_pressed = ExtResource("11_ybki2")
+texture_hover = ExtResource("12_lsij0")
 script = ExtResource("10_8or72")
-sound_on_texture = ExtResource("11_hcbn3")
-sound_off_texture = ExtResource("12_ybki2")
+sound_on_texture = ExtResource("10_hcbn3")
+sound_off_texture = ExtResource("11_ybki2")

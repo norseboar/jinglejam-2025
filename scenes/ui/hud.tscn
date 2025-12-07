@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c0d47vd87vlmt"]
+[gd_scene load_steps=20 format=3 uid="uid://c0d47vd87vlmt"]
 
 [ext_resource type="Script" uid="uid://b4vx32mrylism" path="res://scripts/hud.gd" id="1_hqnrr"]
 [ext_resource type="Texture2D" uid="uid://cuyaqmy0d44ys" path="res://assets/sprites/ui/bottom_panel.png" id="2_bo48s"]
@@ -9,14 +9,15 @@
 [ext_resource type="Texture2D" uid="uid://224hb5iqorv7" path="res://assets/sprites/ui/fight_button/fight_button_80x42.png" id="5_gss2c"]
 [ext_resource type="Texture2D" uid="uid://cr0jj48q2688x" path="res://assets/sprites/ui/deploy_button/deploy_button_highlight.png" id="6_erw67"]
 [ext_resource type="Texture2D" uid="uid://hp0p6bqlua4x" path="res://assets/sprites/ui/fight_button/fight_button_80x41.png" id="6_h022r"]
-[ext_resource type="Script" uid="uid://d4eh8dp6lwy7d" path="res://scripts/tinted_button.gd" id="7_4d46k"]
+[ext_resource type="Script" path="res://scripts/tinted_button.gd" id="7_4d46k"]
 [ext_resource type="Texture2D" uid="uid://c6eydxw58l61v" path="res://assets/sprites/ui/next_button/next_button_80x40.png" id="7_4jqwt"]
 [ext_resource type="Texture2D" uid="uid://boqvm3pbcc2x6" path="res://assets/sprites/ui/next_button/next_button_pressed.png" id="8_kicr4"]
 [ext_resource type="Texture2D" uid="uid://2rhn2jh2rt6r" path="res://assets/sprites/ui/next_button/next_button_highlight.png" id="9_mj13f"]
 [ext_resource type="Script" uid="uid://dbmau6olq1lnw" path="res://scripts/tray_panel.gd" id="10_fbprx"]
 [ext_resource type="Script" uid="uid://gfq4k1nlmm6l" path="res://scripts/sound_toggle_button.gd" id="15_o6xly"]
-[ext_resource type="Texture2D" uid="uid://b7b1e3yxh1rsw" path="res://assets/sprites/ui/sound_on.png" id="16_we3sy"]
-[ext_resource type="Texture2D" uid="uid://b2lh0ksx8dc3u" path="res://assets/sprites/ui/sound_off.png" id="17_65nxt"]
+[ext_resource type="Texture2D" uid="uid://shark2mcq5np" path="res://assets/sprites/ui/sound_button1.png" id="15_we3sy"]
+[ext_resource type="Texture2D" uid="uid://0ac6n004k3fg" path="res://assets/sprites/ui/sound_button3.png" id="16_65nxt"]
+[ext_resource type="Texture2D" uid="uid://dd8ea7xgtheij" path="res://assets/sprites/ui/sound_button2.png" id="17_el1dq"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0mwgc"]
 
@@ -209,11 +210,14 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -64.0
+offset_left = -39.0
 offset_top = -64.0
+offset_right = 25.0
 grow_horizontal = 0
 grow_vertical = 0
-texture_normal = ExtResource("16_we3sy")
+texture_normal = ExtResource("15_we3sy")
+texture_pressed = ExtResource("16_65nxt")
+texture_hover = ExtResource("17_el1dq")
 script = ExtResource("15_o6xly")
-sound_on_texture = ExtResource("16_we3sy")
-sound_off_texture = ExtResource("17_65nxt")
+sound_on_texture = ExtResource("15_we3sy")
+sound_off_texture = ExtResource("16_65nxt")
