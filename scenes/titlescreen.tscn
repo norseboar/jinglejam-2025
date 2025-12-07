@@ -1,10 +1,11 @@
-[gd_scene load_steps=33 format=3 uid="uid://dspj2kekx0lyk"]
+[gd_scene load_steps=34 format=3 uid="uid://dspj2kekx0lyk"]
 
 [ext_resource type="Script" uid="uid://cklegvw7v1gri" path="res://scripts/titlescreen.gd" id="1_8or72"]
 [ext_resource type="Texture2D" uid="uid://wsvhwiqjpj24" path="res://assets/backgrounds/titlescreen.png" id="2_hcbn3"]
 [ext_resource type="Texture2D" uid="uid://dwb6ism222jr0" path="res://assets/backgrounds/titlescreen_banner.png" id="3_8or72"]
 [ext_resource type="Texture2D" uid="uid://jeahgoje7i6c" path="res://assets/sprites/ui/start_button/start_button.png" id="3_v7hj3"]
 [ext_resource type="Texture2D" uid="uid://da64cd73sw671" path="res://assets/sprites/ui/start_button/start_button_pressed.png" id="4_8or72"]
+[ext_resource type="Script" uid="uid://d01wyrotvj4i5" path="res://scripts/relative_sprite_position.gd" id="4_ybki2"]
 [ext_resource type="Texture2D" uid="uid://l8cgt1m3s036" path="res://assets/sprites/ui/start_button/start_button_highlight.png" id="5_hcbn3"]
 [ext_resource type="Texture2D" uid="uid://dget5nnbnp0b4" path="res://assets/sprites/ui/quit_button/quit_button.png" id="9_ybki2"]
 [ext_resource type="Script" uid="uid://gfq4k1nlmm6l" path="res://scripts/sound_toggle_button.gd" id="10_8or72"]
@@ -170,7 +171,16 @@ texture = ExtResource("2_hcbn3")
 expand_mode = 3
 stretch_mode = 6
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="LogoContainer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_ybki2")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="LogoContainer"]
 texture_filter = 1
 position = Vector2(867, 236)
 sprite_frames = SubResource("SpriteFrames_5yi1n")
