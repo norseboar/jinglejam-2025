@@ -448,12 +448,26 @@ func die() -> void:
 
 func apply_upgrades() -> void:
 	"""Apply upgrade bonuses to base stats and update visual markers."""
-	for upgrade_index in upgrades:
-		var count: int = upgrades[upgrade_index]
+	for upgrade_index_key in upgrades:
+		# Convert key to int (handles both string and int keys)
+		var upgrade_index: int
+		if upgrade_index_key is int:
+			upgrade_index = upgrade_index_key
+		elif upgrade_index_key is String:
+			# Try to convert string to int, skip if invalid
+			if not upgrade_index_key.is_valid_int():
+				push_error("Invalid upgrade key (not an integer): %s" % upgrade_index_key)
+				continue
+			upgrade_index = upgrade_index_key.to_int()
+		else:
+			push_error("Invalid upgrade key type: %s" % typeof(upgrade_index_key))
+			continue
+		
+		var count: int = upgrades[upgrade_index_key]
 
 		# Get the upgrade definition
-		if upgrade_index >= available_upgrades.size():
-			push_error("Invalid upgrade index: %d" % upgrade_index)
+		if upgrade_index < 0 or upgrade_index >= available_upgrades.size():
+			push_error("Invalid upgrade index: %d (available_upgrades size: %d)" % [upgrade_index, available_upgrades.size()])
 			continue
 
 		var upgrade: UnitUpgrade = available_upgrades[upgrade_index]
