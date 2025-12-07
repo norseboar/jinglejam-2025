@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://b6ra1cx32f7ve"]
+[gd_scene load_steps=7 format=3 uid="uid://b6ra1cx32f7ve"]
 
 [ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/spriteframes/knight.tres" id="1_6k8ya"]
 [ext_resource type="Script" uid="uid://bwvnqebjgqrsx" path="res://scripts/unit.gd" id="1_33c7x"]
 [ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="1_cx6aj"]
 [ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="2_6k8ya"]
 [ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="3_mgebg"]
+[ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="6_3nj72"]
 
 [node name="Unit" type="Node2D"]
 script = ExtResource("1_33c7x")
@@ -16,7 +17,7 @@ animation = &"attack"
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 
 [node name="UpgradeMarkers" type="Node2D" parent="."]
-position = Vector2(0, 2)
+position = Vector2(0, 1)
 
 [node name="Marker1" type="Sprite2D" parent="UpgradeMarkers"]
 position = Vector2(0, -11)
@@ -29,3 +30,6 @@ texture = ExtResource("2_6k8ya")
 [node name="Marker3" type="Sprite2D" parent="UpgradeMarkers"]
 position = Vector2(0, -11)
 texture = ExtResource("3_mgebg")
+
+[node name="Healthbar" parent="." instance=ExtResource("6_3nj72")]
+position = Vector2(-13, 4)

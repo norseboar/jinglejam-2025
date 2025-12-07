@@ -61,10 +61,17 @@ var friendly_container: Node2D = null
 # Node references
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
+@onready var healthbar: Healthbar = $Healthbar
 
 
 func _ready() -> void:
 	current_hp = max_hp
+
+	# Initialize healthbar
+	if healthbar:
+		healthbar.set_alignment(is_enemy)
+		healthbar.update_health(current_hp, max_hp)
+
 	# Flip sprite to face correct direction based on team
 	# This must happen in _ready() so enemies face the correct direction immediately
 	if animated_sprite:
@@ -362,6 +369,10 @@ func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:
 
 	current_hp -= final_damage
 
+	# Update healthbar
+	if healthbar:
+		healthbar.update_health(current_hp, max_hp)
+
 	# Visual feedback: flash the sprite red
 	if animated_sprite:
 		animated_sprite.modulate = Color.RED
@@ -383,6 +394,10 @@ func receive_heal(amount: int) -> void:
 
 	# Heal the unit, clamping to max_hp
 	current_hp = min(current_hp + amount, max_hp)
+
+	# Update healthbar
+	if healthbar:
+		healthbar.update_health(current_hp, max_hp)
 
 	# Visual feedback: flash the sprite green
 	if animated_sprite:

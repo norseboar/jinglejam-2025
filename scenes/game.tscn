@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://qguwsk400gqy" path="res://assets/backgrounds/chess_table.jpg" id="5_p57ef"]
 [ext_resource type="PackedScene" uid="uid://c0d47vd87vlmt" path="res://scenes/ui/hud.tscn" id="6_p57ef"]
 [ext_resource type="Script" uid="uid://bwkdnef87rpc7" path="res://scripts/upgrade_screen.gd" id="7_0tnpc"]
-[ext_resource type="Resource" uid="uid://dvenpd2yimxv5" path="res://units/rosters/starting_rosters/demons.tres" id="7_e1j6l"]
+[ext_resource type="Resource" uid="uid://ccncwdniynkcg" path="res://units/rosters/starting_rosters/humans.tres" id="7_e1j6l"]
 [ext_resource type="Texture2D" uid="uid://cv4fsh4q3oll" path="res://assets/backgrounds/reward_bg.jpg" id="7_gee14"]
 [ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="8_pl11u"]
 [ext_resource type="Resource" uid="uid://cqbdneupe6hhs" path="res://units/rosters/full_rosters/dwarves_full.tres" id="10_qnb83"]
@@ -90,6 +90,7 @@ upgrade_screen = NodePath("UpgradeScreen")
 battle_select_screen = NodePath("BattleSelectScreen")
 
 [node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "start_battle_button", "editor_background", "upgrade_instructions", "upgrade_data", "hp_button", "damage_button", "upgrade_price_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_price_label", "gold_label", "draft_label", "recruit_label")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -419,7 +420,6 @@ texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
 [node name="BattleSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("options_container", "advance_button")]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -436,18 +436,27 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 0.5
+offset_right = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_trtic")
+
+[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel"]
+layout_mode = 0
+offset_left = 83.5
+offset_top = 32.0
+offset_right = 563.5
+offset_bottom = 322.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_left = 18.0
-offset_top = 42.0
+offset_top = -5.5
 offset_right = -22.0
-offset_bottom = 242.0
+offset_bottom = 194.5
 grow_horizontal = 2
 alignment = 1
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://64c08orlqwik"]
+[gd_scene load_steps=9 format=3 uid="uid://64c08orlqwik"]
 
 [ext_resource type="Script" uid="uid://c36sx2wogsgew" path="res://scripts/archer.gd" id="1_71e6i"]
 [ext_resource type="PackedScene" uid="uid://bdw82wxhs38s0" path="res://units/demons/demon_archer_projectile.tscn" id="2_5v4jw"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_71e6i"]
 [ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_5v4jw"]
 [ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_fiyps"]
+[ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="8_5v4jw"]
 
 [node name="Unit" type="Node2D"]
 script = ExtResource("1_71e6i")
@@ -44,3 +45,6 @@ position = Vector2(0, -11)
 texture = ExtResource("5_fiyps")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+
+[node name="Healthbar" parent="." instance=ExtResource("8_5v4jw")]
+position = Vector2(-13, -4)

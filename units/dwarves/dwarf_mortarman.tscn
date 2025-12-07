@@ -44,3 +44,6 @@ frame_progress = 0.0063604116
 
 [node name="UpgradeMarkers" parent="." index="2"]
 position = Vector2(0, -4)
+
+[node name="Healthbar" parent="." index="3"]
+position = Vector2(-23, 7)

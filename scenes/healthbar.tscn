@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://bntf8d8dx0sl8"]
+
+[ext_resource type="Script" uid="uid://bcig4fiaprgmj" path="res://scripts/healthbar.gd" id="1_ulkio"]
+[ext_resource type="Texture2D" uid="uid://mrj5jcilgo6q" path="res://assets/sprites/healthbar/healthbar_background.png" id="1_vjxg4"]
+[ext_resource type="Texture2D" uid="uid://cvayia61t7w53" path="res://assets/sprites/healthbar/healthbar_fill.png" id="2_ulkio"]
+
+[node name="Healthbar" type="Node2D" node_paths=PackedStringArray("fill")]
+script = ExtResource("1_ulkio")
+player_color = Color(0.38431373, 0.6509804, 0.34509805, 1)
+enemy_color = Color(0.7176471, 0.16862746, 0.16862746, 1)
+fill = NodePath("Fill")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("1_vjxg4")
+
+[node name="Fill" type="Sprite2D" parent="."]
+texture = ExtResource("2_ulkio")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cuvby1b737c0w"]
+[gd_scene load_steps=8 format=3 uid="uid://cuvby1b737c0w"]
 
 [ext_resource type="Script" uid="uid://cndk3otdr1x8c" path="res://scripts/healer.gd" id="1_w1g8w"]
 [ext_resource type="AudioStream" uid="uid://ddiujl58sj6d6" path="res://assets/sfx/demons/Dark Heal A.wav" id="2_c0hlw"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_c0hlw"]
 [ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_vnq4l"]
 [ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_ad8s3"]
+[ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="7_c0hlw"]
 
 [node name="Unit" type="Node2D"]
 script = ExtResource("1_w1g8w")
@@ -42,3 +43,6 @@ position = Vector2(0, -11)
 texture = ExtResource("5_ad8s3")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+
+[node name="Healthbar" parent="." instance=ExtResource("7_c0hlw")]
+position = Vector2(-13, 5)

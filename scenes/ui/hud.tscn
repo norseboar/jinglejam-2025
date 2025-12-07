@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://224hb5iqorv7" path="res://assets/sprites/ui/fight_button/fight_button_80x42.png" id="5_gss2c"]
 [ext_resource type="Texture2D" uid="uid://cr0jj48q2688x" path="res://assets/sprites/ui/deploy_button/deploy_button_highlight.png" id="6_erw67"]
 [ext_resource type="Texture2D" uid="uid://hp0p6bqlua4x" path="res://assets/sprites/ui/fight_button/fight_button_80x41.png" id="6_h022r"]
-[ext_resource type="Script" path="res://scripts/tinted_button.gd" id="7_4d46k"]
+[ext_resource type="Script" uid="uid://d4eh8dp6lwy7d" path="res://scripts/tinted_button.gd" id="7_4d46k"]
 [ext_resource type="Texture2D" uid="uid://c6eydxw58l61v" path="res://assets/sprites/ui/next_button/next_button_80x40.png" id="7_4jqwt"]
 [ext_resource type="Texture2D" uid="uid://boqvm3pbcc2x6" path="res://assets/sprites/ui/next_button/next_button_pressed.png" id="8_kicr4"]
 [ext_resource type="Texture2D" uid="uid://2rhn2jh2rt6r" path="res://assets/sprites/ui/next_button/next_button_highlight.png" id="9_mj13f"]
@@ -210,9 +210,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -39.0
-offset_top = -64.0
-offset_right = 25.0
+offset_left = -49.0
+offset_top = -51.0
+offset_right = 15.0
+offset_bottom = 13.0
 grow_horizontal = 0
 grow_vertical = 0
 texture_normal = ExtResource("15_we3sy")

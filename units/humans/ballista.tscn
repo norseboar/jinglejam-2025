@@ -17,6 +17,12 @@
 script = ExtResource("1_tjwou")
 projectile_scene = ExtResource("2_kb8w8")
 projectile_speed = 400.0
+splash_radius = 0.0
+impact_animation_scene = null
+projectile_use_target = false
+projectile_arc_amplitude = 0.0
+projectile_ignore_until_target = false
+projectile_force_aoe_only = false
 max_hp = 20
 damage = 10
 speed = 50.0
@@ -36,3 +42,6 @@ impact_sounds = Array[AudioStream]([ExtResource("8_12rvi"), ExtResource("9_0mfv7
 sprite_frames = ExtResource("3_tjwou")
 frame = 8
 frame_progress = 0.668208
+
+[node name="Healthbar" parent="." index="3"]
+position = Vector2(-18, 4)

@@ -29,40 +29,18 @@ func _ready() -> void:
 				break
 	
 	if animated_sprite == null:
-		print("[RelativeSpritePosition] ERROR: No AnimatedSprite2D found!")
 		return
 	
 	# Store the original scale
 	base_scale = animated_sprite.scale
 	
-	# Always use reference size for ratio calculation
-	# The sprite position in the editor should be set for the reference size
-	var viewport_size := get_viewport().get_visible_rect().size
-	
-	print("[RelativeSpritePosition] =================================")
-	print("[RelativeSpritePosition] Initial setup:")
-	print("[RelativeSpritePosition]   Control size: ", size)
-	print("[RelativeSpritePosition]   Viewport size: ", viewport_size)
-	print("[RelativeSpritePosition]   Reference size: ", reference_size)
-	print("[RelativeSpritePosition]   Base sprite scale: ", base_scale)
-	print("[RelativeSpritePosition]   Scaling enabled: ", enable_scaling)
-	if enable_scaling:
-		print("[RelativeSpritePosition]   Scale mode: ", scale_mode)
-	
 	# Calculate the ratio from the sprite's current position
 	# This assumes the sprite was positioned at the reference size in the editor
 	var initial_pos := animated_sprite.position
-	print("[RelativeSpritePosition]   Initial sprite position: ", initial_pos)
 	
 	# Always use reference size for ratio calculation
 	position_ratio.x = initial_pos.x / reference_size.x
 	position_ratio.y = initial_pos.y / reference_size.y
-	
-	print("[RelativeSpritePosition]   Using reference size for ratio calculation")
-	print("[RelativeSpritePosition]   Calculated ratio: ", position_ratio)
-	print("[RelativeSpritePosition]   (ratio.x = ", position_ratio.x, " = ", initial_pos.x, " / ", reference_size.x, ")")
-	print("[RelativeSpritePosition]   (ratio.y = ", position_ratio.y, " = ", initial_pos.y, " / ", reference_size.y, ")")
-	print("[RelativeSpritePosition] =================================")
 	
 	# Update position initially
 	_update_sprite_position()
@@ -88,13 +66,10 @@ func _update_sprite_position() -> void:
 	
 	# Get the Control's current size (or use viewport size if Control fills screen)
 	var control_size := size
-	var viewport_size := get_viewport().get_visible_rect().size
-	var using_viewport := false
 	
 	if control_size == Vector2.ZERO:
 		# Fallback to viewport size if Control hasn't been sized yet
-		control_size = viewport_size
-		using_viewport = true
+		control_size = get_viewport().get_visible_rect().size
 	
 	# Calculate position based on the stored ratio
 	var target_x := control_size.x * position_ratio.x
@@ -120,25 +95,6 @@ func _update_sprite_position() -> void:
 				scale_factor = max(width_ratio, height_ratio)
 	
 	var new_scale := base_scale * scale_factor
-	
-	print("[RelativeSpritePosition] Update sprite position:")
-	print("[RelativeSpritePosition]   Control size: ", size)
-	print("[RelativeSpritePosition]   Viewport size: ", viewport_size)
-	print("[RelativeSpritePosition]   Using viewport fallback: ", using_viewport)
-	print("[RelativeSpritePosition]   Effective size: ", control_size)
-	print("[RelativeSpritePosition]   Position ratio: ", position_ratio)
-	print("[RelativeSpritePosition]   Old sprite position: ", animated_sprite.position)
-	print("[RelativeSpritePosition]   New sprite position: ", new_pos)
-	print("[RelativeSpritePosition]   (x = ", control_size.x, " * ", position_ratio.x, " = ", target_x, ")")
-	print("[RelativeSpritePosition]   (y = ", control_size.y, " * ", position_ratio.y, " = ", target_y, ")")
-	if enable_scaling:
-		print("[RelativeSpritePosition]   Scale calculation:")
-		print("[RelativeSpritePosition]     Width ratio: ", control_size.x / reference_size.x)
-		print("[RelativeSpritePosition]     Height ratio: ", control_size.y / reference_size.y)
-		print("[RelativeSpritePosition]     Scale mode: ", scale_mode)
-		print("[RelativeSpritePosition]     Scale factor: ", scale_factor)
-		print("[RelativeSpritePosition]     Base scale: ", base_scale)
-		print("[RelativeSpritePosition]     New scale: ", new_scale)
 	
 	# Set the sprite's position and scale
 	animated_sprite.position = new_pos
