@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Roster" load_steps=4 format=3 uid="uid://ehqsv8r3oc67"]
+
+[ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="1_8cj3a"]
+[ext_resource type="PackedScene" uid="uid://cylo0gvp21l7i" path="res://units/factionless/ogre.tscn" id="2_xkomq"]
+[ext_resource type="PackedScene" uid="uid://d8emyhc2jsnq" path="res://units/factionless/blue_ogre.tscn" id="3_vrqdj"]
+
+[resource]
+script = ExtResource("1_8cj3a")
+team_name = "Neutral"
+units = Array[PackedScene]([ExtResource("2_xkomq"), ExtResource("3_vrqdj")])
+metadata/_custom_type_script = "uid://clvfy8mjj8pl3"

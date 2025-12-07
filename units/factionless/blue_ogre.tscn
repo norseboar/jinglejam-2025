@@ -1,11 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://d8emyhc2jsnq"]
+[gd_scene load_steps=8 format=3 uid="uid://d8emyhc2jsnq"]
 
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_8sn7d"]
-[ext_resource type="SpriteFrames" uid="uid://cethh2aalq15c" path="res://assets/spriteframes/blue_ogre.tres" id="2_8sn7d"]
+[ext_resource type="SpriteFrames" uid="uid://bi6xwgs2hqn2l" path="res://assets/spriteframes/blue_ogre.tres" id="2_8sn7d"]
 [ext_resource type="AudioStream" uid="uid://bklc3p4acvet1" path="res://assets/sfx/ogre_club/HAMMER_Hit_Body_stereo.wav" id="2_umbpk"]
 [ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_rscdi"]
 [ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_dxbas"]
 [ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_1ne5f"]
+[ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="7_rscdi"]
 
 [node name="Unit" type="Node2D"]
 script = ExtResource("1_8sn7d")
@@ -35,3 +36,6 @@ position = Vector2(0, -11)
 texture = ExtResource("5_1ne5f")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+
+[node name="Healthbar" parent="." instance=ExtResource("7_rscdi")]
+position = Vector2(-11, 5)

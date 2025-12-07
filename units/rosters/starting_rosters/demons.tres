@@ -1,14 +1,12 @@
-[gd_resource type="Resource" script_class="Roster" load_steps=7 format=3 uid="uid://dvenpd2yimxv5"]
+[gd_resource type="Resource" script_class="Roster" load_steps=5 format=3 uid="uid://dvenpd2yimxv5"]
 
 [ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="1_5wkk3"]
 [ext_resource type="PackedScene" uid="uid://cy4o1pvxheyss" path="res://units/demons/demon_spear.tscn" id="2_pm7cq"]
 [ext_resource type="PackedScene" uid="uid://cuvby1b737c0w" path="res://units/demons/demon_healer.tscn" id="3_of4wn"]
 [ext_resource type="PackedScene" uid="uid://64c08orlqwik" path="res://units/demons/demon_archer.tscn" id="4_of4wn"]
-[ext_resource type="PackedScene" uid="uid://d8emyhc2jsnq" path="res://units/factionless/blue_ogre.tscn" id="5_of4wn"]
-[ext_resource type="PackedScene" uid="uid://cylo0gvp21l7i" path="res://units/factionless/ogre.tscn" id="6_fybne"]
 
 [resource]
 script = ExtResource("1_5wkk3")
 team_name = "Demons"
-units = Array[PackedScene]([ExtResource("2_pm7cq"), ExtResource("3_of4wn"), ExtResource("4_of4wn"), ExtResource("5_of4wn"), ExtResource("6_fybne"), ExtResource("2_pm7cq"), ExtResource("3_of4wn"), ExtResource("3_of4wn"), ExtResource("3_of4wn")])
+units = Array[PackedScene]([ExtResource("3_of4wn"), ExtResource("3_of4wn"), ExtResource("3_of4wn"), ExtResource("4_of4wn"), ExtResource("4_of4wn"), ExtResource("4_of4wn"), ExtResource("2_pm7cq"), ExtResource("2_pm7cq"), ExtResource("2_pm7cq"), ExtResource("2_pm7cq")])
 metadata/_custom_type_script = "uid://clvfy8mjj8pl3"
