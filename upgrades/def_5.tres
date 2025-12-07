@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="UnitUpgrade" load_steps=2 format=3 uid="uid://bi8au7qa005et"]
+
+[ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="1_nwbou"]
+
+[resource]
+script = ExtResource("1_nwbou")
+stat_type = 5
+amount = 5
+label_text = "DEF"

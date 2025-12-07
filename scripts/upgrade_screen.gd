@@ -17,8 +17,13 @@ signal draft_complete()
 # Upgrade pane references
 @export var upgrade_instructions: Node
 @export var upgrade_data: Node
-@export var hp_button: BaseButton
-@export var damage_button: BaseButton
+# Dynamic upgrade slots (3 per unit)
+@export var upgrade_button_1: BaseButton
+@export var upgrade_button_2: BaseButton
+@export var upgrade_button_3: BaseButton
+@export var upgrade_label_1: Label
+@export var upgrade_label_2: Label
+@export var upgrade_label_3: Label
 @export var upgrade_price_label: Label
 
 # Recruit pane references
@@ -59,16 +64,18 @@ func _ready() -> void:
 	if start_battle_button:
 		start_battle_button.pressed.connect(_on_start_battle_button_pressed)
 
-	# Connect upgrade pane buttons
-	if hp_button:
-		hp_button.pressed.connect(_on_hp_button_pressed)
-	if damage_button:
-		damage_button.pressed.connect(_on_damage_button_pressed)
-
 	# Connect recruit button
 	if recruit_button:
 		recruit_button.pressed.connect(_on_recruit_button_pressed)
-	
+
+	# Connect upgrade buttons
+	if upgrade_button_1:
+		upgrade_button_1.pressed.connect(_on_upgrade_button_pressed.bind(0))
+	if upgrade_button_2:
+		upgrade_button_2.pressed.connect(_on_upgrade_button_pressed.bind(1))
+	if upgrade_button_3:
+		upgrade_button_3.pressed.connect(_on_upgrade_button_pressed.bind(2))
+
 	# Hide editor background at runtime
 	hide_editor_background()
 	
@@ -326,10 +333,13 @@ func _refresh_upgrade_pane() -> void:
 			upgrade_instructions.visible = true
 		if upgrade_data:
 			upgrade_data.visible = false
-		if hp_button:
-			hp_button.disabled = true
-		if damage_button:
-			damage_button.disabled = true
+		# Disable all upgrade buttons
+		if upgrade_button_1:
+			upgrade_button_1.disabled = true
+		if upgrade_button_2:
+			upgrade_button_2.disabled = true
+		if upgrade_button_3:
+			upgrade_button_3.disabled = true
 		return
 
 	# Has selection - hide instructions, show data
@@ -341,7 +351,7 @@ func _refresh_upgrade_pane() -> void:
 	# Get army unit data
 	var army_unit = army_ref[selected_army_index]
 	var total_upgrades := _get_total_upgrades(army_unit.upgrades)
-	
+
 	# Get upgrade cost from unit scene
 	var upgrade_cost := _get_unit_upgrade_cost(army_unit.unit_scene)
 	var game := _get_game()
@@ -356,12 +366,47 @@ func _refresh_upgrade_pane() -> void:
 	if upgrade_price_label:
 		upgrade_price_label.text = "Upgrade: %d Gold" % upgrade_cost
 
-	# Disable buttons if maxed or can't afford
+	# Get available upgrades from unit scene
+	var unit_instance := army_unit.unit_scene.instantiate() as Unit
+	if unit_instance == null:
+		push_error("Failed to instantiate unit for upgrade display")
+		return
+	var available_upgrades := unit_instance.available_upgrades
+	unit_instance.queue_free()
+
+	# Disable all buttons if maxed
 	var maxed := total_upgrades >= 3
-	if hp_button:
-		hp_button.disabled = maxed or not can_afford_upgrade
-	if damage_button:
-		damage_button.disabled = maxed or not can_afford_upgrade
+
+	# Populate each upgrade slot (0-2)
+	var upgrade_buttons := [upgrade_button_1, upgrade_button_2, upgrade_button_3]
+	var upgrade_labels := [upgrade_label_1, upgrade_label_2, upgrade_label_3]
+
+	for i in range(3):
+		var button: BaseButton = upgrade_buttons[i]
+		var label: Label = upgrade_labels[i]
+
+		if i >= available_upgrades.size() or available_upgrades[i] == null:
+			# No upgrade in this slot
+			if button:
+				button.disabled = true
+				button.visible = false
+			if label:
+				label.visible = false
+			continue
+
+		var upgrade: UnitUpgrade = available_upgrades[i]
+
+		# Update label text
+		if label:
+			# Replace \n with actual newlines (handles both literal \n and actual newlines)
+			var display_text := upgrade.label_text.replace("\\n", "\n")
+			label.text = "%s +%d" % [display_text, upgrade.amount]
+			label.visible = true
+
+		# Update button state
+		if button:
+			button.visible = true
+			button.disabled = maxed or not can_afford_upgrade
 
 
 func _refresh_recruit_pane() -> void:
@@ -497,8 +542,8 @@ func _get_unit_base_recruit_cost(unit_scene: PackedScene) -> int:
 	return cost
 
 
-func _on_hp_button_pressed() -> void:
-	"""Handle HP upgrade button press."""
+func _on_upgrade_button_pressed(slot_index: int) -> void:
+	"""Handle upgrade button press for any upgrade slot."""
 	if selected_army_index < 0 or selected_army_index >= army_ref.size():
 		return
 
@@ -514,10 +559,10 @@ func _on_hp_button_pressed() -> void:
 	if game == null or not game.spend_gold(upgrade_cost):
 		return  # Can't afford
 
-	# Add HP upgrade
-	if not army_unit.upgrades.has("hp"):
-		army_unit.upgrades["hp"] = 0
-	army_unit.upgrades["hp"] += 1
+	# Add upgrade to the specified slot
+	if not army_unit.upgrades.has(slot_index):
+		army_unit.upgrades[slot_index] = 0
+	army_unit.upgrades[slot_index] += 1
 
 	# Update stats display immediately
 	var unit_summary := upgrade_data.get_node_or_null("UnitSummary") as UnitSummary
@@ -526,38 +571,6 @@ func _on_hp_button_pressed() -> void:
 
 	# Refresh pane (updates button states and text)
 	_refresh_upgrade_pane()
-
-
-func _on_damage_button_pressed() -> void:
-	"""Handle Damage upgrade button press."""
-	if selected_army_index < 0 or selected_army_index >= army_ref.size():
-		return
-
-	var army_unit = army_ref[selected_army_index]
-	var total := _get_total_upgrades(army_unit.upgrades)
-
-	if total >= 3:
-		return  # Already maxed
-
-	# Get upgrade cost and check/spend gold
-	var upgrade_cost := _get_unit_upgrade_cost(army_unit.unit_scene)
-	var game := _get_game()
-	if game == null or not game.spend_gold(upgrade_cost):
-		return  # Can't afford
-
-	# Add damage upgrade
-	if not army_unit.upgrades.has("damage"):
-		army_unit.upgrades["damage"] = 0
-	army_unit.upgrades["damage"] += 1
-
-	# Update stats display immediately
-	var unit_summary := upgrade_data.get_node_or_null("UnitSummary") as UnitSummary
-	if unit_summary:
-		unit_summary.update_stats(army_unit.upgrades)
-
-	# Refresh pane (updates button states and text)
-	_refresh_upgrade_pane()
-
 
 func _on_recruit_button_pressed() -> void:
 	"""Handle Recruit button press."""

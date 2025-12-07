@@ -384,6 +384,20 @@ func hide_battle_select() -> void:
 		battle_select_screen.hide_battle_select()
 
 
+func hide_battle_section_for_faction_select() -> void:
+	"""Hide battle UI while faction selection is shown."""
+	if battle_group:
+		battle_group.visible = false
+	else:
+		if tray_panel:
+			if tray_panel is TrayPanel:
+				(tray_panel as TrayPanel).hide_immediately()
+			else:
+				tray_panel.visible = false
+		if phase_label:
+			phase_label.get_parent().visible = false
+
+
 func _on_battle_select_advance_pressed_data(option_data: BattleOptionData) -> void:
 	"""Handle advance from battle select screen with generated data."""
 	hide_battle_select()

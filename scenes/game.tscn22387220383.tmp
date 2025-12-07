@@ -98,7 +98,7 @@ offset_bottom = 0.0
 upgrade_screen = NodePath("UpgradeScreen")
 battle_select_screen = NodePath("BattleSelectScreen")
 
-[node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "start_battle_button", "editor_background", "upgrade_instructions", "upgrade_data", "upgrade_button_1", "upgrade_button_2", "upgrade_button_3", "upgrade_label_1", "upgrade_label_2", "upgrade_label_3", "upgrade_price_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_price_label", "gold_label", "draft_label", "recruit_label")]
+[node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "start_battle_button", "editor_background", "upgrade_instructions", "upgrade_data", "hp_button", "damage_button", "upgrade_price_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_price_label", "gold_label", "draft_label", "recruit_label")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -114,12 +114,8 @@ start_battle_button = NodePath("CenterPanel/VBoxContainer/FirstBattleButton")
 editor_background = NodePath("DebugBackground")
 upgrade_instructions = NodePath("Control/UpgradePane/MarginContainer/UpgradeInstructions")
 upgrade_data = NodePath("Control/UpgradePane/MarginContainer/UpgradeData")
-upgrade_button_1 = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup/Upgrade1")
-upgrade_button_2 = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup2/Upgrade2")
-upgrade_button_3 = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup3/Upgrade3")
-upgrade_label_1 = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup/Label")
-upgrade_label_2 = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup2/Label")
-upgrade_label_3 = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup3/Label")
+hp_button = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup/Upgrade1")
+damage_button = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup2/Upgrade2")
 upgrade_price_label = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/UpgradePriceLabel")
 recruit_instructions = NodePath("Control/RecruitPane/MarginContainer/RecruitInstructions")
 recruit_data = NodePath("Control/RecruitPane/MarginContainer/RecruitData")

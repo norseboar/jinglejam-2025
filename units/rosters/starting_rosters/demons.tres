@@ -8,5 +8,5 @@
 [resource]
 script = ExtResource("1_5wkk3")
 team_name = "Demons"
-units = Array[PackedScene]([ExtResource("3_of4wn"), ExtResource("3_of4wn"), ExtResource("3_of4wn"), ExtResource("4_of4wn"), ExtResource("4_of4wn"), ExtResource("4_of4wn"), ExtResource("2_pm7cq"), ExtResource("2_pm7cq"), ExtResource("2_pm7cq"), ExtResource("2_pm7cq")])
+units = Array[PackedScene]([ExtResource("2_pm7cq"), ExtResource("2_pm7cq"), ExtResource("2_pm7cq"), ExtResource("2_pm7cq"), ExtResource("4_of4wn"), ExtResource("4_of4wn"), ExtResource("4_of4wn"), ExtResource("3_of4wn"), ExtResource("3_of4wn"), ExtResource("3_of4wn")])
 metadata/_custom_type_script = "uid://clvfy8mjj8pl3"

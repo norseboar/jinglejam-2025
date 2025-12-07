@@ -22,6 +22,7 @@ signal unit_slot_clicked(slot: UnitSlot)  # Pass the slot so parent knows which 
 @export var selection_mode: SelectionMode = SelectionMode.CLICK  # How this slot is selected
 @export var show_background: bool = true  # Whether to show the background node
 @export var drag_preview_scene: PackedScene  # Custom scene for drag preview (optional - falls back to simple preview if not set)
+@export var override_sprite_frames: bool = true  # If false, keep the sprite set in the scene
 
 # State
 var is_selected: bool = false
@@ -49,17 +50,18 @@ func set_unit(army_unit: ArmyUnit) -> void:
 	
 	if not army_unit or not army_unit.unit_scene:
 		# Clear the slot
-		if animated_sprite:
+		if override_sprite_frames and animated_sprite:
 			animated_sprite.sprite_frames = null
 			animated_sprite.stop()
 		return
 	
-	# Extract SpriteFrames from the unit scene
-	var sprite_frames: SpriteFrames = _extract_sprite_frames(army_unit.unit_scene)
-	if sprite_frames and animated_sprite:
-		animated_sprite.sprite_frames = sprite_frames
-		# Don't play animation yet - will be controlled by selection state
-		_update_animation_state()
+	# Extract SpriteFrames from the unit scene if overriding
+	if override_sprite_frames:
+		var sprite_frames: SpriteFrames = _extract_sprite_frames(army_unit.unit_scene)
+		if sprite_frames and animated_sprite:
+			animated_sprite.sprite_frames = sprite_frames
+	# Update animation state so selection visuals stay in sync with existing sprite frames
+	_update_animation_state()
 
 func _update_animation_state() -> void:
 	"""Update animation based on selection state - animate when selected, static frame when not."""

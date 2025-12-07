@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="UnitUpgrade" load_steps=2 format=3 uid="uid://d4baw5bu55blw"]
+
+[ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="1_u40cg"]
+
+[resource]
+script = ExtResource("1_u40cg")
+stat_type = 1
+label_text = "DMG"

@@ -110,6 +110,8 @@ func _show_faction_selection() -> void:
 	"""Display the faction select screen and pause draft flow until a roster is chosen."""
 	if faction_select_screen:
 		print("Game: showing faction selector")
+		if hud:
+			hud.hide_battle_section_for_faction_select()
 		faction_select_screen.show_selector()
 	else:
 		# Fallback: proceed directly with whatever starting_roster is set

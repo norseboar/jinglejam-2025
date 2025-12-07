@@ -9,6 +9,7 @@ signal advance_pressed(option_data: BattleOptionData)
 
 # Scene to instantiate for each option
 @export var battle_option_scene: PackedScene
+@export var background_texture: Texture2D
 
 # State
 var options: Array[BattleOption] = []
@@ -29,6 +30,7 @@ func show_battle_select(scenes: Array[PackedScene]) -> void:
 	"""Show the battle select screen with the given level scene options (legacy method)."""
 	# This method is kept for backward compatibility but should use show_battle_select_generated instead
 	selected_index = 0
+	_apply_background_texture()
 	
 	# Clear existing options
 	_clear_options()
@@ -50,6 +52,7 @@ func show_battle_select_generated(data_list: Array[BattleOptionData]) -> void:
 	"""Show the battle select screen with generated battle options."""
 	option_data_list = data_list
 	selected_index = 0
+	_apply_background_texture()
 
 	# Clear existing options
 	_clear_options()
@@ -134,3 +137,16 @@ func _on_advance_button_pressed() -> void:
 
 	var selected_data := option_data_list[selected_index]
 	advance_pressed.emit(selected_data)
+
+
+func _apply_background_texture() -> void:
+	"""Apply this screen's background texture to the game's background, if available."""
+	if background_texture == null:
+		return
+	var game := _get_game()
+	if game and game.background_rect:
+		game.background_rect.texture = background_texture
+
+
+func _get_game() -> Game:
+	return get_tree().get_first_node_in_group("game") as Game

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="UnitUpgrade" load_steps=2 format=3 uid="uid://b8xbtj1olnkiw"]
+
+[ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="1_s6xew"]
+
+[resource]
+script = ExtResource("1_s6xew")
+stat_type = 4
+amount = 1
+label_text = "ATK\\nSPD"

@@ -3,7 +3,6 @@ class_name Healer
 
 ## Healer - unit that heals wounded allies within range.
 
-@export var heal_amount := 2
 @export var heal_vfx_scene: PackedScene = preload("res://units/demons/healing_vfx.tscn")
 
 
@@ -17,6 +16,9 @@ func _ready() -> void:
 		attack_cooldown = 2.0  # Slower heal cadence
 	if speed == 100.0:
 		speed = 90.0  # Slightly slower movement
+	# Set default heal amount if not set in scene
+	if heal_amount == 0:
+		heal_amount = 2
 
 	super._ready()
 

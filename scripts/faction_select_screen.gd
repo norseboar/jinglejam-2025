@@ -13,6 +13,7 @@ const DEFAULT_STARTING_ROSTER_PATHS := [
 @export var confirm_button: BaseButton
 @export var faction_name_label: Label
 @export var rosters: Array[Roster] = []
+@export var background_texture: Texture2D
 
 var available_rosters: Array[Roster] = []
 var selected_index: int = -1
@@ -32,6 +33,7 @@ func show_selector() -> void:
 	"""Show the selector modal and reset state."""
 	available_rosters = _get_available_rosters()
 	print("FactionSelect: loaded %d rosters" % available_rosters.size())
+	_apply_background_texture()
 	_populate_slots()
 	if available_rosters.size() > 0:
 		_select_index(0)
@@ -87,6 +89,8 @@ func _populate_slots() -> void:
 func _assign_roster_to_slot(slot: UnitSlot, roster: Roster) -> void:
 	if slot == null:
 		return
+	# Keep whatever sprite is authored in the scene for faction preview slots
+	slot.override_sprite_frames = false
 	slot.set_selected(false)
 	if roster and not roster.units.is_empty():
 		var preview_unit := ArmyUnit.new()
@@ -142,4 +146,17 @@ func _on_confirm_pressed() -> void:
 	print("FactionSelect: confirmed roster '%s'" % roster.team_name)
 	hide_selector()
 	roster_selected.emit(roster)
+
+
+func _apply_background_texture() -> void:
+	"""Apply this screen's background texture to the game's background, if available."""
+	if background_texture == null:
+		return
+	var game := _get_game()
+	if game and game.background_rect:
+		game.background_rect.texture = background_texture
+
+
+func _get_game() -> Game:
+	return get_tree().get_first_node_in_group("game") as Game
 

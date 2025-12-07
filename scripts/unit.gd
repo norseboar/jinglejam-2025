@@ -11,12 +11,14 @@ signal player_unit_died(army_index: int)  # Emitted by player units with army_in
 @export var speed := 100.0           # pixels per second
 @export var attack_range := 50.0     # radius to attack enemies
 @export var detection_range := 2000.0 # radius to detect enemies (very large to cover screen)
-@export var attack_cooldown := 0.0   # seconds to wait in idle after attack animation completes (0 = no cooldown)
+@export var attack_cooldown := 3.0   # seconds to wait in idle after attack animation completes (0 = no cooldown)
+@export var attack_speed := 0  # Attack speed stat (reduces cooldown by 0.5 seconds per point)
 @export var attack_damage_frame := 0 # Frame number in attack animation when damage is dealt
 @export var priority := 1            # Priority for targeting (higher = more important)
 @export var armor := 0               # Damage reduction (subtracted from incoming damage)
 @export var armor_piercing := false  # If true, attacks ignore enemy armor
 @export var targets_high_priority := false  # If true, only targets highest priority enemies
+@export var heal_amount := 0         # Heal amount (only used by Healer units)
 
 # Display info
 @export var display_name: String = "Unit"
@@ -25,7 +27,9 @@ signal player_unit_died(army_index: int)  # Emitted by player units with army_in
 # Gold system properties
 @export var base_recruit_cost := 10  # Base cost to recruit this unit type
 @export var upgrade_cost := 5  # Cost per upgrade (HP or Damage)
-@export var gold_reward := 5  # Gold given when this unit is killed
+
+# Upgrade system
+@export var available_upgrades: Array[UnitUpgrade] = []
 
 # Sound effects
 @export var damage_sounds: Array[AudioStream] = [
@@ -123,7 +127,7 @@ func _do_movement(delta: float) -> void:
 		var direction_to_target := (target_pos - position).normalized()
 		
 		# Move towards target
-		position += direction_to_target * speed * delta
+		position += direction_to_target * speed * 10.0 * delta
 		
 		# Flip sprite to face movement direction
 		animated_sprite.flip_h = direction_to_target.x < 0
@@ -135,7 +139,7 @@ func _do_movement(delta: float) -> void:
 		animated_sprite.flip_h = is_enemy
 		
 		# Move horizontally
-		position.x += direction * speed * delta
+		position.x += direction * speed * 10.0 * delta
 
 
 func _check_for_targets() -> void:
@@ -217,16 +221,17 @@ func _check_for_targets() -> void:
 		var distance_to_target := position.distance_to(closest_enemy.position)
 		
 		# If we're in attack range, start fighting
-		if distance_to_target <= attack_range:
+		if distance_to_target <= (attack_range * 10.0 + 20.0):
 			set_state("fighting")
 			# Reset cooldown timer when entering combat
 			# Ranged units (not Swordsman) get a random delay for first attack to stagger them
+			var effective_cooldown := _get_effective_cooldown()
 			if self is Archer or self is ArtilleryUnit:
-				# Random delay between 0 and attack_cooldown for first attack
-				time_since_attack = randf() * attack_cooldown
+				# Random delay between 0 and effective_cooldown for first attack
+				time_since_attack = randf() * effective_cooldown
 			else:
 				# Melee units (Swordsman) attack immediately
-				time_since_attack = attack_cooldown  # Set to cooldown value so attack happens immediately
+				time_since_attack = effective_cooldown  # Set to cooldown value so attack happens immediately
 		# Otherwise, we'll keep moving towards them (state stays "moving")
 
 
@@ -245,7 +250,7 @@ func _do_fighting(delta: float) -> void:
 
 	# Check if target moved out of attack range
 	var distance := position.distance_to(target.position)
-	if distance > attack_range * 1.2:  # Small buffer to prevent flickering
+	if distance > (attack_range * 10.0 + 20.0) * 1.2:  # Small buffer to prevent flickering
 		# Keep the target but switch to moving so we can move towards them
 		set_state("moving")
 		return
@@ -253,7 +258,8 @@ func _do_fighting(delta: float) -> void:
 	# Attack immediately when not attacking, then wait for cooldown after attack completes
 	if not is_attacking:
 		# If no cooldown, or cooldown has passed since last attack finished, attack immediately
-		if attack_cooldown <= 0.0 or time_since_attack >= attack_cooldown:
+		var effective_cooldown := _get_effective_cooldown()
+		if effective_cooldown <= 0.0 or time_since_attack >= effective_cooldown:
 			_attack_target()
 		else:
 			# Count cooldown timer during idle (after attack animation completes)
@@ -303,11 +309,12 @@ func _on_attack_animation_finished() -> void:
 	is_attacking = false
 	
 	# Switch back to idle animation
-	# If attack_cooldown > 0, we'll wait in idle for that duration before next attack
+	# If effective_cooldown > 0, we'll wait in idle for that duration before next attack
 	if state == "fighting" and animated_sprite:
 		_safe_play_animation("idle")
 		# Reset cooldown timer - it will count up during idle animation
-		if attack_cooldown > 0.0:
+		var effective_cooldown := _get_effective_cooldown()
+		if effective_cooldown > 0.0:
 			time_since_attack = 0.0
 
 
@@ -423,6 +430,7 @@ func die() -> void:
 	
 	# Emit appropriate signal based on unit type
 	if is_enemy:
+		var gold_reward := _calculate_gold_reward()
 		enemy_unit_died.emit(gold_reward, global_position)
 	else:
 		# Emit signal for player unit death (to remove from army)
@@ -440,16 +448,51 @@ func die() -> void:
 
 func apply_upgrades() -> void:
 	"""Apply upgrade bonuses to base stats and update visual markers."""
-	for upgrade_type in upgrades:
-		var count: int = upgrades[upgrade_type]
-		match upgrade_type:
-			"hp":
-				max_hp += count
+	for upgrade_index in upgrades:
+		var count: int = upgrades[upgrade_index]
+
+		# Get the upgrade definition
+		if upgrade_index >= available_upgrades.size():
+			push_error("Invalid upgrade index: %d" % upgrade_index)
+			continue
+
+		var upgrade: UnitUpgrade = available_upgrades[upgrade_index]
+		var total_amount := upgrade.amount * count
+
+		# Apply based on stat type
+		match upgrade.stat_type:
+			UnitUpgrade.StatType.MAX_HP:
+				max_hp += total_amount
 				current_hp = max_hp  # Refresh to new max
-			"damage":
-				damage += count
-	
+			UnitUpgrade.StatType.DAMAGE:
+				damage += total_amount
+			UnitUpgrade.StatType.SPEED:
+				speed += total_amount
+			UnitUpgrade.StatType.ATTACK_RANGE:
+				attack_range += total_amount
+			UnitUpgrade.StatType.ATTACK_SPEED:
+				attack_speed += total_amount
+			UnitUpgrade.StatType.ARMOR:
+				armor += total_amount
+			UnitUpgrade.StatType.HEAL_AMOUNT:
+				heal_amount += total_amount
+
 	_update_upgrade_markers()
+
+
+func _get_effective_cooldown() -> float:
+	"""Calculate effective cooldown: base cooldown minus attack speed bonus."""
+	var effective := attack_cooldown - (attack_speed * 0.5)
+	return max(0.0, effective)  # Ensure cooldown never goes below 0
+
+
+func _calculate_gold_reward() -> int:
+	"""Calculate gold reward based on unit cost and upgrades."""
+	var total_upgrades := 0
+	for count in upgrades.values():
+		total_upgrades += count
+	var total_cost := base_recruit_cost + (upgrade_cost * total_upgrades)
+	return int(total_cost / 2.0)
 
 
 func _safe_play_animation(anim_name: String) -> void:

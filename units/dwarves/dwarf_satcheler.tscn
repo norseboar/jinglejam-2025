@@ -1,16 +1,20 @@
-[gd_scene load_steps=12 format=3 uid="uid://dhrjnricjo8lf"]
+[gd_scene load_steps=16 format=3 uid="uid://dhrjnricjo8lf"]
 
 [ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_t1dey"]
 [ext_resource type="Script" uid="uid://c36sx2wogsgew" path="res://scripts/archer.gd" id="2_rhl77"]
 [ext_resource type="PackedScene" uid="uid://pwmae7tfvrj3" path="res://units/dwarves/projectile_grenade.tscn" id="3_t1dey"]
 [ext_resource type="PackedScene" uid="uid://dglhowo45qkr4" path="res://scenes/vfx/satchel_vfx.tscn" id="4_rhl77"]
 [ext_resource type="SpriteFrames" uid="uid://d1sgs5255jqyd" path="res://assets/spriteframes/dwarf_satcheler.tres" id="4_t1dey"]
+[ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="5_4orfl"]
 [ext_resource type="AudioStream" uid="uid://cofs7g4bge1jx" path="res://assets/sfx/explosion/EXPLOSION_Medium_Bang_with_Kickback_stereo.wav" id="5_bpibc"]
 [ext_resource type="AudioStream" uid="uid://b3uotnaj3estb" path="res://assets/sfx/throw/Spear throw 2.wav" id="5_nopp4"]
 [ext_resource type="AudioStream" uid="uid://3yya4e6gpvdp" path="res://assets/sfx/throw/Spear throw 3.wav" id="6_ffc0m"]
 [ext_resource type="AudioStream" uid="uid://cd1epcer4lvk8" path="res://assets/sfx/explosion/EXPLOSION_Medium_Fast_with_Rock_Debris_stereo.wav" id="6_m45cr"]
+[ext_resource type="Resource" uid="uid://d4baw5bu55blw" path="res://upgrades/rng_5.tres" id="6_tilus"]
+[ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_10.tres" id="7_4xvbj"]
 [ext_resource type="AudioStream" uid="uid://cn2wkbgofawgr" path="res://assets/sfx/throw/Spear throw 4.wav" id="7_csun7"]
 [ext_resource type="AudioStream" uid="uid://b6a2t44iix7x5" path="res://assets/sfx/explosion/EXPLOSION_Medium_Sharp_with_Echo_stereo.wav" id="7_ep4n7"]
+[ext_resource type="Resource" uid="uid://l0bc24e1i7ds" path="res://upgrades/atk_spd_1.tres" id="8_n714i"]
 
 [node name="dwarf_satcheler" instance=ExtResource("1_t1dey")]
 script = ExtResource("2_rhl77")
@@ -22,15 +26,17 @@ projectile_use_target = true
 projectile_arc_amplitude = 30.0
 projectile_ignore_until_target = true
 projectile_force_aoe_only = false
-max_hp = 20
-damage = 30
-speed = 50.0
-attack_range = 100.0
-attack_cooldown = 2.0
+max_hp = 30
+damage = 20
+speed = 6.0
+attack_range = 2.0
+attack_speed = 3
 attack_damage_frame = 2
 armor_piercing = true
 display_name = "Dwarf Satcheler"
-description = "Shortrange arsonist"
+description = "Shortrange grenadier"
+base_recruit_cost = 15
+available_upgrades = Array[ExtResource("5_4orfl")]([ExtResource("6_tilus"), ExtResource("7_4xvbj"), ExtResource("8_n714i")])
 damage_sounds = Array[AudioStream]([])
 fire_sounds = Array[AudioStream]([ExtResource("5_nopp4"), ExtResource("6_ffc0m"), ExtResource("7_csun7")])
 impact_sounds = Array[AudioStream]([ExtResource("5_bpibc"), ExtResource("6_m45cr"), ExtResource("7_ep4n7")])
