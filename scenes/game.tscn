@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=33 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="1_ca42v"]
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -26,16 +26,23 @@
 [ext_resource type="Texture2D" uid="uid://belfmhbyw1w1s" path="res://assets/sprites/ui/buy_button/buy_button_pressed.png" id="19_bt5mj"]
 [ext_resource type="Texture2D" uid="uid://cadwb1i3siefs" path="res://assets/sprites/ui/buy_button/buy_button_highlight.png" id="20_e1j6l"]
 [ext_resource type="Script" uid="uid://d4eh8dp6lwy7d" path="res://scripts/tinted_button.gd" id="23_pl11u"]
+[ext_resource type="Script" uid="uid://ba8mk545ccyla" path="res://scripts/faction_select_screen.gd" id="27_wljb1"]
+[ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/spriteframes/knight.tres" id="28_suyxu"]
+[ext_resource type="Resource" uid="uid://cptdpd3b8m1h0" path="res://units/rosters/starting_rosters/dwarves.tres" id="28_v2yb1"]
+[ext_resource type="Resource" uid="uid://dvenpd2yimxv5" path="res://units/rosters/starting_rosters/demons.tres" id="29_js0lu"]
+[ext_resource type="SpriteFrames" uid="uid://h0c0lfbqiyj8" path="res://assets/spriteframes/demons_archer.tres" id="29_sgl2t"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trtic"]
 bg_color = Color(0.099985994, 0.09998601, 0.099985965, 1)
 
-[node name="Game" type="Control" node_paths=PackedStringArray("background_rect", "gameplay", "player_units", "enemy_units", "hud", "ui_layer") groups=["game"]]
+[node name="Game" type="Control" node_paths=PackedStringArray("background_rect", "gameplay", "player_units", "enemy_units", "hud", "ui_layer", "faction_select_screen") groups=["game"]]
 texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 1.0
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_ca42v")
@@ -53,6 +60,7 @@ player_units = NodePath("SubViewportContainer/SubViewport/Gameplay/PlayerUnits")
 enemy_units = NodePath("SubViewportContainer/SubViewport/Gameplay/EnemyUnits")
 hud = NodePath("SubViewportContainer/SubViewport/UI/HUD")
 ui_layer = NodePath("SubViewportContainer/SubViewport/UI")
+faction_select_screen = NodePath("SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen")
 
 [node name="BackgroundRect" type="TextureRect" parent="."]
 texture_filter = 2
@@ -423,6 +431,7 @@ texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
 [node name="BattleSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("options_container", "advance_button")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -494,6 +503,105 @@ texture_pressed = ExtResource("14_1kice")
 texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
+[node name="FactionSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("slot_group", "confirm_button", "faction_name_label")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("27_wljb1")
+slot_group = NodePath("Panel/PanelContainer/VBoxContainer/UnitSlotGroup")
+confirm_button = NodePath("Panel/PanelContainer/VBoxContainer/Button")
+faction_name_label = NodePath("Panel/PanelContainer/VBoxContainer/Label2")
+rosters = Array[ExtResource("8_pl11u")]([ExtResource("7_e1j6l"), ExtResource("28_v2yb1"), ExtResource("29_js0lu")])
+
+[node name="Panel" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.5
+offset_right = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_trtic")
+
+[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel"]
+layout_mode = 0
+offset_left = 83.5
+offset_top = 32.0
+offset_right = 563.5
+offset_bottom = 322.0
+
+[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -82.0
+offset_top = -48.5
+offset_right = 82.0
+offset_bottom = 48.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Select a faction:"
+horizontal_alignment = 1
+
+[node name="UnitSlotGroup" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer/UnitSlotGroup/UnitSlot/Panel" index="0"]
+sprite_frames = ExtResource("28_suyxu")
+
+[node name="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer/UnitSlotGroup/UnitSlot3/Panel" index="0"]
+position = Vector2(16, 15)
+sprite_frames = ExtResource("29_sgl2t")
+
+[node name="UnitSlot4" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer/UnitSlotGroup" index="3"]
+visible = false
+
+[node name="UnitSlot5" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer/UnitSlotGroup" index="4"]
+visible = false
+
+[node name="UnitSlot6" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer/UnitSlotGroup" index="5"]
+visible = false
+
+[node name="UnitSlot7" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer/UnitSlotGroup" index="6"]
+visible = false
+
+[node name="UnitSlot8" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer/UnitSlotGroup" index="7"]
+visible = false
+
+[node name="UnitSlot9" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer/UnitSlotGroup" index="8"]
+visible = false
+
+[node name="UnitSlot10" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer/UnitSlotGroup" index="9"]
+visible = false
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Humans"
+horizontal_alignment = 1
+
+[node name="Button" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("13_264po")
+texture_pressed = ExtResource("14_1kice")
+texture_hover = ExtResource("15_5newe")
+script = ExtResource("23_pl11u")
+
 [node name="Gameplay" type="Node2D" parent="SubViewportContainer/SubViewport"]
 
 [node name="PlayerUnits" type="Node2D" parent="SubViewportContainer/SubViewport/Gameplay"]
@@ -503,3 +611,7 @@ texture_filter = 1
 [node name="EnemyUnits" type="Node2D" parent="SubViewportContainer/SubViewport/Gameplay"]
 y_sort_enabled = true
 texture_filter = 1
+
+[editable path="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer/UnitSlotGroup"]
+[editable path="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer/UnitSlotGroup/UnitSlot"]
+[editable path="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/Panel/PanelContainer/VBoxContainer/UnitSlotGroup/UnitSlot3"]

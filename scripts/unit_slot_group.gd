@@ -80,4 +80,3 @@ func _on_unit_slot_clicked(clicked_slot: UnitSlot) -> void:
 			# Deselect all other slots, select the clicked one
 			for slot in slots:
 				slot.set_selected(slot == clicked_slot)
-

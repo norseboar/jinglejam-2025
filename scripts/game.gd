@@ -60,6 +60,7 @@ var is_draft_mode: bool = true
 # UI references (assign in inspector)
 @export var hud: HUD
 @export var ui_layer: CanvasLayer  # Where levels get loaded (same layer as HUD for drag-drop)
+@export var faction_select_screen: FactionSelectScreen
 
 ## Title screen scene path (loaded at runtime to avoid circular reference with titlescreen preloading game)
 @export var title_screen_path: String = "res://scenes/titlescreen.tscn"
@@ -77,17 +78,23 @@ func _ready() -> void:
 	hud.draft_complete.connect(_on_draft_complete)
 	unit_placed.connect(_on_unit_placed)
 	army_unit_placed.connect(_on_army_unit_placed)
+	if faction_select_screen:
+		faction_select_screen.roster_selected.connect(_on_faction_roster_selected)
 	
 	# Initialize gold
 	gold = starting_gold
 	gold_changed.emit(gold)
 	
-	# Start in draft mode
-	_show_draft_screen()
+	# Show faction selection before draft begins
+	_show_faction_selection()
 
 
 func _show_draft_screen() -> void:
 	"""Show the draft screen at game start."""
+	if starting_roster:
+		print("Game: showing draft with starting roster '%s' (%d units)" % [starting_roster.team_name, starting_roster.units.size()])
+	else:
+		print("Game: starting_roster is null when showing draft")
 	# Set upgrade background
 	if background_rect and upgrade_background:
 		background_rect.texture = upgrade_background
@@ -97,6 +104,28 @@ func _show_draft_screen() -> void:
 	
 	# Show draft screen via HUD
 	hud.show_draft_screen(starting_roster)
+
+
+func _show_faction_selection() -> void:
+	"""Display the faction select screen and pause draft flow until a roster is chosen."""
+	if faction_select_screen:
+		print("Game: showing faction selector")
+		faction_select_screen.show_selector()
+	else:
+		# Fallback: proceed directly with whatever starting_roster is set
+		print("Game: no faction selector assigned, skipping to draft")
+		_show_draft_screen()
+
+
+func _on_faction_roster_selected(roster: Roster) -> void:
+	"""Handle roster selection from the faction select screen."""
+	if roster:
+		print("Game: roster selected '%s'" % roster.team_name)
+	else:
+		print("Game: roster selected was null")
+	if roster:
+		starting_roster = roster
+	_show_draft_screen()
 
 
 func add_gold(amount: int) -> void:
