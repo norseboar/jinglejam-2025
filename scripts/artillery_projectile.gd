@@ -51,8 +51,8 @@ func _on_impact() -> void:
 		# Splash damage - damage everything in radius
 		_deal_splash_damage(target_position)
 	else:
-		# Direct hit - find the closest enemy and damage it
-		var closest_enemy = null
+		# Direct hit - find the closest enemy unit and damage it
+		var closest_enemy: Unit = null
 		var closest_distance := 999999.0
 		
 		if enemy_container != null:
@@ -60,26 +60,26 @@ func _on_impact() -> void:
 				if not is_instance_valid(enemy):
 					continue
 				
-				# Skip other projectiles
-				if enemy is Projectile or enemy is ArtilleryProjectile:
+				# Only damage Unit objects - ignore everything else
+				if not enemy is Unit:
 					continue
 				
+				var unit_enemy := enemy as Unit
+				
 				# Skip dead or dying units
-				if enemy is Unit:
-					var unit_enemy := enemy as Unit
-					if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
-						continue
-					
-					# Only hit units with opposite team
-					if unit_enemy.is_enemy == fired_by_enemy:
-						continue
+				if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+					continue
+				
+				# Only hit units with opposite team
+				if unit_enemy.is_enemy == fired_by_enemy:
+					continue
 				
 				var distance := target_position.distance_to(enemy.global_position)
 				if distance < closest_distance:
 					closest_distance = distance
-					closest_enemy = enemy
+					closest_enemy = unit_enemy
 		
-		if closest_enemy != null and closest_enemy.has_method("take_damage"):
+		if closest_enemy != null:
 			closest_enemy.take_damage(damage, armor_piercing)
 	
 	# Remove the target marker
@@ -101,7 +101,7 @@ func _is_combat_active() -> bool:
 
 
 func _deal_splash_damage(impact_position: Vector2) -> void:
-	"""Deal splash damage to all enemies within splash_radius."""
+	"""Deal splash damage to all enemy units within splash_radius."""
 	if enemy_container == null:
 		return
 	
@@ -113,25 +113,24 @@ func _deal_splash_damage(impact_position: Vector2) -> void:
 		if not is_instance_valid(enemy):
 			continue
 		
-		# Skip other projectiles
-		if enemy is Projectile or enemy is ArtilleryProjectile:
+		# Only damage Unit objects - ignore everything else
+		if not enemy is Unit:
 			continue
 		
+		var unit_enemy := enemy as Unit
+		
 		# Skip dead or dying units
-		if enemy is Unit:
-			var unit_enemy := enemy as Unit
-			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
-				continue
-			
-			# Only hit units with opposite team
-			if unit_enemy.is_enemy == fired_by_enemy:
-				continue
+		if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+			continue
+		
+		# Only hit units with opposite team
+		if unit_enemy.is_enemy == fired_by_enemy:
+			continue
 		
 		# Check if enemy is within splash radius
 		var distance := impact_position.distance_to(enemy.global_position)
 		if distance <= splash_radius:
-			if enemy.has_method("take_damage"):
-				enemy.take_damage(damage, armor_piercing)
+			unit_enemy.take_damage(damage, armor_piercing)
 
 
 ## Initialize the artillery projectile

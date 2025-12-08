@@ -6,19 +6,19 @@
 [ext_resource type="SpriteFrames" uid="uid://d23wfea1q7erd" path="res://assets/spriteframes/dwarf_spearman.tres" id="3_u18bb"]
 [ext_resource type="Resource" uid="uid://bqm8cfthlmkbj" path="res://upgrades/hp_10.tres" id="4_ubojj"]
 [ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_5.tres" id="5_vwamq"]
-[ext_resource type="Resource" uid="uid://b8xbtj1olnkiw" path="res://upgrades/spd_3.tres" id="6_rv5y8"]
+[ext_resource type="Resource" uid="uid://bi8au7qa005et" path="res://upgrades/def_3.tres" id="6_jryk5"]
 
 [node name="Dwarf_spearman" instance=ExtResource("1_pw30i")]
 script = ExtResource("2_66k5u")
-max_hp = 40
+max_hp = 60
 speed = 6.0
 attack_speed = 5
 attack_damage_frame = 5
+priority = 0
 display_name = "Dwarf Spearman"
 description = "Dwarven infantry"
-base_recruit_cost = 8
 upgrade_cost = 2
-available_upgrades = Array[ExtResource("3_jryk5")]([ExtResource("4_ubojj"), ExtResource("5_vwamq"), ExtResource("6_rv5y8")])
+available_upgrades = Array[ExtResource("3_jryk5")]([ExtResource("4_ubojj"), ExtResource("5_vwamq"), ExtResource("6_jryk5")])
 damage_sounds = Array[AudioStream]([])
 
 [node name="AnimatedSprite2D" parent="." index="0"]

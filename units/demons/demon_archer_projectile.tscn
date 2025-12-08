@@ -6,9 +6,9 @@
 [node name="Projectile" type="Node2D"]
 texture_filter = 1
 script = ExtResource("2_57rpi")
-hit_radius = 4.0
+hit_radius = 8.0
 sine_amplitude = 3.0
-sine_frequency = 2.0
+sine_frequency = 1.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("1_wkcui")

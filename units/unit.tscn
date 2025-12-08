@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="3_mgebg"]
 [ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="6_3nj72"]
 
-[node name="Unit" type="Node2D"]
+[node name="Unit2" type="Node2D"]
 script = ExtResource("1_33c7x")
 max_hp = 30
 damage = 10
@@ -23,6 +23,7 @@ animation = &"attack"
 bus = &"SFX"
 
 [node name="UpgradeMarkers" type="Node2D" parent="."]
+visible = false
 position = Vector2(0, 1)
 
 [node name="Marker1" type="Sprite2D" parent="UpgradeMarkers"]

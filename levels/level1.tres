@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="LevelPool" load_steps=3 format=3 uid="uid://cyvh8mfk4k4lx"]
+[gd_resource type="Resource" script_class="LevelData" load_steps=2 format=3 uid="uid://dengaonc622oh"]
 
-[ext_resource type="PackedScene" uid="uid://qpwnhy3k2yqo" path="res://levels/dwarves.tscn" id="1_657pd"]
-[ext_resource type="Script" uid="uid://3ckw4rqc0bfv" path="res://scripts/level_pool.gd" id="1_jied7"]
+[ext_resource type="Script" uid="uid://vkkyrt2e3lsm" path="res://scripts/level_data.gd" id="1_o8qyq"]
 
 [resource]
-script = ExtResource("1_jied7")
-level_scenes = Array[PackedScene]([ExtResource("1_657pd")])
+script = ExtResource("1_o8qyq")
+low_multiplier = 0.5
+high_multiplier = 0.7
+metadata/_custom_type_script = "uid://vkkyrt2e3lsm"

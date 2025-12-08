@@ -99,10 +99,8 @@ func _assign_roster_to_slot(slot: UnitSlot, roster: Roster) -> void:
 		preview_unit.upgrades = {}
 		preview_unit.placed = false
 		slot.set_unit(preview_unit)
-		slot.tooltip_text = roster.team_name
 	else:
 		slot.set_unit(null)
-		slot.tooltip_text = ""
 
 
 func _on_slot_clicked(slot: UnitSlot) -> void:

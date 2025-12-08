@@ -76,10 +76,10 @@ func show_unit_from_scene(unit_scene: PackedScene, upgrades: Dictionary = {}) ->
 		if stats_label:
 			if is_healer:
 				var heal: int = unit.heal_amount + stat_bonuses.heal_amount
-				stats_label.text = "HP: %d HEAL: %d CAST: %d\nDEF: %d  SPD: %d RNG: %d" % [hp, heal, atk_spd, def, spd, rng]
+				stats_label.text = "HP: %d  HEAL: %d  CAST SPD: %d\nDEF: %d   SPD: %d  RNG: %d" % [hp, heal, atk_spd, def, spd, rng]
 			else:
 				var dmg: int = unit.damage + stat_bonuses.damage
-				stats_label.text = "HP: %d DMG: %d ATK SPD: %d\nDEF: %d  SPD: %d RNG: %d" % [hp, dmg, atk_spd, def, spd, rng]
+				stats_label.text = "HP: %d  DMG: %d  ATK SPD: %d\nDEF: %d   SPD: %d  RNG: %d" % [hp, dmg, atk_spd, def, spd, rng]
 
 		# Calculate and display upgrade fraction
 		var total_upgrades: int = 0
@@ -126,10 +126,10 @@ func update_stats(upgrades: Dictionary) -> void:
 		if stats_label:
 			if is_healer:
 				var heal: int = unit.heal_amount + stat_bonuses.heal_amount
-				stats_label.text = "HP: %d HEAL: %d CAST: %d\nDEF: %d  SPD: %d RNG: %d" % [hp, heal, atk_spd, def, spd, rng]
+				stats_label.text = "HP: %d  HEAL: %d  CAST SPD: %d\nDEF: %d  SPD: %d  RNG: %d" % [hp, heal, atk_spd, def, spd, rng]
 			else:
 				var dmg: int = unit.damage + stat_bonuses.damage
-				stats_label.text = "HP: %d DMG: %d ATK SPD: %d\nDEF: %d  SPD: %d RNG: %d" % [hp, dmg, atk_spd, def, spd, rng]
+				stats_label.text = "HP: %d  DMG: %d  ATK SPD: %d\nDEF: %d   SPD: %d  RNG: %d" % [hp, dmg, atk_spd, def, spd, rng]
 
 		# Update upgrade fraction
 		var total_upgrades: int = 0

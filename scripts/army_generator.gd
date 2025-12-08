@@ -8,8 +8,9 @@ static func generate_army(
 	roster: Roster,
 	target_gold: int,
 	max_slots: int,
-	neutral_units: Array[PackedScene] = [],
-	neutral_first_pick_chance: float = 0.0
+	forced_units: Array[PackedScene] = [],
+	neutral_roster: Roster = null,
+	minimum_gold: int = 0
 ) -> Array[ArmyUnit]:
 	"""
 	Generate a random army from the given roster.
@@ -18,26 +19,52 @@ static func generate_army(
 		roster: The faction roster to pick units from
 		target_gold: Target gold value for the army (can go slightly negative)
 		max_slots: Maximum number of units (based on battlefield slot count)
-		neutral_units: Optional neutral units that can be mixed in
-		neutral_first_pick_chance: Chance that the first picked unit is neutral (0.0-1.0)
+		forced_units: Units that must appear in the army (drafted first)
+		neutral_roster: Optional neutral roster to include in unit pool
+		minimum_gold: Minimum gold value (overrides target_gold if higher)
 
 	Returns:
 		Array of ArmyUnit sorted by unit priority (highest first)
 	"""
 	var army: Array[ArmyUnit] = []
+
+	# Apply minimum gold floor
+	if minimum_gold > 0:
+		target_gold = max(target_gold, minimum_gold)
+
 	var remaining_gold := target_gold
+
+	# Draft forced units first
+	for unit_scene in forced_units:
+		if unit_scene == null:
+			continue
+
+		var army_unit := ArmyUnit.new()
+		army_unit.unit_scene = unit_scene
+		army_unit.unit_type = unit_scene.resource_path.get_file().get_basename()
+		army_unit.upgrades = {}
+		army_unit.placed = false
+		army.append(army_unit)
+		remaining_gold -= _get_base_cost(unit_scene)
+
 	var roster_pool := roster.units.duplicate()
-	var neutral_pool := neutral_units.duplicate()
+	var neutral_pool: Array[PackedScene] = []
+	if neutral_roster != null:
+		neutral_pool = neutral_roster.units.duplicate()
+
 	var combined_pool: Array[PackedScene] = []
 	if not roster_pool.is_empty():
 		combined_pool.append_array(roster_pool)
 	if not neutral_pool.is_empty():
 		combined_pool.append_array(neutral_pool)
 
-	var force_first_neutral := false
-	if not neutral_pool.is_empty() and neutral_first_pick_chance > 0.0:
-		force_first_neutral = randf() < neutral_first_pick_chance
-	var first_pick_done := false
+	# Track if we've added at least one roster unit
+	var has_faction_unit := false
+	for army_unit in army:
+		if _is_unit_in_roster(army_unit.unit_scene, roster):
+			has_faction_unit = true
+			break
+
 
 	while remaining_gold > 0:
 		var can_add := army.size() < max_slots
@@ -76,10 +103,35 @@ static func generate_army(
 				break  # No units available to add
 
 			var unit_scene: PackedScene = null
-			if not first_pick_done and force_first_neutral:
-				unit_scene = neutral_pool.pick_random()
+
+			# If we need a faction unit and don't have one yet, force pick from roster
+			if not has_faction_unit and not roster_pool.is_empty():
+				# Pick cheapest roster unit if out of budget
+				if remaining_gold <= 0:
+					unit_scene = _get_cheapest_unit(roster_pool)
+				else:
+					# Pick affordable roster unit
+					var affordable := _get_affordable_units(roster_pool, remaining_gold)
+					if not affordable.is_empty():
+						unit_scene = affordable.pick_random()
+					else:
+						unit_scene = _get_cheapest_unit(roster_pool)
+				has_faction_unit = true
 			else:
-				unit_scene = combined_pool.pick_random()
+				# Normal unit picking - try to pick affordable unit
+				if remaining_gold > 0:
+					var affordable := _get_affordable_units(combined_pool, remaining_gold)
+					if not affordable.is_empty():
+						unit_scene = affordable.pick_random()
+					else:
+						# No affordable units, but continue if we have space
+						unit_scene = combined_pool.pick_random()
+				else:
+					# Out of gold but need to continue
+					unit_scene = combined_pool.pick_random()
+
+			if unit_scene == null:
+				break
 
 			var army_unit := ArmyUnit.new()
 			army_unit.unit_scene = unit_scene
@@ -88,8 +140,25 @@ static func generate_army(
 			army_unit.placed = false
 			army.append(army_unit)
 			remaining_gold -= _get_base_cost(unit_scene)
-			first_pick_done = true
 
+			# Track if we added a faction unit
+			if _is_unit_in_roster(unit_scene, roster):
+				has_faction_unit = true
+
+	
+		# Ensure at least one faction unit, even if it means going negative on gold
+	if not has_faction_unit and not roster_pool.is_empty():
+		var cheapest_faction_unit := _get_cheapest_unit(roster_pool)
+		if cheapest_faction_unit != null:
+			var army_unit := ArmyUnit.new()
+			army_unit.unit_scene = cheapest_faction_unit
+			army_unit.unit_type = cheapest_faction_unit.resource_path.get_file().get_basename()
+			army_unit.upgrades = {}
+			army_unit.placed = false
+			army.append(army_unit)
+			remaining_gold -= _get_base_cost(cheapest_faction_unit)
+			has_faction_unit = true
+			
 	# Sort by unit priority (highest first) for slot placement
 	army.sort_custom(_compare_by_priority)
 
@@ -183,6 +252,39 @@ static func _compare_by_priority(a: ArmyUnit, b: ArmyUnit) -> bool:
 	var priority_a := _get_unit_priority(a.unit_scene)
 	var priority_b := _get_unit_priority(b.unit_scene)
 	return priority_a > priority_b
+
+
+static func _is_unit_in_roster(unit_scene: PackedScene, roster: Roster) -> bool:
+	"""Check if a unit scene belongs to a roster."""
+	if unit_scene == null or roster == null:
+		return false
+	return roster.units.has(unit_scene)
+
+
+static func _get_affordable_units(pool: Array[PackedScene], max_gold: int) -> Array[PackedScene]:
+	"""Get all units from pool that cost <= max_gold."""
+	var result: Array[PackedScene] = []
+	for unit_scene in pool:
+		if _get_base_cost(unit_scene) <= max_gold:
+			result.append(unit_scene)
+	return result
+
+
+static func _get_cheapest_unit(pool: Array[PackedScene]) -> PackedScene:
+	"""Get the cheapest unit from pool."""
+	if pool.is_empty():
+		return null
+
+	var cheapest: PackedScene = pool[0]
+	var cheapest_cost := _get_base_cost(cheapest)
+
+	for unit_scene in pool:
+		var cost := _get_base_cost(unit_scene)
+		if cost < cheapest_cost:
+			cheapest = unit_scene
+			cheapest_cost = cost
+
+	return cheapest
 
 
 static func calculate_army_value(army: Array[ArmyUnit]) -> int:

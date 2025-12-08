@@ -1,0 +1,160 @@
+[gd_scene load_steps=5 format=3 uid="uid://durx8brl5ftca"]
+
+[ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_dkl7y"]
+[ext_resource type="Texture2D" uid="uid://dcx8sootto15l" path="res://assets/backgrounds/mountains-9580848_1280.jpg" id="3_ruuqe"]
+[ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="4_65tkh"]
+[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="5_mahir"]
+
+[node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background", "enemy_spawn_slots_container", "level_bounds_area")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -640.0
+offset_bottom = -360.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_dkl7y")
+background_texture = ExtResource("3_ruuqe")
+editor_background = NodePath("EditorBackground")
+army_name = "Humans"
+enemy_spawn_slots_container = NodePath("EnemyMarkers")
+level_bounds_area = NodePath("PlayArea")
+
+[node name="EditorBackground" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+texture = ExtResource("3_ruuqe")
+expand_mode = 3
+
+[node name="PlayerSpawnSlots" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 30.0
+offset_top = -75.0
+offset_right = 30.0
+offset_bottom = -75.0
+
+[node name="SpawnSlot5" parent="PlayerSpawnSlots" instance=ExtResource("4_65tkh")]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 215.0
+offset_right = 63.0
+offset_bottom = 247.0
+
+[node name="SpawnSlot" parent="PlayerSpawnSlots" instance=ExtResource("4_65tkh")]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 181.0
+offset_right = 104.0
+offset_bottom = 213.0
+
+[node name="SpawnSlot9" parent="PlayerSpawnSlots" instance=ExtResource("4_65tkh")]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 234.0
+offset_right = 104.0
+offset_bottom = 266.0
+
+[node name="SpawnSlot6" parent="PlayerSpawnSlots" instance=ExtResource("4_65tkh")]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 212.0
+offset_right = 144.0
+offset_bottom = 244.0
+
+[node name="SpawnSlot2" parent="PlayerSpawnSlots" instance=ExtResource("4_65tkh")]
+layout_mode = 0
+offset_left = 145.0
+offset_top = 201.0
+offset_right = 177.0
+offset_bottom = 233.0
+
+[node name="SpawnSlot10" parent="PlayerSpawnSlots" instance=ExtResource("4_65tkh")]
+layout_mode = 0
+offset_left = 147.0
+offset_top = 239.0
+offset_right = 179.0
+offset_bottom = 271.0
+
+[node name="SpawnSlot7" parent="PlayerSpawnSlots" instance=ExtResource("4_65tkh")]
+layout_mode = 0
+offset_left = 186.0
+offset_top = 209.0
+offset_right = 218.0
+offset_bottom = 241.0
+
+[node name="SpawnSlot3" parent="PlayerSpawnSlots" instance=ExtResource("4_65tkh")]
+layout_mode = 0
+offset_left = 204.0
+offset_top = 260.0
+offset_right = 236.0
+offset_bottom = 292.0
+
+[node name="SpawnSlot11" parent="PlayerSpawnSlots" instance=ExtResource("4_65tkh")]
+layout_mode = 0
+offset_left = 238.0
+offset_top = 222.0
+offset_right = 270.0
+offset_bottom = 254.0
+
+[node name="SpawnSlot8" parent="PlayerSpawnSlots" instance=ExtResource("4_65tkh")]
+layout_mode = 0
+offset_left = 250.0
+offset_top = 259.0
+offset_right = 282.0
+offset_bottom = 291.0
+
+[node name="SpawnSlot4" parent="PlayerSpawnSlots" instance=ExtResource("4_65tkh")]
+layout_mode = 0
+offset_left = 287.0
+offset_top = 225.0
+offset_right = 319.0
+offset_bottom = 257.0
+
+[node name="SpawnSlot12" parent="PlayerSpawnSlots" instance=ExtResource("4_65tkh")]
+layout_mode = 0
+offset_left = 292.0
+offset_top = 267.0
+offset_right = 324.0
+offset_bottom = 299.0
+
+[node name="EnemyMarkers" type="Node2D" parent="."]
+
+[node name="EnemyMarker" parent="EnemyMarkers" instance=ExtResource("5_mahir")]
+position = Vector2(594, 227)
+
+[node name="EnemyMarker2" parent="EnemyMarkers" instance=ExtResource("5_mahir")]
+position = Vector2(591, 180)
+
+[node name="EnemyMarker3" parent="EnemyMarkers" instance=ExtResource("5_mahir")]
+position = Vector2(554, 222)
+
+[node name="EnemyMarker4" parent="EnemyMarkers" instance=ExtResource("5_mahir")]
+position = Vector2(550, 163)
+
+[node name="EnemyMarker5" parent="EnemyMarkers" instance=ExtResource("5_mahir")]
+position = Vector2(509, 146)
+
+[node name="EnemyMarker6" parent="EnemyMarkers" instance=ExtResource("5_mahir")]
+position = Vector2(508, 189)
+
+[node name="EnemyMarker7" parent="EnemyMarkers" instance=ExtResource("5_mahir")]
+position = Vector2(511, 228)
+
+[node name="EnemyMarker8" parent="EnemyMarkers" instance=ExtResource("5_mahir")]
+position = Vector2(469, 237)
+
+[node name="EnemyMarker9" parent="EnemyMarkers" instance=ExtResource("5_mahir")]
+position = Vector2(466, 188)
+
+[node name="EnemyMarker10" parent="EnemyMarkers" instance=ExtResource("5_mahir")]
+position = Vector2(422, 211)
+
+[node name="PlayArea" type="Control" parent="."]
+anchors_preset = 0
+offset_top = 110.0
+offset_right = 640.0
+offset_bottom = 270.0
+mouse_filter = 2

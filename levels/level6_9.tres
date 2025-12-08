@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="LevelData" load_steps=3 format=3 uid="uid://dma1pro3drmpe"]
+
+[ext_resource type="Resource" uid="uid://ehqsv8r3oc67" path="res://units/rosters/full_rosters/neutral.tres" id="1_ks6cl"]
+[ext_resource type="Script" uid="uid://vkkyrt2e3lsm" path="res://scripts/level_data.gd" id="2_hgwpt"]
+
+[resource]
+script = ExtResource("2_hgwpt")
+low_multiplier = 1.0
+minimum_gold = 100
+neutral_roster = ExtResource("1_ks6cl")
+use_intense_music = true
+metadata/_custom_type_script = "uid://vkkyrt2e3lsm"

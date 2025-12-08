@@ -10,9 +10,9 @@ class_name ArtilleryUnit
 @export var splash_radius := 100.0  # Radius for splash damage (0 = no splash, direct hit only)
 @export var impact_animation_scene: PackedScene = null  # Optional scene to instantiate on impact
 
-# Stored target position for the artillery strike
-var _artillery_target_position := Vector2.ZERO
-var _current_target_marker: Node2D = null
+# Queue of pending artillery strikes (allows multiple shots in flight)
+# Each entry: { position: Vector2, marker: Node2D }
+var _pending_strikes: Array[Dictionary] = []
 
 
 ## Override to filter targets to only those within level bounds (ground targets only)
@@ -142,38 +142,62 @@ func _execute_attack() -> void:
 	if target == null or not is_instance_valid(target):
 		return
 	
+	# Don't spawn projectile if target is already dead/dying
+	if target is Unit:
+		var target_unit := target as Unit
+		if target_unit.current_hp <= 0 or target_unit.state == "dying":
+			return
+	
+	# Don't spawn projectile if combat has ended
+	if not _is_combat_active():
+		return
+	
 	if projectile_scene == null:
 		push_error("ArtilleryUnit has no projectile_scene assigned!")
 		return
 	
-	# Store the target position at the moment of firing
-	_artillery_target_position = target.global_position
+	# Store this strike's data in the queue
+	var strike_position := target.global_position
+	var strike_marker := _spawn_target_marker(strike_position)
 	
-	# Spawn target marker
-	_spawn_target_marker()
+	# Queue this strike
+	var strike_data := {
+		"position": strike_position,
+		"marker": strike_marker
+	}
+	_pending_strikes.append(strike_data)
 	
 	# Wait for hit_delay, then spawn the projectile
-	get_tree().create_timer(hit_delay).timeout.connect(_spawn_artillery_projectile)
+	# Use a lambda to capture the specific strike data
+	get_tree().create_timer(hit_delay).timeout.connect(func(): _spawn_artillery_projectile(strike_data))
 
 
-func _spawn_target_marker() -> void:
+func _spawn_target_marker(position: Vector2) -> Node2D:
 	if target_marker_scene == null:
 		push_warning("ArtilleryUnit has no target_marker_scene assigned!")
-		return
+		return null
 	
-	_current_target_marker = target_marker_scene.instantiate()
-	get_parent().add_child(_current_target_marker)
-	_current_target_marker.global_position = _artillery_target_position
+	var marker := target_marker_scene.instantiate()
+	get_parent().add_child(marker)
+	marker.global_position = position
+	return marker
 
 
-func _spawn_artillery_projectile() -> void:
+func _spawn_artillery_projectile(strike_data: Dictionary) -> void:
+	# Remove this strike from the queue
+	_pending_strikes.erase(strike_data)
+	
+	# Get strike data
+	var strike_position: Vector2 = strike_data.get("position", Vector2.ZERO)
+	var strike_marker: Node2D = strike_data.get("marker", null)
+	
 	# Spawn projectile
 	var projectile: ArtilleryProjectile = projectile_scene.instantiate() as ArtilleryProjectile
 	if projectile == null:
 		push_error("Failed to instantiate artillery projectile!")
 		# Clean up marker if projectile fails
-		if _current_target_marker != null and is_instance_valid(_current_target_marker):
-			_current_target_marker.queue_free()
+		if strike_marker != null and is_instance_valid(strike_marker):
+			strike_marker.queue_free()
 		return
 	
 	# Add to scene tree
@@ -183,15 +207,12 @@ func _spawn_artillery_projectile() -> void:
 	# Get the viewport height and position above it
 	var viewport_rect := get_viewport_rect()
 	var spawn_y := viewport_rect.position.y - 50  # 50 pixels above top of screen
-	projectile.global_position = Vector2(_artillery_target_position.x, spawn_y)
+	projectile.global_position = Vector2(strike_position.x, spawn_y)
 	
 	# Setup projectile
-	projectile.setup(_artillery_target_position, enemy_container, damage, splash_radius, armor_piercing, is_enemy)
+	projectile.setup(strike_position, enemy_container, damage, splash_radius, armor_piercing, is_enemy)
 	projectile.speed = projectile_speed
-	projectile.target_marker = _current_target_marker
+	projectile.target_marker = strike_marker
 	projectile.impact_animation_scene = impact_animation_scene
 	# Pass impact sound callback to projectile
 	projectile.impact_sound_callback = _play_impact_sound
-	
-	# Clear our reference (projectile now owns the marker)
-	_current_target_marker = null

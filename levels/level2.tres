@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="LevelPool" load_steps=4 format=3 uid="uid://bs8xm2jkbcjtk"]
-
-[ext_resource type="PackedScene" uid="uid://c6vhu77lnu7a" path="res://levels/level2/level_02a.tscn" id="1_nrf11"]
-[ext_resource type="PackedScene" uid="uid://d0p0jfhcsmw1o" path="res://levels/level2/level_02b.tscn" id="2_2kogu"]
-[ext_resource type="Script" uid="uid://3ckw4rqc0bfv" path="res://scripts/level_pool.gd" id="3_anc7p"]
-
-[resource]
-script = ExtResource("3_anc7p")
-level_scenes = Array[PackedScene]([ExtResource("1_nrf11"), ExtResource("2_2kogu")])

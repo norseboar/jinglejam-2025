@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="LevelData" load_steps=3 format=3 uid="uid://b0iqmuxqklj7g"]
+
+[ext_resource type="Script" uid="uid://vkkyrt2e3lsm" path="res://scripts/level_data.gd" id="1_5butx"]
+[ext_resource type="PackedScene" uid="uid://cylo0gvp21l7i" path="res://units/factionless/ogre.tscn" id="1_iclnb"]
+
+[resource]
+script = ExtResource("1_5butx")
+high_multiplier = 1.0
+minimum_gold = 70
+forced_units = Array[PackedScene]([ExtResource("1_iclnb")])
+use_intense_music = true
+metadata/_custom_type_script = "uid://vkkyrt2e3lsm"

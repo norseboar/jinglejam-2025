@@ -57,6 +57,8 @@ var has_triggered_frame_damage := false  # Prevents multiple damage triggers per
 var army_index := -1         # Index in Game.army array, or -1 if not from army
 var has_reached_fly_height := false  # True when unit has reached its fly_height target
 var heal_armor_timer := 0.0  # Time remaining on heal armor (in seconds)
+var battle_start_time := 0   # Time (msec) when unit first started moving (for stagger timing)
+var has_done_first_combat_entry := false  # True after first time entering combat this battle
 
 # Upgrades
 var upgrades: Dictionary = {}  # e.g., { "hp": 2, "damage": 1 }
@@ -91,6 +93,10 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	# Always increment time since last attack (tracks cooldown across all states)
+	# Keep counting even during attack animations
+	time_since_attack += delta
+	
 	# Tick down heal armor timer
 	if heal_armor > 0:
 		heal_armor_timer -= delta
@@ -121,6 +127,10 @@ func set_state(new_state: String) -> void:
 	# Don't reset when transitioning from fighting to moving (after attacks)
 	if state == "idle" and new_state == "moving":
 		has_reached_fly_height = false
+		# Record battle start time for stagger timing
+		battle_start_time = Time.get_ticks_msec()
+		# Reset first combat entry flag for new battle
+		has_done_first_combat_entry = false
 	
 	state = new_state
 	match state:
@@ -129,7 +139,7 @@ func set_state(new_state: String) -> void:
 		"moving":
 			_safe_play_animation("walk")
 		"fighting":
-			pass  # Attack animation played per attack
+			_safe_play_animation("idle")  # Play idle while waiting between attacks
 		"dying":
 			_safe_play_animation("idle")  # Play idle animation while dying
 
@@ -280,14 +290,29 @@ func _check_for_targets() -> void:
 		# If we're in attack range, start fighting
 		if distance_to_target <= (attack_range * 10.0 + 20.0):
 			set_state("fighting")
-			# Reset cooldown timer when entering combat
-			# All units get a random delay between 0 and 0.25 seconds for first attack to stagger them
-			time_since_attack = randf() * 0.25
+			
+			# Only set initial attack timing on FIRST combat entry in this battle
+			if not has_done_first_combat_entry:
+				has_done_first_combat_entry = true
+				# Apply stagger delay in the first 0.25 seconds of battle to prevent all units firing at once
+				var time_since_battle_start := (Time.get_ticks_msec() - battle_start_time) / 1000.0
+				if time_since_battle_start < 0.25:
+					# Artillery gets longer stagger (0-0.5s) to spread out their shots more
+					var stagger_max := 0.5 if self is ArtilleryUnit else 0.25
+					time_since_attack = randf() * stagger_max
+				else:
+					time_since_attack = 999.0  # Large value = attack immediately
+			# After first combat entry, time_since_attack continues tracking naturally
 		# Otherwise, we'll keep moving towards them (state stays "moving")
 
 
 func _do_fighting(delta: float) -> void:
-	# Check if target is still valid and is a Unit
+	# If we're already attacking, COMMIT to the attack - don't interrupt the animation
+	# This prevents units from snapping out of attack animations mid-swing
+	if is_attacking:
+		return
+	
+	# Before starting a new attack, check if target is still valid
 	if not is_instance_valid(target) or not target is Unit:
 		target = null
 		set_state("moving")
@@ -306,15 +331,10 @@ func _do_fighting(delta: float) -> void:
 		set_state("moving")
 		return
 
-	# Attack immediately when not attacking, then wait for cooldown after attack completes
-	if not is_attacking:
-		# If no cooldown, or cooldown has passed since last attack finished, attack immediately
-		var effective_cooldown := _get_effective_cooldown()
-		if effective_cooldown <= 0.0 or time_since_attack >= effective_cooldown:
-			_attack_target()
-		else:
-			# Count cooldown timer during idle (after attack animation completes)
-			time_since_attack += delta
+	# Attack when cooldown has passed (time_since_attack increments in _process)
+	var effective_cooldown := _get_effective_cooldown()
+	if effective_cooldown <= 0.0 or time_since_attack >= effective_cooldown:
+		_attack_target()
 
 
 func _attack_target() -> void:
@@ -366,6 +386,9 @@ func _on_attack_animation_finished() -> void:
 		# Reset cooldown timer - it will count up during idle animation
 		var effective_cooldown := _get_effective_cooldown()
 		if effective_cooldown > 0.0:
+			if not is_enemy and self is Healer:
+				var timestamp := Time.get_ticks_msec() / 1000.0
+				print("[%.2f] Healer attack animation finished, resetting time_since_attack to 0" % timestamp)
 			time_since_attack = 0.0
 
 

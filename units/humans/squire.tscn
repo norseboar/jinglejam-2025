@@ -6,20 +6,20 @@
 [ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="3_e42qj"]
 [ext_resource type="Resource" uid="uid://bqm8cfthlmkbj" path="res://upgrades/hp_10.tres" id="4_5673y"]
 [ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_5.tres" id="5_2k6kh"]
-[ext_resource type="Resource" uid="uid://b8xbtj1olnkiw" path="res://upgrades/spd_3.tres" id="6_v78tp"]
+[ext_resource type="Resource" uid="uid://bi8au7qa005et" path="res://upgrades/def_3.tres" id="6_e42qj"]
 
 [node name="Squire" instance=ExtResource("1_de5d7")]
 script = ExtResource("1_e8w7h")
-max_hp = 10
+max_hp = 20
 speed = 8.0
 attack_speed = 4
 attack_damage_frame = 4
-armor = 2
+armor = 1
 display_name = "Squire"
 description = "Lightly-armored soldier"
 base_recruit_cost = 5
 upgrade_cost = 1
-available_upgrades = Array[ExtResource("3_e42qj")]([ExtResource("4_5673y"), ExtResource("5_2k6kh"), ExtResource("6_v78tp")])
+available_upgrades = Array[ExtResource("3_e42qj")]([ExtResource("4_5673y"), ExtResource("5_2k6kh"), ExtResource("6_e42qj")])
 
 [node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = ExtResource("2_e8w7h")

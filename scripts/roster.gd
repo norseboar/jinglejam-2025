@@ -18,3 +18,6 @@ class_name Roster
 
 ## Music track to play during battles against this faction
 @export var battle_music: AudioStream
+
+## Intense variant battle music (used when level specifies use_intense_music)
+@export var battle_music_intense: AudioStream = null

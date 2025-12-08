@@ -25,8 +25,8 @@ var total_gold_spent: int = 0  # Track gold spent for army value calculation
 # Level management
 ## Array of LevelPool resources. Each pool contains multiple level scene options for that level.
 @export var level_pools: Array[Resource] = []
-## Total number of levels/battles in the game (used for completion tracking)
-@export var total_levels: int = 10
+## Array of level data resources (defines difficulty progression)
+@export var levels: Array[LevelData] = []
 var current_level_index := 0
 var selected_level_scene: PackedScene = null  # The specific scene chosen from the pool
 
@@ -52,7 +52,6 @@ var is_draft_mode: bool = true
 
 ## Neutral units that can mix into enemy armies after a level threshold
 @export var neutral_roster: Roster
-@export var neutral_min_level: int = 0  # 1-based; 0 disables neutrals
 
 # Node references (assign in inspector)
 @export var background_rect: TextureRect
@@ -191,18 +190,6 @@ func calculate_army_value() -> int:
 	return value
 
 
-func _get_neutral_units_for_current_level() -> Array[PackedScene]:
-	"""Return neutral units if unlocked for the current battle number (1-based)."""
-	if neutral_roster == null:
-		return []
-	if neutral_min_level <= 0:
-		return []
-	var battle_number := current_level_index + 1
-	if battle_number < neutral_min_level:
-		return []
-	return neutral_roster.units
-
-
 func generate_battle_options() -> Array[BattleOptionData]:
 	"""Generate two battle options from random rosters with scaled armies."""
 	var result: Array[BattleOptionData] = []
@@ -214,14 +201,23 @@ func generate_battle_options() -> Array[BattleOptionData]:
 	# Calculate player army value
 	var army_value := calculate_army_value()
 
-	# Generate multipliers
-	var low_multiplier := randf_range(0.5, 1.0)
-	var high_multiplier := randf_range(1.0, 1.5)
-	var low_target := int(army_value * low_multiplier)
-	var high_target := int(army_value * high_multiplier)
+	# Get current level data
+	if current_level_index < 0 or current_level_index >= levels.size():
+		push_error("Invalid current_level_index: %d (levels size: %d)" % [current_level_index, levels.size()])
+		return result
+
+	var level_data := levels[current_level_index]
+
+	# Calculate target values using level multipliers
+	var low_target := int(army_value * level_data.low_multiplier)
+	var high_target := int(army_value * level_data.high_multiplier)
+
+	# Apply minimum gold floor
+	low_target = max(low_target, level_data.minimum_gold)
+	high_target = max(high_target, level_data.minimum_gold)
 
 	print("Player army value: %d" % army_value)
-	print("Target values - Low: %d (%.1fx), High: %d (%.1fx)" % [low_target, low_multiplier, high_target, high_multiplier])
+	print("Target values - Low: %d (%.1fx), High: %d (%.1fx)" % [low_target, level_data.low_multiplier, high_target, level_data.high_multiplier])
 
 	# Pick 2 random rosters
 	var roster_indices: Array[int] = []
@@ -231,9 +227,6 @@ func generate_battle_options() -> Array[BattleOptionData]:
 
 	var roster_a: Roster = full_rosters[roster_indices[0]]
 	var roster_b: Roster = full_rosters[roster_indices[1]]
-
-	var neutral_units := _get_neutral_units_for_current_level()
-	var neutral_first_pick_chance := 0.66 if not neutral_units.is_empty() else 0.0
 
 	# Randomly assign low/high targets
 	var targets := [low_target, high_target]
@@ -246,7 +239,7 @@ func generate_battle_options() -> Array[BattleOptionData]:
 		return result
 
 	var slot_count_a := _count_enemy_slots(battlefield_a)
-	var army_a := ArmyGenerator.generate_army(roster_a, targets[0], slot_count_a, neutral_units, neutral_first_pick_chance)
+	var army_a := ArmyGenerator.generate_army(roster_a, targets[0], slot_count_a, level_data.forced_units, level_data.neutral_roster, level_data.minimum_gold)
 	var value_a := ArmyGenerator.calculate_army_value(army_a)
 	print("Generated '%s' army worth %d gold (target: %d)" % [roster_a.team_name, value_a, targets[0]])
 	result.append(BattleOptionData.create(roster_a, battlefield_a, army_a, targets[0]))
@@ -258,7 +251,7 @@ func generate_battle_options() -> Array[BattleOptionData]:
 		return result
 
 	var slot_count_b := _count_enemy_slots(battlefield_b)
-	var army_b := ArmyGenerator.generate_army(roster_b, targets[1], slot_count_b, neutral_units, neutral_first_pick_chance)
+	var army_b := ArmyGenerator.generate_army(roster_b, targets[1], slot_count_b, level_data.forced_units, level_data.neutral_roster, level_data.minimum_gold)
 	var value_b := ArmyGenerator.calculate_army_value(army_b)
 	print("Generated '%s' army worth %d gold (target: %d)" % [roster_b.team_name, value_b, targets[1]])
 	result.append(BattleOptionData.create(roster_b, battlefield_b, army_b, targets[1]))
@@ -333,7 +326,7 @@ func _end_battle(victory: bool) -> void:
 			child.set_state("idle")
 
 	# Capture enemy data for upgrade screen (only if victory and not last level, defeat will restart)
-	if victory and current_level_index < total_levels - 1:
+	if victory and current_level_index < levels.size() - 1:
 		_capture_enemies_faced()
 	
 	# Play victory or defeat jingle (and duck current music)
@@ -343,7 +336,7 @@ func _end_battle(victory: bool) -> void:
 		MusicManager.play_jingle_and_duck(MusicManager.defeat_jingle)
 	
 	# Show battle end modal (which leads to upgrade screen on victory, or restart on defeat/last level)
-	hud.show_battle_end_modal(victory, current_level_index + 1, total_levels)
+	hud.show_battle_end_modal(victory, current_level_index + 1, levels.size())
 	
 	# Update auto-deploy button state (should be disabled during upgrade phase)
 	if hud:
@@ -878,12 +871,13 @@ func _on_auto_deploy_requested() -> void:
 	# Sort by priority (high priority first)
 	unplaced_units.sort_custom(_compare_units_by_priority)
 	
-	# Get available spawn slots (back to front)
+	# Get available spawn slots (in hierarchy order - topmost first)
 	var spawn_slots: Array[SpawnSlot] = []
 	if current_level:
 		var spawn_slots_container := current_level.get_node_or_null("PlayerSpawnSlots")
 		if spawn_slots_container:
 			# Get all spawn slots and filter for unoccupied ones
+			# get_children() preserves hierarchy order (topmost slot first)
 			for child in spawn_slots_container.get_children():
 				if child is SpawnSlot:
 					var slot := child as SpawnSlot
@@ -893,10 +887,7 @@ func _on_auto_deploy_requested() -> void:
 	if spawn_slots.is_empty():
 		return  # No available slots
 	
-	# Reverse slots to go back to front
-	spawn_slots.reverse()
-	
-	# Place units starting from the back
+	# Place highest priority units in topmost slots (first in hierarchy order)
 	var slots_used: int = min(unplaced_units.size(), spawn_slots.size())
 	for i in range(slots_used):
 		var unit_data: Dictionary = unplaced_units[i]
@@ -929,54 +920,52 @@ func _get_unit_priority(unit_scene: PackedScene) -> int:
 
 
 func _on_draft_complete() -> void:
-	"""Handle draft completion - start first battle directly (no battle select)."""
+	"""Handle draft completion - show battle select screen for first battle."""
 	is_draft_mode = false
 	current_enemy_army.clear()  # Ensure clean state
 	
-	# Generate one random battle option for first battle
-	if full_rosters.is_empty():
-		push_error("No full rosters available for first battle!")
-		return
+	# Set level index to 0 for first battle
+	current_level_index = 0
 	
-	# Filter out rosters with the same name as starting roster
-	var available_rosters: Array[Roster] = []
-	for roster in full_rosters:
-		if starting_roster and roster.team_name == starting_roster.team_name:
-			continue  # Skip rosters matching starting roster name
-		available_rosters.append(roster)
+	# Clear any old level and units before showing battle select
+	_clear_all_units()
+	if current_level:
+		current_level.queue_free()
+		current_level = null
 	
-	if available_rosters.is_empty():
-		push_warning("All rosters match starting roster name, using any roster")
-		available_rosters = full_rosters
-	
-	# Pick one random roster from available ones
-	var roster: Roster = available_rosters.pick_random()
-	if roster.battlefields.is_empty():
-		push_error("Roster '%s' has no battlefields!" % roster.team_name)
-		return
-	
-	# Pick random battlefield from roster
-	var battlefield: PackedScene = roster.battlefields.pick_random()
-	
-	# Calculate player army value and generate enemy army
-	var army_value := calculate_army_value()
-	var target_value := int(army_value * randf_range(0.7, 1.0))  # First battle slightly easier
-	
-	var slot_count := _count_enemy_slots(battlefield)
-	var neutral_units := _get_neutral_units_for_current_level()
-	var neutral_first_pick_chance := 0.66 if not neutral_units.is_empty() else 0.0
-	var enemy_army := ArmyGenerator.generate_army(roster, target_value, slot_count, neutral_units, neutral_first_pick_chance)
-	
-	# Load battle directly
-	current_enemy_roster = roster  # Store for music
-	current_enemy_army = enemy_army
-	load_level_scene(battlefield)
+	# Generate battle options (same as after victory)
+	var options := generate_battle_options()
+	if options.size() >= 2:
+		hud.show_battle_select_generated(options)
+	else:
+		push_error("Failed to generate battle options!")
 
 
 func _play_battle_music() -> void:
 	"""Play the battle music for the current enemy roster."""
-	if current_enemy_roster and current_enemy_roster.battle_music:
-		MusicManager.play_track(current_enemy_roster.battle_music)
+	if not current_enemy_roster:
+		push_warning("No current_enemy_roster set")
+		return
+
+	# Check if we have valid level data
+	if current_level_index < 0 or current_level_index >= levels.size():
+		push_warning("Invalid level index for music selection")
+		# Fallback to normal music
+		if current_enemy_roster.battle_music:
+			MusicManager.play_track(current_enemy_roster.battle_music)
+		return
+
+	var level_data := levels[current_level_index]
+	var track: AudioStream = null
+
+	# Check if we should use intense music
+	if level_data.use_intense_music and current_enemy_roster.battle_music_intense:
+		track = current_enemy_roster.battle_music_intense
+	else:
+		track = current_enemy_roster.battle_music
+
+	if track:
+		MusicManager.play_track(track)
 	else:
 		push_warning("No battle music available for current roster")
 
@@ -987,7 +976,7 @@ func _on_upgrade_confirmed(victory: bool) -> void:
 	
 	if victory:
 		# Check if all levels completed
-		if current_level_index >= total_levels - 1:
+		if current_level_index >= levels.size() - 1:
 			# All levels completed - return to title screen
 			_return_to_title_screen()
 			return

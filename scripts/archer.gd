@@ -40,6 +40,16 @@ func _execute_attack() -> void:
 	if target == null or not is_instance_valid(target):
 		return
 	
+	# Don't spawn projectile if target is already dead/dying
+	if target is Unit:
+		var target_unit := target as Unit
+		if target_unit.current_hp <= 0 or target_unit.state == "dying":
+			return
+	
+	# Don't spawn projectile if combat has ended
+	if not _is_combat_active():
+		return
+	
 	if projectile_scene == null:
 		push_error("Archer has no projectile_scene assigned!")
 		return

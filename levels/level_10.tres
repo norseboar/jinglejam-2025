@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="LevelData" load_steps=5 format=3 uid="uid://q7vi0odeibft"]
+
+[ext_resource type="Resource" uid="uid://ehqsv8r3oc67" path="res://units/rosters/full_rosters/neutral.tres" id="1_5040i"]
+[ext_resource type="PackedScene" uid="uid://cylo0gvp21l7i" path="res://units/factionless/ogre.tscn" id="1_bhqm4"]
+[ext_resource type="PackedScene" uid="uid://d8emyhc2jsnq" path="res://units/factionless/blue_ogre.tscn" id="2_b8be7"]
+[ext_resource type="Script" uid="uid://vkkyrt2e3lsm" path="res://scripts/level_data.gd" id="2_gegew"]
+
+[resource]
+script = ExtResource("2_gegew")
+low_multiplier = 1.2
+minimum_gold = 150
+forced_units = Array[PackedScene]([ExtResource("1_bhqm4"), ExtResource("2_b8be7")])
+neutral_roster = ExtResource("1_5040i")
+use_intense_music = true
+metadata/_custom_type_script = "uid://vkkyrt2e3lsm"

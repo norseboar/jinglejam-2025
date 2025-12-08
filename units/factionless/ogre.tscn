@@ -1,23 +1,31 @@
-[gd_scene load_steps=8 format=3 uid="uid://cylo0gvp21l7i"]
+[gd_scene load_steps=12 format=3 uid="uid://cylo0gvp21l7i"]
 
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_t42t4"]
 [ext_resource type="AudioStream" uid="uid://bklc3p4acvet1" path="res://assets/sfx/ogre_club/HAMMER_Hit_Body_stereo.wav" id="2_4ly1c"]
+[ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="2_q28u0"]
 [ext_resource type="SpriteFrames" uid="uid://dut5wdvjr0ypa" path="res://assets/spriteframes/ogre.tres" id="2_t42t4"]
 [ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_p8eyf"]
+[ext_resource type="Resource" uid="uid://dhaa5yrfn7frh" path="res://upgrades/hp_20.tres" id="3_q28u0"]
+[ext_resource type="Resource" uid="uid://bjhdh7tc83o52" path="res://upgrades/dmg_10.tres" id="4_geo24"]
 [ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_kmeiw"]
 [ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_08g5t"]
+[ext_resource type="Resource" uid="uid://l0bc24e1i7ds" path="res://upgrades/atk_spd_1.tres" id="5_ijv5w"]
 [ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="7_8ak0h"]
 
 [node name="Unit" type="Node2D"]
 script = ExtResource("1_t42t4")
-max_hp = 100
+max_hp = 150
 damage = 20
 speed = 5.0
 attack_range = 1.0
 attack_speed = 4
 attack_damage_frame = 5
+priority = 0
+display_name = "Ogre"
+description = "A fearsome brute"
 base_recruit_cost = 50
 upgrade_cost = 10
+available_upgrades = Array[ExtResource("2_q28u0")]([ExtResource("3_q28u0"), ExtResource("4_geo24"), ExtResource("5_ijv5w")])
 damage_sounds = Array[AudioStream]([ExtResource("2_4ly1c")])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

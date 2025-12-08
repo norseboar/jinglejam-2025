@@ -19,33 +19,10 @@ func _safe_play_animation(anim_name: String) -> void:
 	super._safe_play_animation(anim_name)
 
 
-## Override _do_fighting to commit to attacks once started
-func _do_fighting(delta: float) -> void:
-	# If we're already attacking, COMMIT to the attack - don't check range
-	# This prevents interruption if target moves during cast animation
-	if is_attacking:
-		super._do_fighting(delta)
-		return
-	
-	# Before starting attack, check if target is still in range
-	if target != null and is_instance_valid(target):
-		var distance := position.distance_to(target.position)
-		var buffer_range := (attack_range * 10.0 + 20.0) * 1.2
-		
-		# If target moved out of range BEFORE we started attacking, chase them
-		if distance > buffer_range:
-			set_state("moving")
-			return
-	else:
-		target = null
-		set_state("moving")
-		return
-	
-	# Target is valid and in range - start or continue the attack
-	super._do_fighting(delta)
-
-
 func _process(delta: float) -> void:
+	# Always call parent first for time tracking and base behavior
+	super._process(delta)
+	
 	# Override to scan for targets even when idle, but only during combat
 	if state == "idle":
 		if _is_combat_active():
@@ -53,9 +30,6 @@ func _process(delta: float) -> void:
 			# If we found a target, switch to moving to approach them
 			if target != null and is_instance_valid(target):
 				set_state("moving")
-	else:
-		# For other states, use parent behavior
-		super._process(delta)
 
 
 func _do_movement(delta: float) -> void:
@@ -111,11 +85,6 @@ func _do_movement(delta: float) -> void:
 		# Check if we're now in range to attack
 		if distance <= effective_range:
 			set_state("fighting")
-			# Set time_since_attack high enough to attack immediately (with small random delay)
-			var effective_cooldown := _get_effective_cooldown()
-			time_since_attack = max(0.0, effective_cooldown - randf() * 0.25)
-			# Play idle animation while waiting to attack
-			_safe_play_animation("idle")
 			return  # Don't move this frame, start attacking next frame
 
 		# Move towards target (with 10.0 multiplier like base units)
@@ -237,6 +206,12 @@ func _perform_heal() -> void:
 
 	# Heal the target
 	target_unit.receive_heal(heal_amount)
+	
+	# Log healing event with timestamp for debugging (player healers only)
+	if not is_enemy:
+		var timestamp := Time.get_ticks_msec() / 1000.0
+		var effective_cd := _get_effective_cooldown()
+		print("[%.2f] Healer healed %s (HP: %d/%d) | time_since_attack: %.2f | effective_cd: %.2f" % [timestamp, target_unit.display_name, target_unit.current_hp, target_unit.max_hp, time_since_attack, effective_cd])
 
 	# Spawn healing VFX at target position
 	if heal_vfx_scene != null:

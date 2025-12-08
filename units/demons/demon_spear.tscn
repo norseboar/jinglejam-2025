@@ -7,23 +7,24 @@
 [ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_tu8x7"]
 [ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_tdcms"]
 [ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_5.tres" id="4_u3kg2"]
-[ext_resource type="Resource" uid="uid://b8xbtj1olnkiw" path="res://upgrades/spd_3.tres" id="5_60s0h"]
+[ext_resource type="Resource" uid="uid://l0bc24e1i7ds" path="res://upgrades/atk_spd_1.tres" id="5_4w8yq"]
 [ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_lbk56"]
 [ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="6_yt3tj"]
 
 [node name="Unit" type="Node2D"]
 script = ExtResource("1_ndutp")
-max_hp = 10
-damage = 15
+max_hp = 20
+damage = 10
 speed = 10.0
 attack_range = 0.0
-attack_speed = 6
+attack_speed = 3
 attack_damage_frame = 5
+targets_high_priority = true
 fly_height = 95
 display_name = "Imp"
-description = "Flies to important units first"
-base_recruit_cost = 7
-available_upgrades = Array[ExtResource("2_4w8yq")]([ExtResource("3_ofls6"), ExtResource("4_u3kg2"), ExtResource("5_60s0h")])
+description = "Flies to dangerous units"
+upgrade_cost = 2
+available_upgrades = Array[ExtResource("2_4w8yq")]([ExtResource("3_ofls6"), ExtResource("4_u3kg2"), ExtResource("5_4w8yq")])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_ndutp")

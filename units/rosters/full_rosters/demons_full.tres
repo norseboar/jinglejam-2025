@@ -1,18 +1,22 @@
-[gd_resource type="Resource" script_class="Roster" load_steps=9 format=3 uid="uid://cweq82v4c5xjm"]
+[gd_resource type="Resource" script_class="Roster" load_steps=12 format=3 uid="uid://cweq82v4c5xjm"]
 
 [ext_resource type="PackedScene" uid="uid://ddg0d0euvs07d" path="res://battlefields/bridge.tscn" id="1_6dujo"]
 [ext_resource type="AudioStream" uid="uid://cph5uigkkt6nb" path="res://assets/music/Yogs Game Jame Battle Track 3 - Demons Normal Full Mix 80bpm.mp3" id="1_8hc7m"]
 [ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="1_yh7ya"]
+[ext_resource type="AudioStream" uid="uid://ce637jefd1ba" path="res://assets/music/Yogs Game Jame Battle Track 3 - Demons Intense Full Mix 80bpm.mp3" id="2_br6ra"]
 [ext_resource type="PackedScene" uid="uid://dbfnx1ed8abot" path="res://battlefields/grass.tscn" id="2_qbits"]
 [ext_resource type="PackedScene" uid="uid://d0cewvge382qj" path="res://battlefields/mossy_rock.tscn" id="3_vymiy"]
 [ext_resource type="PackedScene" uid="uid://cy4o1pvxheyss" path="res://units/demons/demon_spear.tscn" id="5_qbits"]
 [ext_resource type="PackedScene" uid="uid://64c08orlqwik" path="res://units/demons/demon_archer.tscn" id="6_8hc7m"]
+[ext_resource type="PackedScene" uid="uid://bbo5yg5xhacmc" path="res://battlefields/snow.tscn" id="6_xj114"]
 [ext_resource type="PackedScene" uid="uid://cuvby1b737c0w" path="res://units/demons/demon_healer.tscn" id="7_br6ra"]
+[ext_resource type="PackedScene" uid="uid://durx8brl5ftca" path="res://battlefields/lava.tscn" id="7_yd47y"]
 
 [resource]
 script = ExtResource("1_yh7ya")
 team_name = "Demons"
 units = Array[PackedScene]([ExtResource("6_8hc7m"), ExtResource("7_br6ra"), ExtResource("5_qbits")])
-battlefields = Array[PackedScene]([ExtResource("1_6dujo"), ExtResource("2_qbits"), ExtResource("3_vymiy")])
+battlefields = Array[PackedScene]([ExtResource("1_6dujo"), ExtResource("2_qbits"), ExtResource("3_vymiy"), ExtResource("6_xj114"), ExtResource("7_yd47y")])
 battle_music = ExtResource("1_8hc7m")
+battle_music_intense = ExtResource("2_br6ra")
 metadata/_custom_type_script = "uid://clvfy8mjj8pl3"

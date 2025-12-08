@@ -31,12 +31,54 @@ expand_mode = 3
 [node name="PlayerSpawnSlots" type="Control" parent="."]
 anchors_preset = 0
 
+[node name="SpawnSlot6" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 175.0
+offset_top = 189.0
+offset_right = 207.0
+offset_bottom = 221.0
+
+[node name="SpawnSlot10" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 230.0
+offset_right = 216.0
+offset_bottom = 262.0
+
 [node name="SpawnSlot" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
 layout_mode = 0
 offset_left = 198.0
 offset_top = 155.0
 offset_right = 230.0
 offset_bottom = 187.0
+
+[node name="SpawnSlot7" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 217.0
+offset_top = 184.0
+offset_right = 249.0
+offset_bottom = 216.0
+
+[node name="SpawnSlot11" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 225.0
+offset_top = 220.0
+offset_right = 257.0
+offset_bottom = 252.0
+
+[node name="SpawnSlot12" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 230.0
+offset_right = 302.0
+offset_bottom = 262.0
+
+[node name="SpawnSlot8" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
+layout_mode = 0
+offset_left = 271.0
+offset_top = 191.0
+offset_right = 303.0
+offset_bottom = 223.0
 
 [node name="SpawnSlot2" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
 layout_mode = 0
@@ -58,48 +100,6 @@ offset_left = 318.0
 offset_top = 199.0
 offset_right = 350.0
 offset_bottom = 231.0
-
-[node name="SpawnSlot6" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
-layout_mode = 0
-offset_left = 175.0
-offset_top = 189.0
-offset_right = 207.0
-offset_bottom = 221.0
-
-[node name="SpawnSlot7" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
-layout_mode = 0
-offset_left = 217.0
-offset_top = 184.0
-offset_right = 249.0
-offset_bottom = 216.0
-
-[node name="SpawnSlot8" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
-layout_mode = 0
-offset_left = 271.0
-offset_top = 191.0
-offset_right = 303.0
-offset_bottom = 223.0
-
-[node name="SpawnSlot10" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
-layout_mode = 0
-offset_left = 184.0
-offset_top = 230.0
-offset_right = 216.0
-offset_bottom = 262.0
-
-[node name="SpawnSlot11" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
-layout_mode = 0
-offset_left = 225.0
-offset_top = 220.0
-offset_right = 257.0
-offset_bottom = 252.0
-
-[node name="SpawnSlot12" parent="PlayerSpawnSlots" instance=ExtResource("3_50rdu")]
-layout_mode = 0
-offset_left = 270.0
-offset_top = 230.0
-offset_right = 302.0
-offset_bottom = 262.0
 
 [node name="EnemyMarkers" type="Node2D" parent="."]
 
