@@ -18,6 +18,7 @@ attack_speed = 5
 attack_damage_frame = 5
 display_name = "Dwarf Spearman"
 description = "Dwarven infantry"
+upgrade_cost = 2
 available_upgrades = Array[ExtResource("3_jryk5")]([ExtResource("4_ubojj"), ExtResource("5_vwamq"), ExtResource("6_rv5y8")])
 damage_sounds = Array[AudioStream]([])
 

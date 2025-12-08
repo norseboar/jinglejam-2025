@@ -16,11 +16,11 @@ speed = 8.0
 attack_range = 0.0
 attack_speed = 4
 attack_damage_frame = 4
-armor = 5
+armor = 2
 display_name = "Squire"
 description = "Lightly-armored soldier"
 base_recruit_cost = 5
-upgrade_cost = 2
+upgrade_cost = 1
 available_upgrades = Array[ExtResource("3_e42qj")]([ExtResource("4_5673y"), ExtResource("5_2k6kh"), ExtResource("6_v78tp")])
 
 [node name="AnimatedSprite2D" parent="." index="0"]

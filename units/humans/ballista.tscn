@@ -37,6 +37,7 @@ priority = 2
 display_name = "Ballista"
 description = "Ranged artillery"
 base_recruit_cost = 15
+upgrade_cost = 3
 available_upgrades = Array[ExtResource("4_12rvi")]([ExtResource("5_0mfv7"), ExtResource("6_0665g"), ExtResource("7_oqas3")])
 damage_sounds = Array[AudioStream]([])
 fire_sounds = Array[AudioStream]([ExtResource("4_rbs72"), ExtResource("5_3daft"), ExtResource("6_memip"), ExtResource("7_drwih")])

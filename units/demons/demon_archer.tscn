@@ -27,6 +27,7 @@ armor_piercing = true
 targets_high_priority = true
 display_name = "Mage"
 description = "A ranged spellcaster"
+upgrade_cost = 2
 available_upgrades = Array[ExtResource("3_ub768")]([ExtResource("4_665lu"), ExtResource("5_hp1l8"), ExtResource("6_iekho")])
 damage_sounds = Array[AudioStream]([])
 fire_sounds = Array[AudioStream]([ExtResource("2_71e6i")])

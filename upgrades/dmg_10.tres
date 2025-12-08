@@ -5,4 +5,5 @@
 [resource]
 script = ExtResource("1_1nmbx")
 stat_type = 1
+amount = 5
 label_text = "DMG"
