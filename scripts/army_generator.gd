@@ -63,8 +63,12 @@ static func generate_army(
 			# Upgrade a random eligible unit
 			var upgradable := _get_upgradable_units(army)
 			var unit_to_upgrade: ArmyUnit = upgradable.pick_random()
-			var upgrade_type: String = ["hp", "damage"].pick_random()
-			unit_to_upgrade.upgrades[upgrade_type] = unit_to_upgrade.upgrades.get(upgrade_type, 0) + 1
+			# Pick a random upgrade slot index (0, 1, or 2) from available upgrades
+			var upgrade_slot := _get_random_upgrade_slot(unit_to_upgrade.unit_scene)
+			if upgrade_slot >= 0:
+				if not unit_to_upgrade.upgrades.has(upgrade_slot):
+					unit_to_upgrade.upgrades[upgrade_slot] = 0
+				unit_to_upgrade.upgrades[upgrade_slot] += 1
 			remaining_gold -= _get_upgrade_cost(unit_to_upgrade.unit_scene)
 		else:
 			# Add a new unit from the roster
@@ -151,6 +155,27 @@ static func _get_unit_priority(unit_scene: PackedScene) -> int:
 	var p := instance.priority
 	instance.queue_free()
 	return p
+
+
+static func _get_random_upgrade_slot(unit_scene: PackedScene) -> int:
+	"""Get a random upgrade slot index (0-2) from the unit's available upgrades."""
+	if unit_scene == null:
+		return -1
+	var instance := unit_scene.instantiate() as Unit
+	if instance == null:
+		return -1
+	var available := instance.available_upgrades
+	instance.queue_free()
+	if available.is_empty():
+		return -1
+	# Pick a random slot index (0, 1, or 2) that has an upgrade available
+	var valid_slots: Array[int] = []
+	for i in range(min(3, available.size())):
+		if available[i] != null:
+			valid_slots.append(i)
+	if valid_slots.is_empty():
+		return -1
+	return valid_slots.pick_random()
 
 
 static func _compare_by_priority(a: ArmyUnit, b: ArmyUnit) -> bool:
