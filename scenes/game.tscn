@@ -626,8 +626,7 @@ texture_pressed = ExtResource("14_1kice")
 texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
-[node name="BattleSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("options_container", "advance_button")]
-visible = false
+[node name="BattleSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("options_container", "advance_button", "player_army_slot_group")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -637,6 +636,7 @@ grow_vertical = 2
 script = ExtResource("13_kvuet")
 options_container = NodePath("Panel/HBoxContainer")
 advance_button = NodePath("Panel/PanelContainer/VBoxContainer/Button")
+player_army_slot_group = NodePath("Panel/PanelContainer/VBoxContainer/UnitSlotGroup")
 battle_option_scene = ExtResource("14_trtic")
 background_texture = ExtResource("27_v2yb1")
 
@@ -657,15 +657,34 @@ offset_right = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="PanelContainer2" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -41.0
+offset_top = 19.5
+offset_right = 41.0
+offset_bottom = 96.5
+grow_horizontal = 2
+
+[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/PanelContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Challenge
+an army"
+horizontal_alignment = 1
+
 [node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_left = 18.0
-offset_top = -5.5
+offset_top = 4.0
 offset_right = -22.0
-offset_bottom = 194.5
+offset_bottom = 204.0
 grow_horizontal = 2
+theme_override_constants/separation = 120
 alignment = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel"]
@@ -675,10 +694,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -82.0
-offset_top = -123.5
-offset_right = 82.0
-offset_bottom = -26.5
+offset_left = -104.0
+offset_top = -162.0
+offset_right = 104.0
+offset_bottom = -18.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -686,10 +705,9 @@ grow_vertical = 0
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer"]
+[node name="UnitSlotGroup" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
 layout_mode = 2
-text = "Select a challenger"
-horizontal_alignment = 1
+selection_mode = 0
 
 [node name="Button" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -700,6 +718,7 @@ texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
 [node name="FactionSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("slot_group", "confirm_button", "faction_name_label")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
