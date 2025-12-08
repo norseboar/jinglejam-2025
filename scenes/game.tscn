@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=67 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="1_ca42v"]
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -40,7 +40,7 @@
 [ext_resource type="Script" uid="uid://d4eh8dp6lwy7d" path="res://scripts/tinted_button.gd" id="23_pl11u"]
 [ext_resource type="Texture2D" uid="uid://bduybapepv747" path="res://assets/sprites/human/Knight.png" id="26_3hbvx"]
 [ext_resource type="Material" uid="uid://cyw5aohyrrd4p" path="res://resources/background_mat.tres" id="26_q8j3a"]
-[ext_resource type="Texture2D" uid="uid://1xufpkwejdwp" path="res://resources/background_gradient_tex.tres" id="27_ms3bu"]
+[ext_resource type="Texture2D" uid="uid://1xufpkwejdwp" path="res://resources/background_gradient_bridge.tres" id="27_ms3bu"]
 [ext_resource type="Texture2D" uid="uid://01p7222oltqo" path="res://assets/sprites/demons/demons_archer.png" id="27_q8j3a"]
 [ext_resource type="Texture2D" uid="uid://do3fnx1lc1ppm" path="res://assets/sprites/ui/map.png" id="27_v2yb1"]
 [ext_resource type="Script" uid="uid://ba8mk545ccyla" path="res://scripts/faction_select_screen.gd" id="27_wljb1"]
@@ -137,7 +137,10 @@ spacing_bottom = -10
 [sub_resource type="FontVariation" id="FontVariation_8qswn"]
 spacing_bottom = -10
 
-[node name="Game" type="Control" node_paths=PackedStringArray("background_rect", "gameplay", "player_units", "enemy_units", "hud", "ui_layer", "faction_select_screen") groups=["game"]]
+[sub_resource type="FontVariation" id="FontVariation_ms3bu"]
+spacing_bottom = -8
+
+[node name="Game" type="Control" node_paths=PackedStringArray("background_rect", "gradient_overlay", "gameplay", "player_units", "enemy_units", "hud", "ui_layer", "faction_select_screen") groups=["game"]]
 texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
@@ -158,6 +161,7 @@ starting_roster = ExtResource("7_e1j6l")
 full_rosters = Array[ExtResource("8_pl11u")]([ExtResource("10_qnb83"), ExtResource("11_sww3w"), ExtResource("11_pl11u")])
 neutral_roster = ExtResource("12_bhx41")
 background_rect = NodePath("BackgroundRect")
+gradient_overlay = NodePath("BackgroundRect/TextureRect")
 gameplay = NodePath("SubViewportContainer/SubViewport/Gameplay")
 player_units = NodePath("SubViewportContainer/SubViewport/Gameplay/PlayerUnits")
 enemy_units = NodePath("SubViewportContainer/SubViewport/Gameplay/EnemyUnits")
@@ -735,9 +739,13 @@ layout_mode = 2
 alignment = 1
 
 [node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
-text = "The realm has fractured into ten roaming armies.
-Win battles to unite them under your banner. Lose, and join one of theirs."
+theme_override_fonts/font = SubResource("FontVariation_ms3bu")
+text = "The realm has fractured into roaming armies.
+
+Defeat all ten of them in battle to unite them under your banner."
+autowrap_mode = 3
 
 [node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 1)

@@ -4,6 +4,9 @@ class_name LevelRoot
 ## The background texture for this level (applied to Game's BackgroundRect at runtime)
 @export var background_texture: Texture2D
 
+## The gradient overlay texture for this level (applied to Game's gradient overlay at runtime)
+@export var gradient_texture: Texture2D
+
 ## Editor-only background for placement reference (hidden at runtime)
 @export var editor_background: CanvasItem
 

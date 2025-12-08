@@ -56,7 +56,7 @@ var battles_lost: int = 0  # Counts times player "joined" enemy faction
 ```gdscript
 func _end_battle(victory: bool) -> void:
 	phase = "battle_end"
-	
+
 	# Update HUD state to reflect the battle-end phase (keep battle UI while modal shows)
 	if hud:
 		hud.set_phase(phase, current_level_index + 1)
@@ -77,11 +77,12 @@ func _end_battle(victory: bool) -> void:
 	# Capture enemy data for upgrade screen (only if victory and not last level, defeat will restart)
 	if victory and current_level_index < levels.size() - 1:
 		_capture_enemies_faced()
-	
+
 	# ... rest of function
 ```
 
 **Verify:**
+
 - Check that the code compiles with no syntax errors
 - Confirm the tracking variables are added
 
@@ -104,6 +105,7 @@ func _end_battle(victory: bool) -> void:
 - [ ] **Step 5:** **Godot Editor:** Set `JoinButton` visibility to hidden by default (in the Inspector, set `Visible` to off)
 
 - [ ] **Step 6:** **Godot Editor:** Add three new Label nodes as children of `VBoxContainer` for stats display. Name them:
+
   - `WinsLabel`
   - `LossesLabel`
   - `GradeLabel`
@@ -115,6 +117,7 @@ func _end_battle(victory: bool) -> void:
 - [ ] **Step 9:** **Godot Editor:** Save the scene
 
 **Verify:**
+
 - Ask user to:
   - Confirm the scene has both `JoinButton` and `RestartButton`
   - Confirm the three stat labels exist and are hidden
@@ -144,17 +147,17 @@ signal join_faction_requested()  # Emitted when player chooses to join enemy fac
 func _on_join_faction_requested() -> void:
 	"""Handle player choosing to join the enemy faction after defeat."""
 	battles_lost += 1
-	
+
 	# Calculate half the enemy army's value
 	var enemy_value := ArmyGenerator.calculate_army_value(current_enemy_army)
 	var target_value := enemy_value / 2
-	
+
 	# Get slot count from current battlefield
 	var slot_count := _count_enemy_slots(selected_level_scene)
 	if slot_count <= 0:
 		push_warning("Could not determine slot count for joined army, using 6")
 		slot_count = 6
-	
+
 	# Generate new army with half enemy value using enemy roster
 	var joined_army := ArmyGenerator.generate_army(
 		current_enemy_roster,  # Pick from enemy roster
@@ -164,36 +167,36 @@ func _on_join_faction_requested() -> void:
 		null,                  # No neutral roster
 		0                      # No minimum gold
 	)
-	
+
 	print("Joined %s faction with army value: %d (half of %d)" % [
 		current_enemy_roster.team_name if current_enemy_roster else "unknown",
 		ArmyGenerator.calculate_army_value(joined_army),
 		enemy_value
 	])
-	
+
 	# Store old player army to use as draft pool
 	var old_army := army.duplicate(true)
-	
+
 	# Replace player army with joined army
 	army = joined_army
-	
+
 	# Go to upgrade screen with swapped roles
 	# Player keeps their gold, old army becomes available to recruit
 	phase = "upgrade"
 	if hud:
 		hud.set_phase(phase, current_level_index + 1)
-	
+
 	# Swap to upgrade background
 	if background_rect and upgrade_background:
 		background_rect.texture = upgrade_background
-	
+
 	# Clear leftover units from the battle
 	_clear_all_units()
-	
+
 	# Hide the level (if present)
 	if current_level:
 		current_level.visible = false
-	
+
 	# Show upgrade screen with joined army and old army as draft pool
 	# Pass false for victory state since this came from a defeat
 	hud.show_upgrade_screen(false, army, old_army)
@@ -207,11 +210,12 @@ func _return_to_title_screen() -> void:
 	battles_won = 0
 	battles_lost = 0
 	current_level_index = 0
-	
+
 	# ... rest of existing function
 ```
 
 **Verify:**
+
 - Check that the code compiles with no syntax errors
 - Confirm the join faction logic is added
 
@@ -262,16 +266,16 @@ func show_battle_end_modal(victory: bool, level: int, total_levels: int, enemy_f
 	last_victory_state = victory
 	is_last_level = (level >= total_levels)
 	current_enemy_faction_name = enemy_faction_name
-	
+
 	if not battle_end_modal or not battle_end_label or not battle_end_button:
 		return
-	
+
 	# Configure modal text and buttons based on state
 	if victory:
 		# Victory flow - hide join button, show single button
 		if battle_end_join_button:
 			battle_end_join_button.visible = false
-		
+
 		if is_last_level:
 			# Last level completed - will show stats instead (handled in Task 6)
 			battle_end_label.text = "Victory! You've completed all levels!"
@@ -281,26 +285,26 @@ func show_battle_end_modal(victory: bool, level: int, total_levels: int, enemy_f
 			battle_end_label.text = "Victory!"
 			if battle_end_button is Button:
 				battle_end_button.text = "Upgrade Army"
-		
+
 		if battle_end_button:
 			battle_end_button.visible = true
 	else:
 		# Defeat flow - show both join and restart buttons
 		battle_end_label.text = "Defeat!"
-		
+
 		# Show join button with faction name
 		if battle_end_join_button:
 			battle_end_join_button.visible = true
 			if battle_end_join_button is Button:
 				var faction_text := enemy_faction_name if enemy_faction_name != "" else "Enemy"
 				battle_end_join_button.text = "Join %s" % faction_text
-		
+
 		# Show restart button
 		if battle_end_button:
 			battle_end_button.visible = true
 			if battle_end_button is Button:
 				battle_end_button.text = "Restart"
-	
+
 	# Show the modal
 	battle_end_modal.visible = true
 ```
@@ -313,17 +317,17 @@ func _on_battle_end_button_pressed() -> void:
 	# Hide modal
 	if battle_end_modal:
 		battle_end_modal.visible = false
-	
+
 	# If defeat, this is the restart button - go to title screen
 	if not last_victory_state:
 		upgrade_confirmed.emit(false)
 		return
-	
+
 	# If victory on last level, will show stats (Task 6 will update this)
 	if is_last_level:
 		upgrade_confirmed.emit(true)
 		return
-	
+
 	# Otherwise, victory on non-last level - show upgrade screen
 	show_upgrade_screen_requested.emit()
 ```
@@ -336,12 +340,13 @@ func _on_battle_end_join_button_pressed() -> void:
 	# Hide modal
 	if battle_end_modal:
 		battle_end_modal.visible = false
-	
+
 	# Emit signal to game to handle join logic
 	join_faction_requested.emit()
 ```
 
 - [ ] **Step 7:** **Godot Editor:** Connect the new join button signal:
+
 1. Open `scenes/ui/hud.tscn` in the Godot editor
 2. Select the `JoinButton` node
 3. Go to the Node tab (next to Inspector)
@@ -352,6 +357,7 @@ func _on_battle_end_join_button_pressed() -> void:
 8. Click Connect
 
 - [ ] **Step 8:** **Godot Editor:** Link the new `battle_end_join_button` export:
+
 1. In `scenes/ui/hud.tscn`, select the root `HUD` node
 2. In the Inspector, find the Script Variables section
 3. Find `Battle End Join Button` in the exported variables
@@ -359,6 +365,7 @@ func _on_battle_end_join_button_pressed() -> void:
 5. Save the scene
 
 **Verify:**
+
 - Ask user to:
   - Confirm no syntax errors
   - Confirm the join button signal is connected in the scene
@@ -386,6 +393,7 @@ func _on_battle_end_join_button_pressed() -> void:
 ```
 
 - [ ] **Step 2:** **Godot Editor:** Link the stats label exports:
+
 1. Open `scenes/ui/hud.tscn` in the Godot editor
 2. Select the root `HUD` node
 3. In the Inspector, find the Script Variables section
@@ -395,6 +403,7 @@ func _on_battle_end_join_button_pressed() -> void:
 7. Save the scene
 
 **Verify:**
+
 - Ask user to:
   - Confirm all three label exports are linked in the inspector
   - Confirm no errors in the scene
@@ -415,9 +424,9 @@ func _calculate_letter_grade(wins: int, losses: int) -> String:
 	var total_battles := wins + losses
 	if total_battles == 0:
 		return "F"
-	
+
 	var win_rate := float(wins) / float(total_battles)
-	
+
 	if win_rate >= 1.0:  # 10/10 wins
 		return "A"
 	elif win_rate >= 0.8:  # 8-9/10 wins
@@ -437,40 +446,40 @@ func show_final_stats(wins: int, losses: int) -> void:
 	"""Show the final statistics screen with letter grade."""
 	if not battle_end_modal or not battle_end_label:
 		return
-	
+
 	# Hide join button (not used in final screen)
 	if battle_end_join_button:
 		battle_end_join_button.visible = false
-	
+
 	# Show restart button
 	if battle_end_button:
 		battle_end_button.visible = true
 		if battle_end_button is Button:
 			battle_end_button.text = "Return to Title"
-	
+
 	# Hide the main label (we'll use the stat labels instead)
 	if battle_end_label:
 		battle_end_label.visible = false
-	
+
 	# Calculate grade
 	var grade := _calculate_letter_grade(wins, losses)
-	
+
 	# Show and populate stats labels
 	if battle_end_wins_label:
 		battle_end_wins_label.visible = true
 		battle_end_wins_label.text = "Banners defeated: %d" % wins
-	
+
 	if battle_end_losses_label:
 		battle_end_losses_label.visible = true
 		battle_end_losses_label.text = "Banners joined: %d" % losses
-	
+
 	if battle_end_grade_label:
 		battle_end_grade_label.visible = true
 		battle_end_grade_label.text = "Rank: %s" % grade
-	
+
 	# Show the modal
 	battle_end_modal.visible = true
-	
+
 	print("Final stats - Wins: %d, Losses: %d, Grade: %s" % [wins, losses, grade])
 ```
 
@@ -482,7 +491,7 @@ func show_battle_end_modal(victory: bool, level: int, total_levels: int, enemy_f
 	last_victory_state = victory
 	is_last_level = (level >= total_levels)
 	current_enemy_faction_name = enemy_faction_name
-	
+
 	# Hide stats labels (only used in final stats screen)
 	if battle_end_wins_label:
 		battle_end_wins_label.visible = false
@@ -490,11 +499,11 @@ func show_battle_end_modal(victory: bool, level: int, total_levels: int, enemy_f
 		battle_end_losses_label.visible = false
 	if battle_end_grade_label:
 		battle_end_grade_label.visible = false
-	
+
 	# Ensure main label is visible (hidden in final stats)
 	if battle_end_label:
 		battle_end_label.visible = true
-	
+
 	# ... rest of existing function
 ```
 
@@ -503,18 +512,18 @@ func show_battle_end_modal(victory: bool, level: int, total_levels: int, enemy_f
 ```gdscript
 func _end_battle(victory: bool) -> void:
 	phase = "battle_end"
-	
+
 	# ... existing code ...
-	
+
 	# Play victory or defeat jingle (and duck current music)
 	if victory:
 		MusicManager.play_jingle_and_duck(MusicManager.victory_jingle)
 	else:
 		MusicManager.play_jingle_and_duck(MusicManager.defeat_jingle)
-	
+
 	# Check if this is the final battle (battle 10)
 	var is_final_battle := (current_level_index >= levels.size() - 1)
-	
+
 	if is_final_battle and victory:
 		# Show final stats instead of normal victory modal
 		if hud:
@@ -523,7 +532,7 @@ func _end_battle(victory: bool) -> void:
 		# Show normal battle end modal (with join option on defeat)
 		var enemy_faction_name := current_enemy_roster.team_name if current_enemy_roster else ""
 		hud.show_battle_end_modal(victory, current_level_index + 1, levels.size(), enemy_faction_name)
-	
+
 	# Update auto-deploy button state (should be disabled during upgrade phase)
 	if hud:
 		hud._update_auto_deploy_button_state()
@@ -534,7 +543,7 @@ func _end_battle(victory: bool) -> void:
 ```gdscript
 func _ready() -> void:
 	# ... existing code ...
-	
+
 	# Connect HUD signals
 	if hud:
 		hud.start_battle_requested.connect(_on_start_battle_requested)
@@ -543,11 +552,12 @@ func _ready() -> void:
 		hud.draft_complete.connect(_on_draft_complete)
 		hud.battle_select_advance.connect(_on_battle_select_advance)
 		hud.join_faction_requested.connect(_on_join_faction_requested)  # Add this line
-	
+
 	# ... rest of existing code ...
 ```
 
 **Verify:**
+
 - Ask user to:
   - Run the game and play through to battle 10
   - Win battle 10 and verify the stats screen appears
@@ -575,4 +585,3 @@ func _ready() -> void:
 - [ ] "Return to Title" button works on final stats screen
 - [ ] Win/loss counters reset when returning to title screen
 - [ ] No errors in console during any of these flows
-

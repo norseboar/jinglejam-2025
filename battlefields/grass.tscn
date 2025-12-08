@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dbfnx1ed8abot"]
+[gd_scene load_steps=6 format=3 uid="uid://dbfnx1ed8abot"]
 
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_812al"]
 [ext_resource type="Texture2D" uid="uid://bxnr8frb2awil" path="res://assets/backgrounds/autumn-leaves-forest.jpg" id="2_r83ro"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_v0msx"]
 [ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="4_40h0h"]
+[ext_resource type="Texture2D" uid="uid://bi1grelftlq6s" path="res://resources/background_gradient_grass.tres" id="4_r83ro"]
 
 [node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background", "enemy_spawn_slots_container", "level_bounds_area")]
 layout_mode = 3
@@ -16,6 +17,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_812al")
 background_texture = ExtResource("2_r83ro")
+gradient_texture = ExtResource("4_r83ro")
 editor_background = NodePath("EditorBackground")
 army_name = "Humans"
 enemy_spawn_slots_container = NodePath("EnemyMarkers")
@@ -27,6 +29,15 @@ offset_right = 640.0
 offset_bottom = 360.0
 texture = ExtResource("2_r83ro")
 expand_mode = 3
+
+[node name="TextureRect" type="TextureRect" parent="EditorBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_r83ro")
 
 [node name="PlayerSpawnSlots" type="Control" parent="."]
 anchors_preset = 0

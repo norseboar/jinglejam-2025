@@ -375,7 +375,13 @@ func show_battle_select(scenes: Array[PackedScene]) -> void:
 func show_battle_select_generated(data_list: Array) -> void:
 	"""Show the battle select screen with generated battle options."""
 	if battle_select_screen:
-		battle_select_screen.show_battle_select_generated(data_list)
+		# Get player's army from game
+		var game := get_tree().get_first_node_in_group("game") as Game
+		var player_army: Array = []
+		if game:
+			player_army = game.army
+		
+		battle_select_screen.show_battle_select_generated(data_list, player_army)
 
 
 func hide_battle_select() -> void:

@@ -55,6 +55,7 @@ var is_draft_mode: bool = true
 
 # Node references (assign in inspector)
 @export var background_rect: TextureRect
+@export var gradient_overlay: TextureRect
 @export var gameplay: Node2D
 @export var player_units: Node2D
 @export var enemy_units: Node2D
@@ -409,6 +410,10 @@ func load_level_scene(level_scene: PackedScene) -> void:
 	# Set the game's background from level
 	if background_rect and current_level.background_texture:
 		background_rect.texture = current_level.background_texture
+	
+	# Set the gradient overlay from level (if specified)
+	if gradient_overlay and current_level.gradient_texture:
+		gradient_overlay.texture = current_level.gradient_texture
 
 	# Reset all spawn slots to unoccupied
 	_reset_spawn_slots()

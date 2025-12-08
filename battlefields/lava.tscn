@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://durx8brl5ftca"]
+[gd_scene load_steps=6 format=3 uid="uid://durx8brl5ftca"]
 
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_dkl7y"]
 [ext_resource type="Texture2D" uid="uid://dcx8sootto15l" path="res://assets/backgrounds/mountains-9580848_1280.jpg" id="3_ruuqe"]
+[ext_resource type="Texture2D" uid="uid://dwatwxymwe6qv" path="res://resources/background_gradient_lava.tres" id="4_0narp"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="4_65tkh"]
 [ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="5_mahir"]
 
@@ -17,6 +18,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_dkl7y")
 background_texture = ExtResource("3_ruuqe")
+gradient_texture = ExtResource("4_0narp")
 editor_background = NodePath("EditorBackground")
 army_name = "Humans"
 enemy_spawn_slots_container = NodePath("EnemyMarkers")
@@ -28,6 +30,15 @@ offset_right = 640.0
 offset_bottom = 360.0
 texture = ExtResource("3_ruuqe")
 expand_mode = 3
+
+[node name="TextureRect" type="TextureRect" parent="EditorBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_0narp")
 
 [node name="PlayerSpawnSlots" type="Control" parent="."]
 anchors_preset = 0

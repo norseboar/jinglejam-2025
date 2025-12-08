@@ -5,5 +5,5 @@
 [resource]
 script = ExtResource("1_o8qyq")
 low_multiplier = 0.5
-high_multiplier = 0.7
+high_multiplier = 0.6
 metadata/_custom_type_script = "uid://vkkyrt2e3lsm"

@@ -6,6 +6,7 @@ signal advance_pressed(option_data: BattleOptionData)
 # Node references (assign in inspector)
 @export var options_container: Container  # HBoxContainer or similar
 @export var advance_button: BaseButton
+@export var player_army_slot_group: UnitSlotGroup  # Shows the player's current army
 
 # Scene to instantiate for each option
 @export var battle_option_scene: PackedScene
@@ -48,8 +49,8 @@ func show_battle_select(scenes: Array[PackedScene]) -> void:
 	visible = true
 
 
-func show_battle_select_generated(data_list: Array[BattleOptionData]) -> void:
-	"""Show the battle select screen with generated battle options."""
+func show_battle_select_generated(data_list: Array[BattleOptionData], player_army: Array = []) -> void:
+	"""Show the battle select screen with generated battle options and player's army."""
 	option_data_list = data_list
 	selected_index = 0
 	_apply_background_texture()
@@ -65,6 +66,9 @@ func show_battle_select_generated(data_list: Array[BattleOptionData]) -> void:
 	# Pre-select first option
 	if options.size() > 0:
 		options[0].set_selected(true)
+
+	# Populate player army display
+	_populate_player_army(player_army)
 
 	# Show screen
 	visible = true
@@ -137,6 +141,25 @@ func _on_advance_button_pressed() -> void:
 
 	var selected_data := option_data_list[selected_index]
 	advance_pressed.emit(selected_data)
+
+
+func _populate_player_army(player_army: Array) -> void:
+	"""Populate the player army slot group with the current army."""
+	if player_army_slot_group == null:
+		return
+	
+	var slots := player_army_slot_group.slots
+	
+	for i in range(slots.size()):
+		var slot := slots[i]
+		if i < player_army.size():
+			var army_unit = player_army[i]
+			if army_unit is ArmyUnit:
+				slot.set_unit(army_unit)
+			else:
+				slot.set_unit(null)
+		else:
+			slot.set_unit(null)
 
 
 func _apply_background_texture() -> void:

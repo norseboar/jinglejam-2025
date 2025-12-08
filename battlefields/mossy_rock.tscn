@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://d0cewvge382qj"]
+[gd_scene load_steps=6 format=3 uid="uid://d0cewvge382qj"]
 
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_vukk4"]
 [ext_resource type="Texture2D" uid="uid://bw7jftfbecibg" path="res://assets/backgrounds/selective-focus-shot-tree-log-covered-with-moss.jpg" id="2_odrfp"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_50rdu"]
+[ext_resource type="Texture2D" uid="uid://d1byhhg5i2xdw" path="res://resources/background_gradient_mossy_rock.tres" id="3_odrfp"]
 [ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="4_hhytr"]
 
 [node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background", "enemy_spawn_slots_container", "level_bounds_area")]
@@ -16,6 +17,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vukk4")
 background_texture = ExtResource("2_odrfp")
+gradient_texture = ExtResource("3_odrfp")
 editor_background = NodePath("EditorBackground")
 army_name = "Humans"
 enemy_spawn_slots_container = NodePath("EnemyMarkers")
@@ -27,6 +29,15 @@ offset_right = 640.0
 offset_bottom = 360.0
 texture = ExtResource("2_odrfp")
 expand_mode = 3
+
+[node name="TextureRect" type="TextureRect" parent="EditorBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_odrfp")
 
 [node name="PlayerSpawnSlots" type="Control" parent="."]
 anchors_preset = 0
