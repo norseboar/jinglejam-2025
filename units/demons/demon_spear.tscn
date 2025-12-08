@@ -14,14 +14,15 @@
 [node name="Unit" type="Node2D"]
 script = ExtResource("1_ndutp")
 max_hp = 10
-damage = 20
+damage = 15
 speed = 10.0
 attack_range = 0.0
 attack_speed = 6
 attack_damage_frame = 5
+fly_height = 95
 display_name = "Imp"
 description = "Flies to important units first"
-base_recruit_cost = 5
+base_recruit_cost = 7
 available_upgrades = Array[ExtResource("2_4w8yq")]([ExtResource("3_ofls6"), ExtResource("4_u3kg2"), ExtResource("5_60s0h")])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

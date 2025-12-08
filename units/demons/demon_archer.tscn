@@ -25,7 +25,6 @@ attack_speed = 3
 attack_damage_frame = 4
 armor_piercing = true
 targets_high_priority = true
-fly_height = 70
 display_name = "Mage"
 description = "A ranged spellcaster"
 upgrade_cost = 2

@@ -11,13 +11,12 @@
 [node name="Dwarf_spearman" instance=ExtResource("1_pw30i")]
 script = ExtResource("2_66k5u")
 max_hp = 40
-damage = 10
 speed = 6.0
-attack_range = 0.0
 attack_speed = 5
 attack_damage_frame = 5
 display_name = "Dwarf Spearman"
 description = "Dwarven infantry"
+base_recruit_cost = 8
 upgrade_cost = 2
 available_upgrades = Array[ExtResource("3_jryk5")]([ExtResource("4_ubojj"), ExtResource("5_vwamq"), ExtResource("6_rv5y8")])
 damage_sounds = Array[AudioStream]([])
