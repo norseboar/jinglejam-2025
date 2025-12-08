@@ -25,6 +25,11 @@ signal player_unit_died(army_index: int)  # Emitted by player units with army_in
 var heal_armor := 0                  # Temporary armor from healing (reduces damage)
 @export var fly_height := -1        # Height from top of screen to fly to at battle start (-1 = disabled)
 
+# Separation behavior (anti-clumping)
+@export var enable_separation := true          # Toggle separation behavior on/off
+@export var separation_radius := 40.0          # How far to check for nearby allies
+@export var separation_strength := 150.0       # How strong the push-away force is
+
 # Display info
 @export var display_name: String = "Unit"
 @export var description: String = "A basic unit."
@@ -186,7 +191,9 @@ func _do_movement(delta: float) -> void:
 		var direction_to_target := (target_pos - position).normalized()
 		
 		# Move towards target
-		position += direction_to_target * speed * 10.0 * delta
+		var movement := direction_to_target * speed * 10.0 * delta
+		var separation := _apply_separation_force() * delta
+		position += movement + separation
 		
 		# Flip sprite to face movement direction
 		animated_sprite.flip_h = direction_to_target.x < 0
@@ -198,7 +205,9 @@ func _do_movement(delta: float) -> void:
 		animated_sprite.flip_h = is_enemy
 		
 		# Move horizontally
-		position.x += direction * speed * 10.0 * delta
+		var movement := Vector2(direction * speed * 10.0 * delta, 0)
+		var separation := _apply_separation_force() * delta
+		position += movement + separation
 	
 	# Constrain ground units (fly_height < 0) to level bounds
 	# Use global_position since bounds are calculated in global space
@@ -212,6 +221,44 @@ func _do_movement(delta: float) -> void:
 			# Convert back to local position
 			if clamped_global_y != global_y:
 				global_position.y = clamped_global_y
+
+
+func _apply_separation_force() -> Vector2:
+	"""Calculate repulsion force from nearby friendly units to prevent clumping."""
+	if not enable_separation or friendly_container == null:
+		return Vector2.ZERO
+	
+	var separation_force := Vector2.ZERO
+	var nearby_count := 0
+	
+	# Check all friendly units
+	for ally in friendly_container.get_children():
+		if not is_instance_valid(ally) or ally == self:
+			continue
+		if not ally is Unit:
+			continue
+		
+		var ally_unit := ally as Unit
+		# Skip dead/dying units
+		if ally_unit.state == "dying" or ally_unit.current_hp <= 0:
+			continue
+		
+		var distance := position.distance_to(ally_unit.position)
+		
+		# If within separation radius, add repulsion force
+		if distance < separation_radius and distance > 0.1:  # Avoid divide by zero
+			# Direction away from ally
+			var away_direction := (position - ally_unit.position).normalized()
+			# Stronger force when closer (inverse square)
+			var force_magnitude := separation_strength * (1.0 - distance / separation_radius)
+			separation_force += away_direction * force_magnitude
+			nearby_count += 1
+	
+	# Average the force if multiple neighbors
+	if nearby_count > 0:
+		separation_force /= nearby_count
+	
+	return separation_force
 
 
 func _check_for_targets() -> void:

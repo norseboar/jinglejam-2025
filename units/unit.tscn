@@ -16,6 +16,8 @@ damage = 10
 speed = 3.0
 attack_range = 0.0
 heal_armor_duration = 5.0
+separation_radius = 50.0
+separation_strength = 200.0
 
 [node name="Shadow" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 0.7647059)
