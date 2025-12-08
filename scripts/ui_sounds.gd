@@ -11,6 +11,7 @@ var audio_player: AudioStreamPlayer
 func _ready() -> void:
 	# Create audio player (non-positional for UI)
 	audio_player = AudioStreamPlayer.new()
+	audio_player.bus = "SFX"
 	add_child(audio_player)
 	
 	# Connect to tree signals to catch all buttons

@@ -19,9 +19,14 @@ func _ready() -> void:
 		push_warning("SoundToggleButton: Bus '%s' not found; using Master" % bus_name)
 		bus_index = AudioServer.get_bus_index("Master")
 	
+	# Only apply mute state if we have a valid bus index
+	if bus_index == -1:
+		push_warning("SoundToggleButton: Master bus not found; audio buses may not be initialized yet")
+		return
+	
 	# Initialize mute state (explicit start_muted takes priority)
 	var muted := start_muted
-	if not start_muted and bus_index != -1:
+	if not start_muted:
 		muted = AudioServer.is_bus_mute(bus_index)
 	_apply_mute_state(muted, bus_index)
 	
@@ -39,6 +44,10 @@ func _on_pressed() -> void:
 
 
 func _apply_mute_state(muted: bool, bus_index: int) -> void:
+	if bus_index == -1:
+		push_warning("SoundToggleButton: Cannot apply mute state; invalid bus index")
+		return
+	
 	AudioServer.set_bus_mute(bus_index, muted)
 	button_pressed = muted
 	_update_textures(muted)

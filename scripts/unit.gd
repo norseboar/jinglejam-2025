@@ -460,7 +460,7 @@ func receive_heal(amount: int) -> void:
 	current_hp = min(current_hp + amount, max_hp)
 
 	# Apply heal armor = half of heal amount (not stacking, just refresh)
-	heal_armor = amount / 2
+	heal_armor = floor(amount / 2.0)
 	heal_armor_timer = heal_armor_duration
 
 	# Update healthbar

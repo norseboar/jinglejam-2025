@@ -24,6 +24,7 @@ func _ready() -> void:
 	
 	# Create audio player for coin sound
 	audio_player = AudioStreamPlayer2D.new()
+	audio_player.bus = "SFX"
 	add_child(audio_player)
 	
 	# Start with opacity 0

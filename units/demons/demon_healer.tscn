@@ -50,6 +50,7 @@ position = Vector2(0, -11)
 texture = ExtResource("5_ad8s3")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX"
 
 [node name="Healthbar" parent="." instance=ExtResource("7_c0hlw")]
 position = Vector2(-13, 5)

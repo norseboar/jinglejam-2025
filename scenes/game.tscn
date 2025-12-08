@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=37 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="1_ca42v"]
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -32,6 +32,10 @@
 [ext_resource type="Resource" uid="uid://cptdpd3b8m1h0" path="res://units/rosters/starting_rosters/dwarves.tres" id="28_v2yb1"]
 [ext_resource type="Resource" uid="uid://dvenpd2yimxv5" path="res://units/rosters/starting_rosters/demons.tres" id="29_js0lu"]
 [ext_resource type="SpriteFrames" uid="uid://h0c0lfbqiyj8" path="res://assets/spriteframes/demons_archer.tres" id="29_sgl2t"]
+[ext_resource type="Texture2D" uid="uid://dfw3054d00mvj" path="res://assets/sprites/ui/sound1.png" id="33_twgab"]
+[ext_resource type="Texture2D" uid="uid://qpuxv3d6ifma" path="res://assets/sprites/ui/sound3.png" id="34_02fa5"]
+[ext_resource type="Texture2D" uid="uid://c2e2rntjvj64l" path="res://assets/sprites/ui/sound2.png" id="35_nepv3"]
+[ext_resource type="Script" uid="uid://gfq4k1nlmm6l" path="res://scripts/sound_toggle_button.gd" id="36_7025r"]
 
 [node name="Game" type="Control" node_paths=PackedStringArray("background_rect", "gameplay", "player_units", "enemy_units", "hud", "ui_layer", "faction_select_screen") groups=["game"]]
 texture_filter = 1
@@ -595,6 +599,26 @@ texture_normal = ExtResource("13_264po")
 texture_pressed = ExtResource("14_1kice")
 texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
+
+[node name="SoundToggle" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -45.0
+offset_top = -47.0
+offset_right = 19.0
+offset_bottom = 17.0
+grow_horizontal = 0
+grow_vertical = 0
+texture_normal = ExtResource("33_twgab")
+texture_pressed = ExtResource("34_02fa5")
+texture_hover = ExtResource("35_nepv3")
+script = ExtResource("36_7025r")
+sound_on_texture = ExtResource("33_twgab")
+sound_off_texture = ExtResource("34_02fa5")
 
 [node name="Gameplay" type="Node2D" parent="SubViewportContainer/SubViewport"]
 

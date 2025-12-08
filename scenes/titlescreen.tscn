@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://dspj2kekx0lyk"]
+[gd_scene load_steps=34 format=3 uid="uid://dspj2kekx0lyk"]
 
 [ext_resource type="Script" uid="uid://cklegvw7v1gri" path="res://scripts/titlescreen.gd" id="1_8or72"]
 [ext_resource type="Texture2D" uid="uid://wsvhwiqjpj24" path="res://assets/backgrounds/titlescreen.png" id="2_hcbn3"]
@@ -149,9 +149,6 @@ animations = [{
 "speed": 12.0
 }]
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_y7yat"]
-load_path = "res://.godot/imported/sound_button1.png-fd16c5ddc2833926b44f7b9b328a220e.ctex"
-
 [node name="titlescreen" type="Control" node_paths=PackedStringArray("start_button", "quit_button")]
 layout_mode = 3
 anchors_preset = 15
@@ -275,9 +272,9 @@ offset_bottom = -63.0
 grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(3, 3)
-texture_normal = SubResource("CompressedTexture2D_y7yat")
-texture_pressed = ExtResource("10_hcbn3")
-texture_hover = ExtResource("11_ybki2")
+texture_normal = ExtResource("13_lsij0")
+texture_pressed = ExtResource("11_ybki2")
+texture_hover = ExtResource("10_hcbn3")
 script = ExtResource("10_8or72")
 sound_on_texture = ExtResource("13_lsij0")
 sound_off_texture = ExtResource("10_hcbn3")
