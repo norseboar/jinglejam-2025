@@ -17,6 +17,12 @@ signal unit_slot_clicked(slot: UnitSlot)  # Pass the slot so parent knows which 
 @export var selection_node: Control  # Generic Control for selection visuals
 @export var background_node: Control  # Background Control node (e.g., Panel)
 
+# Upgrade sprite references (assign in inspector)
+@export var upgrade_background: Sprite2D  # Background sprite for upgrades
+@export var upgrade_1: Sprite2D  # Sprite for 1 upgrade
+@export var upgrade_2: Sprite2D  # Sprite for 2 upgrades
+@export var upgrade_3: Sprite2D  # Sprite for 3+ upgrades
+
 # Configuration
 @export var enable_drag_drop: bool = false  # Enable drag-and-drop support
 @export var selection_mode: SelectionMode = SelectionMode.CLICK  # How this slot is selected
@@ -38,6 +44,9 @@ func _ready() -> void:
 	if background_node:
 		background_node.visible = show_background
 	
+	# Initialize upgrade sprites as hidden
+	_update_upgrade_visibility(0)
+	
 	# Connect UnitSlot's own mouse signals for hover detection
 	if not mouse_entered.is_connected(_on_mouse_entered):
 		mouse_entered.connect(_on_mouse_entered)
@@ -53,6 +62,8 @@ func set_unit(army_unit: ArmyUnit) -> void:
 		if override_sprite_frames and animated_sprite:
 			animated_sprite.sprite_frames = null
 			animated_sprite.stop()
+		# Hide all upgrade sprites when slot is empty
+		_update_upgrade_visibility(0)
 		return
 	
 	# Extract SpriteFrames from the unit scene if overriding
@@ -62,6 +73,13 @@ func set_unit(army_unit: ArmyUnit) -> void:
 			animated_sprite.sprite_frames = sprite_frames
 	# Update animation state so selection visuals stay in sync with existing sprite frames
 	_update_animation_state()
+	
+	# Calculate total upgrades and update visibility
+	var total_upgrades := 0
+	if army_unit.upgrades:
+		for count in army_unit.upgrades.values():
+			total_upgrades += count
+	_update_upgrade_visibility(total_upgrades)
 
 func _update_animation_state() -> void:
 	"""Update animation based on selection state - animate when selected, static frame when not."""
@@ -133,6 +151,20 @@ func _gui_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			unit_slot_clicked.emit(self)
 			accept_event()
+
+func _update_upgrade_visibility(total_upgrades: int) -> void:
+	"""Update visibility of upgrade sprites based on total upgrade count."""
+	# Show background if there are any upgrades
+	if upgrade_background:
+		upgrade_background.visible = (total_upgrades > 0)
+	
+	# Show the appropriate upgrade level sprite (only one at a time)
+	if upgrade_1:
+		upgrade_1.visible = (total_upgrades == 1)
+	if upgrade_2:
+		upgrade_2.visible = (total_upgrades == 2)
+	if upgrade_3:
+		upgrade_3.visible = (total_upgrades >= 3)
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	"""Handle drag-and-drop when enabled."""

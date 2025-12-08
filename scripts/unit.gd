@@ -1,8 +1,10 @@
 extends Node2D
 class_name Unit
 
+const DamageNumberScene = preload("res://scenes/vfx/damage_number.tscn")
+
 # Signals
-signal enemy_unit_died(gold_reward: int, position: Vector2)  # Emitted by enemies with gold_reward and position
+signal enemy_unit_died(gold_reward: int, death_position: Vector2)  # Emitted by enemies with gold_reward and position
 signal player_unit_died(army_index: int)  # Emitted by player units with army_index
 
 # Stats
@@ -113,7 +115,7 @@ func _process(delta: float) -> void:
 		"moving":
 			_do_movement(delta)
 		"fighting":
-			_do_fighting(delta)
+			_do_fighting()
 		"dying":
 			pass  # Do nothing, unit is fading out
 
@@ -309,7 +311,7 @@ func _check_for_targets() -> void:
 		# Otherwise, we'll keep moving towards them (state stays "moving")
 
 
-func _do_fighting(delta: float) -> void:
+func _do_fighting() -> void:
 	# If we're already attacking, COMMIT to the attack - don't interrupt the animation
 	# This prevents units from snapping out of attack animations mid-swing
 	if is_attacking:
@@ -461,6 +463,9 @@ func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:
 		var total_armor := armor + heal_armor
 		final_damage = max(0, amount - total_armor)
 
+	# Spawn damage number
+	_spawn_damage_number(final_damage)
+
 	current_hp -= final_damage
 
 	# Update healthbar
@@ -475,6 +480,49 @@ func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:
 
 	if current_hp <= 0:
 		die()
+
+
+func _spawn_damage_number(damage_amount: int) -> void:
+	"""Spawn a floating damage number at this unit's position."""
+	var damage_number := DamageNumberScene.instantiate()
+
+	# Calculate spawn position at the top of the sprite
+	var spawn_position := global_position
+	if animated_sprite:
+		# Get sprite bounds
+		var sprite_height := 16.0  # Default fallback
+		if animated_sprite.sprite_frames:
+			var current_animation := animated_sprite.animation
+			if animated_sprite.sprite_frames.has_animation(current_animation):
+				var frame_count := animated_sprite.sprite_frames.get_frame_count(current_animation)
+				if frame_count > 0:
+					var frame_texture := animated_sprite.sprite_frames.get_frame_texture(current_animation, 0)
+					if frame_texture:
+						sprite_height = frame_texture.get_height()
+
+		# Position at top of sprite
+		spawn_position = animated_sprite.global_position + Vector2(0, -sprite_height / 2)
+
+	# Set position BEFORE adding as child (so _ready() sees correct position)
+	damage_number.global_position = spawn_position
+
+	# Setup the damage number BEFORE adding as child (so _ready() can use the setup data)
+	damage_number.setup(damage_amount)
+
+	# Find the parent container to add the damage number to
+	# We want to add it to the same level as units (not as a child of this unit)
+	var world_container: Node2D = null
+	if is_enemy and enemy_container != null:
+		world_container = enemy_container.get_parent()
+	elif not is_enemy and friendly_container != null:
+		world_container = friendly_container.get_parent()
+
+	if world_container == null:
+		# Fallback: use parent
+		world_container = get_parent()
+
+	# Add to world - this triggers _ready() which starts the animation
+	world_container.add_child(damage_number)
 
 
 func receive_heal(amount: int) -> void:

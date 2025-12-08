@@ -25,6 +25,8 @@ signal draft_complete()
 @export var upgrade_label_2: Label
 @export var upgrade_label_3: Label
 @export var upgrade_price_label: Label
+@export var sell_button: BaseButton
+@export var sell_price_label: Label
 
 # Recruit pane references
 @export var recruit_instructions: Node
@@ -54,6 +56,12 @@ var enemy_slots: Array[UnitSlot] = []
 var army_ref: Array = []
 var enemies_faced_ref: Array = []
 
+# Store button parents for proper removal/adding
+var start_battle_button_parent: Node = null
+var continue_button_parent: Node = null
+var start_battle_button_index: int = -1
+var continue_button_index: int = -1
+
 
 func _ready() -> void:
 	# Connect continue button
@@ -75,6 +83,10 @@ func _ready() -> void:
 		upgrade_button_2.pressed.connect(_on_upgrade_button_pressed.bind(1))
 	if upgrade_button_3:
 		upgrade_button_3.pressed.connect(_on_upgrade_button_pressed.bind(2))
+
+	# Connect sell button
+	if sell_button:
+		sell_button.pressed.connect(_on_sell_button_pressed)
 
 	# Hide editor background at runtime
 	hide_editor_background()
@@ -195,13 +207,73 @@ func _update_mode_display() -> void:
 	if recruit_label:
 		recruit_label.visible = not is_draft_mode
 
-	# Show/hide appropriate button
-	if start_battle_button:
-		start_battle_button.visible = is_draft_mode
-		# Disable until army has at least 1 unit
-		start_battle_button.disabled = army_ref.size() < 1
-	if continue_button:
-		continue_button.visible = not is_draft_mode
+	# Store button parent references on first call
+	if start_battle_button and start_battle_button_parent == null:
+		start_battle_button_parent = start_battle_button.get_parent()
+		if start_battle_button_parent:
+			start_battle_button_index = start_battle_button.get_index()
+	
+	if continue_button and continue_button_parent == null:
+		continue_button_parent = continue_button.get_parent()
+		if continue_button_parent:
+			continue_button_index = continue_button.get_index()
+
+	# Show/hide appropriate button by removing/adding to tree
+	# This ensures the VBoxContainer shrinks properly
+	var vbox_container: VBoxContainer = null
+	if start_battle_button_parent and start_battle_button_parent is VBoxContainer:
+		vbox_container = start_battle_button_parent as VBoxContainer
+	
+	if start_battle_button and start_battle_button_parent:
+		if is_draft_mode:
+			# Add button if not already in tree
+			if not start_battle_button.get_parent():
+				if start_battle_button_index >= 0:
+					start_battle_button_parent.add_child(start_battle_button)
+					start_battle_button_parent.move_child(start_battle_button, start_battle_button_index)
+				else:
+					start_battle_button_parent.add_child(start_battle_button)
+			start_battle_button.visible = true
+			# Disable until army has at least 1 unit
+			start_battle_button.disabled = army_ref.size() < 1
+		else:
+			# Remove button from tree when not needed
+			if start_battle_button.get_parent():
+				start_battle_button_parent.remove_child(start_battle_button)
+	
+	if continue_button and continue_button_parent:
+		if not is_draft_mode:
+			# Add button if not already in tree
+			if not continue_button.get_parent():
+				if continue_button_index >= 0:
+					continue_button_parent.add_child(continue_button)
+					continue_button_parent.move_child(continue_button, continue_button_index)
+				else:
+					continue_button_parent.add_child(continue_button)
+			continue_button.visible = true
+		else:
+			# Remove button from tree when not needed
+			if continue_button.get_parent():
+				continue_button_parent.remove_child(continue_button)
+	
+	# Force VBoxContainer and PanelContainer to recalculate layout
+	if vbox_container:
+		# Update VBoxContainer first
+		vbox_container.queue_sort()
+		
+		# Force parent PanelContainer to reset its size
+		var panel_container := vbox_container.get_parent()
+		if panel_container and panel_container is PanelContainer:
+			# Reset the size to minimum so it recalculates based on content
+			panel_container.reset_size()
+			# Also queue sort to ensure proper layout
+			call_deferred("_force_panel_resize", panel_container)
+
+
+func _force_panel_resize(panel: PanelContainer) -> void:
+	"""Helper to force panel to recalculate its size."""
+	if panel:
+		panel.reset_size()
 
 
 func hide_upgrade_screen() -> void:
@@ -237,6 +309,27 @@ func _populate_army_tray(slot_group: UnitSlotGroup, units: Array) -> void:
 
 		# Reset selection state
 		slot.set_selected(false)
+
+
+func _refresh_army_tray_slot(slot_index: int) -> void:
+	"""Refresh a specific army tray slot to update upgrade visuals."""
+	if slot_index < 0 or slot_index >= army_slots.size():
+		return
+	
+	if slot_index >= army_ref.size():
+		return
+	
+	var slot := army_slots[slot_index]
+	var army_unit = army_ref[slot_index]
+	
+	# Preserve selection state
+	var was_selected := slot.is_selected
+	
+	# Update the unit (this will refresh upgrade visuals)
+	slot.set_unit(army_unit)
+	
+	# Restore selection state
+	slot.set_selected(was_selected)
 
 
 func _populate_enemy_tray(slot_group: UnitSlotGroup, units: Array) -> void:
@@ -340,6 +433,11 @@ func _refresh_upgrade_pane() -> void:
 			upgrade_button_2.disabled = true
 		if upgrade_button_3:
 			upgrade_button_3.disabled = true
+		# Disable sell button when no unit selected
+		if sell_button:
+			sell_button.disabled = true
+		if sell_price_label:
+			sell_price_label.text = ""
 		return
 
 	# Has selection - hide instructions, show data
@@ -362,9 +460,26 @@ func _refresh_upgrade_pane() -> void:
 	if unit_summary:
 		unit_summary.show_unit_from_scene(army_unit.unit_scene, army_unit.upgrades)
 
+	# Disable all buttons if maxed
+	var maxed := total_upgrades >= 3
+
 	# Update upgrade price label
 	if upgrade_price_label:
-		upgrade_price_label.text = "Upgrade: %d Gold" % upgrade_cost
+		if maxed:
+			upgrade_price_label.text = "Upgrade limit reached"
+		else:
+			upgrade_price_label.text = "Upgrade: %d Gold" % upgrade_cost
+
+	# Calculate and display sell price (half of base cost + upgrade costs)
+	var base_cost := _get_unit_base_recruit_cost(army_unit.unit_scene)
+	var total_upgrade_cost := upgrade_cost * total_upgrades
+	var sell_price := int((base_cost + total_upgrade_cost) / 2.0)
+	if sell_price_label:
+		sell_price_label.text = "+%d gold" % sell_price
+
+	# Enable sell button (always enabled when unit is selected)
+	if sell_button:
+		sell_button.disabled = false
 
 	# Get available upgrades from unit scene
 	var unit_instance := army_unit.unit_scene.instantiate() as Unit
@@ -373,9 +488,6 @@ func _refresh_upgrade_pane() -> void:
 		return
 	var available_upgrades := unit_instance.available_upgrades
 	unit_instance.queue_free()
-
-	# Disable all buttons if maxed
-	var maxed := total_upgrades >= 3
 
 	# Populate each upgrade slot (0-2)
 	var upgrade_buttons := [upgrade_button_1, upgrade_button_2, upgrade_button_3]
@@ -569,8 +681,73 @@ func _on_upgrade_button_pressed(slot_index: int) -> void:
 	if unit_summary:
 		unit_summary.update_stats(army_unit.upgrades)
 
+	# Refresh the army tray to update upgrade visuals
+	_refresh_army_tray_slot(selected_army_index)
+
 	# Refresh pane (updates button states and text)
 	_refresh_upgrade_pane()
+
+
+func _on_sell_button_pressed() -> void:
+	"""Handle Sell button press."""
+	if selected_army_index < 0 or selected_army_index >= army_ref.size():
+		return
+
+	var army_unit = army_ref[selected_army_index]
+	
+	# Calculate sell price (half of base cost + upgrade costs)
+	var base_cost := _get_unit_base_recruit_cost(army_unit.unit_scene)
+	var upgrade_cost := _get_unit_upgrade_cost(army_unit.unit_scene)
+	var total_upgrades := _get_total_upgrades(army_unit.upgrades)
+	var total_upgrade_cost := upgrade_cost * total_upgrades
+	var sell_price := int((base_cost + total_upgrade_cost) / 2.0)
+	
+	# Get game instance
+	var game := _get_game()
+	if game == null:
+		return
+	
+	# Remove unit from army_ref
+	army_ref.remove_at(selected_army_index)
+	
+	# Also remove from game's army array (they should be the same reference)
+	if game.army.size() > selected_army_index:
+		game.army.remove_at(selected_army_index)
+	
+	# Give gold
+	game.add_gold(sell_price)
+	
+	# Select next unit (or deselect if no units left)
+	if army_ref.size() > 0:
+		# Select the same index (which now points to the next unit) or the last unit if we removed the last one
+		var next_index: int = min(selected_army_index, army_ref.size() - 1)
+		selected_army_index = next_index
+		
+		# Update selection in tray
+		if next_index < army_slots.size():
+			# Deselect previous
+			for slot in army_slots:
+				if slot:
+					slot.set_selected(false)
+			# Select new
+			army_slots[next_index].set_selected(true)
+	else:
+		# No units left, deselect
+		selected_army_index = -1
+		for slot in army_slots:
+			if slot:
+				slot.set_selected(false)
+	
+	# Refresh army tray
+	_populate_army_tray(army_slot_group, army_ref)
+	
+	# Update selection after refreshing tray
+	if selected_army_index >= 0 and selected_army_index < army_slots.size():
+		army_slots[selected_army_index].set_selected(true)
+	
+	# Refresh upgrade pane (will show instructions if no unit selected)
+	_refresh_upgrade_pane()
+
 
 func _on_recruit_button_pressed() -> void:
 	"""Handle Recruit button press."""

@@ -1,12 +1,16 @@
-[gd_scene load_steps=6 format=3 uid="uid://b70pbcw3dkq1y"]
+[gd_scene load_steps=10 format=3 uid="uid://b70pbcw3dkq1y"]
 
 [ext_resource type="Texture2D" uid="uid://b31oq7excrdy7" path="res://assets/sprites/ui/unit-slot.png" id="1_1lbe2"]
 [ext_resource type="Script" uid="uid://c4vfmh2r3cdo8" path="res://scripts/unit_slot.gd" id="1_7qvqg"]
 [ext_resource type="PackedScene" uid="uid://s7jjret7o6yr" path="res://scenes/ui/drag_preview.tscn" id="2_5hopu"]
 [ext_resource type="Texture2D" uid="uid://brevdaw0koj0g" path="res://assets/sprites/ui/unit_slot_highlight.png" id="2_c56av"]
 [ext_resource type="SpriteFrames" uid="uid://d23wfea1q7erd" path="res://assets/spriteframes/dwarf_spearman.tres" id="3_7qvqg"]
+[ext_resource type="Texture2D" uid="uid://cjyd4n8c2bfeo" path="res://assets/sprites/healthbar/upgrade_slot.png" id="5_rgj61"]
+[ext_resource type="Texture2D" uid="uid://dpwng0bf2vqtp" path="res://assets/sprites/ui/upgrades_icons1.png" id="6_vh82s"]
+[ext_resource type="Texture2D" uid="uid://cho112nbh4u2i" path="res://assets/sprites/ui/upgrades_icons2.png" id="7_r0j0q"]
+[ext_resource type="Texture2D" uid="uid://d175gqkut1wr0" path="res://assets/sprites/ui/upgrades_icons3.png" id="8_0tdst"]
 
-[node name="UnitSlot" type="Control" node_paths=PackedStringArray("animated_sprite", "selection_node", "background_node")]
+[node name="UnitSlot" type="Control" node_paths=PackedStringArray("animated_sprite", "selection_node", "background_node", "upgrade_background", "upgrade_1", "upgrade_2", "upgrade_3")]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 3
 anchors_preset = 15
@@ -20,6 +24,10 @@ script = ExtResource("1_7qvqg")
 animated_sprite = NodePath("Panel/AnimatedSprite2D")
 selection_node = NodePath("SelectionIndicator")
 background_node = NodePath("Background")
+upgrade_background = NodePath("Panel/Upgrades/Background")
+upgrade_1 = NodePath("Panel/Upgrades/Upgrade1")
+upgrade_2 = NodePath("Panel/Upgrades/Upgrade2")
+upgrade_3 = NodePath("Panel/Upgrades/Upgrade3")
 show_background = false
 drag_preview_scene = ExtResource("2_5hopu")
 
@@ -48,6 +56,24 @@ mouse_filter = 2
 position = Vector2(16, 8)
 sprite_frames = ExtResource("3_7qvqg")
 animation = &"idle"
+
+[node name="Upgrades" type="Node2D" parent="Panel"]
+position = Vector2(25, 24)
+
+[node name="Background" type="Sprite2D" parent="Panel/Upgrades"]
+texture = ExtResource("5_rgj61")
+
+[node name="Upgrade1" type="Sprite2D" parent="Panel/Upgrades"]
+position = Vector2(1, -4)
+texture = ExtResource("6_vh82s")
+
+[node name="Upgrade2" type="Sprite2D" parent="Panel/Upgrades"]
+position = Vector2(1, -3)
+texture = ExtResource("7_r0j0q")
+
+[node name="Upgrade3" type="Sprite2D" parent="Panel/Upgrades"]
+position = Vector2(1, -2)
+texture = ExtResource("8_0tdst")
 
 [node name="SelectionIndicator" type="TextureRect" parent="."]
 visible = false

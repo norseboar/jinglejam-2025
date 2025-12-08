@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://8a00w6ku7u8e"]
+
+[ext_resource type="Script" uid="uid://biexakmskgxro" path="res://scripts/damage_number.gd" id="1_e30wg"]
+[ext_resource type="FontFile" uid="uid://bdq04newhb08v" path="res://resources/Jacquard12-Regular.ttf" id="2_f3kch"]
+
+[node name="DamageNumber" type="Node2D"]
+script = ExtResource("1_e30wg")
+color = Color(0.99747676, 0.94605, 0.939638, 1)
+float_distance = 20.0
+random_horizontal_range = 10.0
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 21.0
+theme_override_fonts/font = ExtResource("2_f3kch")
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1

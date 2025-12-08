@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cylo0gvp21l7i"]
+[gd_scene load_steps=10 format=3 uid="uid://cylo0gvp21l7i"]
 
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_t42t4"]
 [ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_unit"]
@@ -8,6 +8,7 @@
 [ext_resource type="Resource" uid="uid://dhaa5yrfn7frh" path="res://upgrades/hp_20.tres" id="3_q28u0"]
 [ext_resource type="Resource" uid="uid://bjhdh7tc83o52" path="res://upgrades/dmg_10.tres" id="4_geo24"]
 [ext_resource type="Resource" uid="uid://l0bc24e1i7ds" path="res://upgrades/atk_spd_1.tres" id="5_ijv5w"]
+[ext_resource type="Texture2D" uid="uid://b62qqkkay4v5i" path="res://assets/sprites/shadow.png" id="8_c4m5s"]
 
 [node name="Ogre" instance=ExtResource("1_unit")]
 script = ExtResource("1_t42t4")
@@ -25,13 +26,16 @@ upgrade_cost = 10
 available_upgrades = Array[ExtResource("2_q28u0")]([ExtResource("3_q28u0"), ExtResource("4_geo24"), ExtResource("5_ijv5w")])
 damage_sounds = Array[AudioStream]([ExtResource("2_4ly1c")])
 
-[node name="AnimatedSprite2D" parent="." index="0"]
+[node name="Shadow" parent="." index="0"]
+texture = ExtResource("8_c4m5s")
+
+[node name="AnimatedSprite2D" parent="." index="1"]
 sprite_frames = ExtResource("2_t42t4")
 autoplay = "idle"
 frame_progress = 0.5988431
 
-[node name="UpgradeMarkers" parent="." index="2"]
+[node name="UpgradeMarkers" parent="." index="3"]
 position = Vector2(4, -7)
 
-[node name="Healthbar" parent="." index="3"]
+[node name="Healthbar" parent="." index="4"]
 position = Vector2(4, -15)

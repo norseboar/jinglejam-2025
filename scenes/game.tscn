@@ -1,4 +1,4 @@
-[gd_scene load_steps=59 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=66 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="1_ca42v"]
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="3_05nbr"]
 [ext_resource type="Texture2D" uid="uid://bxnr8frb2awil" path="res://assets/backgrounds/autumn-leaves-forest.jpg" id="4_0sl42"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="5_oaba0"]
-[ext_resource type="Texture2D" uid="uid://qguwsk400gqy" path="res://assets/backgrounds/chess_table.jpg" id="5_p57ef"]
 [ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="6_458eo"]
 [ext_resource type="PackedScene" uid="uid://c0d47vd87vlmt" path="res://scenes/ui/hud.tscn" id="6_p57ef"]
 [ext_resource type="Script" uid="uid://bwkdnef87rpc7" path="res://scripts/upgrade_screen.gd" id="7_0tnpc"]
@@ -39,8 +38,13 @@
 [ext_resource type="Texture2D" uid="uid://belfmhbyw1w1s" path="res://assets/sprites/ui/buy_button/buy_button_pressed.png" id="19_bt5mj"]
 [ext_resource type="Texture2D" uid="uid://cadwb1i3siefs" path="res://assets/sprites/ui/buy_button/buy_button_highlight.png" id="20_e1j6l"]
 [ext_resource type="Script" uid="uid://d4eh8dp6lwy7d" path="res://scripts/tinted_button.gd" id="23_pl11u"]
+[ext_resource type="Texture2D" uid="uid://bduybapepv747" path="res://assets/sprites/human/Knight.png" id="26_3hbvx"]
+[ext_resource type="Material" uid="uid://cyw5aohyrrd4p" path="res://resources/background_mat.tres" id="26_q8j3a"]
+[ext_resource type="Texture2D" uid="uid://1xufpkwejdwp" path="res://resources/background_gradient_tex.tres" id="27_ms3bu"]
+[ext_resource type="Texture2D" uid="uid://01p7222oltqo" path="res://assets/sprites/demons/demons_archer.png" id="27_q8j3a"]
 [ext_resource type="Texture2D" uid="uid://do3fnx1lc1ppm" path="res://assets/sprites/ui/map.png" id="27_v2yb1"]
 [ext_resource type="Script" uid="uid://ba8mk545ccyla" path="res://scripts/faction_select_screen.gd" id="27_wljb1"]
+[ext_resource type="Texture2D" uid="uid://b674x3rq0v6h7" path="res://assets/sprites/dwarves/dwarf_satcheler.png" id="28_ms3bu"]
 [ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/spriteframes/knight.tres" id="28_suyxu"]
 [ext_resource type="Resource" uid="uid://cptdpd3b8m1h0" path="res://units/rosters/starting_rosters/dwarves.tres" id="28_v2yb1"]
 [ext_resource type="Resource" uid="uid://dvenpd2yimxv5" path="res://units/rosters/starting_rosters/demons.tres" id="29_js0lu"]
@@ -48,7 +52,10 @@
 [ext_resource type="Texture2D" uid="uid://dfw3054d00mvj" path="res://assets/sprites/ui/sound1.png" id="33_twgab"]
 [ext_resource type="Texture2D" uid="uid://qpuxv3d6ifma" path="res://assets/sprites/ui/sound3.png" id="34_02fa5"]
 [ext_resource type="Texture2D" uid="uid://c2e2rntjvj64l" path="res://assets/sprites/ui/sound2.png" id="35_nepv3"]
+[ext_resource type="Texture2D" uid="uid://dfsqxqvqsgdla" path="res://assets/sprites/ui/sell_button/sell_button.png" id="35_pf7vy"]
 [ext_resource type="Script" uid="uid://gfq4k1nlmm6l" path="res://scripts/sound_toggle_button.gd" id="36_7025r"]
+[ext_resource type="Texture2D" uid="uid://riiup36r0iud" path="res://assets/sprites/ui/sell_button/sell_button_pressed.png" id="36_o8ni1"]
+[ext_resource type="Texture2D" uid="uid://d3jjil1h762ms" path="res://assets/sprites/ui/sell_button/sell_button_highlight.png" id="37_3hbvx"]
 
 [sub_resource type="PackedScene" id="PackedScene_o8ni1"]
 _bundled = {
@@ -160,14 +167,57 @@ faction_select_screen = NodePath("SubViewportContainer/SubViewport/UI/HUD/Factio
 
 [node name="BackgroundRect" type="TextureRect" parent="."]
 texture_filter = 2
+material = ExtResource("26_q8j3a")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("5_p57ef")
+texture = ExtResource("4_0sl42")
 expand_mode = 3
+
+[node name="TextureRect" type="TextureRect" parent="BackgroundRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("27_ms3bu")
+
+[node name="TestUnits" type="Node2D" parent="."]
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="TestUnits"]
+position = Vector2(282, 338)
+texture = ExtResource("26_3hbvx")
+hframes = 10
+vframes = 4
+
+[node name="Sprite2D2" type="Sprite2D" parent="TestUnits"]
+position = Vector2(398, 344)
+texture = ExtResource("26_3hbvx")
+hframes = 10
+vframes = 4
+
+[node name="Sprite2D3" type="Sprite2D" parent="TestUnits"]
+position = Vector2(345, 317)
+texture = ExtResource("26_3hbvx")
+hframes = 10
+vframes = 4
+
+[node name="Sprite2D4" type="Sprite2D" parent="TestUnits"]
+position = Vector2(477, 337)
+texture = ExtResource("27_q8j3a")
+hframes = 10
+vframes = 4
+
+[node name="Sprite2D5" type="Sprite2D" parent="TestUnits"]
+position = Vector2(579, 345)
+texture = ExtResource("28_ms3bu")
+hframes = 10
+vframes = 4
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
 layout_mode = 1
@@ -196,7 +246,8 @@ offset_bottom = 0.0
 upgrade_screen = NodePath("UpgradeScreen")
 battle_select_screen = NodePath("BattleSelectScreen")
 
-[node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "start_battle_button", "editor_background", "upgrade_instructions", "upgrade_data", "upgrade_button_1", "upgrade_button_2", "upgrade_button_3", "upgrade_label_1", "upgrade_label_2", "upgrade_label_3", "upgrade_price_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_price_label", "gold_label", "draft_label", "recruit_label")]
+[node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "start_battle_button", "editor_background", "upgrade_instructions", "upgrade_data", "upgrade_button_1", "upgrade_button_2", "upgrade_button_3", "upgrade_label_1", "upgrade_label_2", "upgrade_label_3", "upgrade_price_label", "sell_button", "sell_price_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_price_label", "gold_label", "draft_label", "recruit_label")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -219,6 +270,8 @@ upgrade_label_1 = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBox
 upgrade_label_2 = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup2/Label")
 upgrade_label_3 = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup3/Label")
 upgrade_price_label = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/UpgradePriceLabel")
+sell_button = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer/SellButton")
+sell_price_label = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer/SellLabel")
 recruit_instructions = NodePath("Control/RecruitPane/MarginContainer/RecruitInstructions")
 recruit_data = NodePath("Control/RecruitPane/MarginContainer/RecruitData")
 recruit_button = NodePath("Control/RecruitPane/MarginContainer/RecruitData/VBoxContainer2/RecruitButton")
@@ -438,6 +491,31 @@ texture_pressed = ExtResource("19_bt5mj")
 texture_hover = ExtResource("20_e1j6l")
 script = ExtResource("23_pl11u")
 
+[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -76.0
+offset_bottom = 53.0
+grow_horizontal = 0
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="SellButton" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+texture_normal = ExtResource("35_pf7vy")
+texture_pressed = ExtResource("36_o8ni1")
+texture_hover = ExtResource("37_3hbvx")
+script = ExtResource("23_pl11u")
+
+[node name="SellLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer"]
+layout_mode = 2
+text = "+5 Gold"
+horizontal_alignment = 2
+
 [node name="RecruitPane" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control"]
 layout_mode = 0
 offset_left = 32.1875
@@ -517,7 +595,7 @@ anchor_bottom = 1.0
 offset_left = -64.0
 offset_top = -130.5
 offset_right = 48.0
-offset_bottom = 28.5
+offset_bottom = 10.5
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -526,7 +604,6 @@ layout_mode = 2
 
 [node name="GoldLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/CenterPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 34
 text = "Gold: 10"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -546,6 +623,7 @@ texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
 [node name="BattleSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("options_container", "advance_button")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -618,7 +696,6 @@ texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
 [node name="FactionSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("slot_group", "confirm_button", "faction_name_label")]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -656,6 +733,16 @@ grow_vertical = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer"]
 layout_mode = 2
 alignment = 1
+
+[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "The realm has fractured into ten roaming armies.
+Win battles to unite them under your banner. Lose, and join one of theirs."
+
+[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+color = Color(0.42352942, 0.11372549, 0.105882354, 1)
 
 [node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
 layout_mode = 2

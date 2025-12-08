@@ -172,14 +172,14 @@ func _execute_attack() -> void:
 	get_tree().create_timer(hit_delay).timeout.connect(func(): _spawn_artillery_projectile(strike_data))
 
 
-func _spawn_target_marker(position: Vector2) -> Node2D:
+func _spawn_target_marker(target_pos: Vector2) -> Node2D:
 	if target_marker_scene == null:
 		push_warning("ArtilleryUnit has no target_marker_scene assigned!")
 		return null
 	
 	var marker := target_marker_scene.instantiate()
 	get_parent().add_child(marker)
-	marker.global_position = position
+	marker.global_position = target_pos
 	return marker
 
 

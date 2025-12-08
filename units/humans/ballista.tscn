@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bbev3r4fqct55"]
+[gd_scene load_steps=18 format=3 uid="uid://bbev3r4fqct55"]
 
 [ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_2rwqy"]
 [ext_resource type="Script" uid="uid://c36sx2wogsgew" path="res://scripts/archer.gd" id="1_tjwou"]
@@ -16,6 +16,7 @@
 [ext_resource type="AudioStream" uid="uid://2lkd2k6y1ddb" path="res://assets/sfx/ballista_impact/Spear Stab (Flesh) 3.wav" id="9_0mfv7"]
 [ext_resource type="AudioStream" uid="uid://bjyd8dpa46bg8" path="res://assets/sfx/ballista_impact/Sword Stab (Flesh) 1.wav" id="10_0665g"]
 [ext_resource type="AudioStream" uid="uid://dh6lq4f7flo5w" path="res://assets/sfx/ballista_impact/Sword Stab (Flesh) 3.wav" id="11_oqas3"]
+[ext_resource type="Texture2D" uid="uid://dbgdxykfdbs22" path="res://assets/sprites/shadow_large.png" id="16_0mfv7"]
 
 [node name="Ballista" instance=ExtResource("1_2rwqy")]
 script = ExtResource("1_tjwou")
@@ -42,13 +43,17 @@ damage_sounds = Array[AudioStream]([])
 fire_sounds = Array[AudioStream]([ExtResource("4_rbs72"), ExtResource("5_3daft"), ExtResource("6_memip"), ExtResource("7_drwih")])
 impact_sounds = Array[AudioStream]([ExtResource("8_12rvi"), ExtResource("9_0mfv7"), ExtResource("10_0665g"), ExtResource("11_oqas3")])
 
-[node name="AnimatedSprite2D" parent="." index="0"]
+[node name="Shadow" parent="." index="0"]
+position = Vector2(-3, 0)
+texture = ExtResource("16_0mfv7")
+
+[node name="AnimatedSprite2D" parent="." index="1"]
 sprite_frames = ExtResource("3_tjwou")
 frame = 8
 frame_progress = 0.668208
 
-[node name="UpgradeMarkers" parent="." index="2"]
+[node name="UpgradeMarkers" parent="." index="3"]
 position = Vector2(0, 5)
 
-[node name="Healthbar" parent="." index="3"]
+[node name="Healthbar" parent="." index="4"]
 position = Vector2(0, -3)

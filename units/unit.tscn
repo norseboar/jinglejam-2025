@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://b6ra1cx32f7ve"]
+[gd_scene load_steps=9 format=3 uid="uid://b6ra1cx32f7ve"]
 
 [ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/spriteframes/knight.tres" id="1_6k8ya"]
 [ext_resource type="Script" uid="uid://bwvnqebjgqrsx" path="res://scripts/unit.gd" id="1_33c7x"]
+[ext_resource type="Texture2D" uid="uid://8aad1pv6e4x" path="res://assets/sprites/shadow_small.png" id="2_hyvs3"]
 [ext_resource type="Texture2D" uid="uid://cjyd4n8c2bfeo" path="res://assets/sprites/healthbar/upgrade_slot.png" id="3_vtl0n"]
 [ext_resource type="Texture2D" uid="uid://dpwng0bf2vqtp" path="res://assets/sprites/ui/upgrades_icons1.png" id="4_hyvs3"]
 [ext_resource type="Texture2D" uid="uid://cho112nbh4u2i" path="res://assets/sprites/ui/upgrades_icons2.png" id="5_urgnh"]
@@ -15,6 +16,10 @@ damage = 10
 speed = 3.0
 attack_range = 0.0
 heal_armor_duration = 5.0
+
+[node name="Shadow" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.7647059)
+texture = ExtResource("2_hyvs3")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("1_6k8ya")

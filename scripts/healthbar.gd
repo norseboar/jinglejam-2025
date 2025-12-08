@@ -1,7 +1,7 @@
 extends Node2D
 class_name Healthbar
 
-## Healthbar component that displays unit health with a vertical fill bar.
+## Healthbar component that displays unit health with a horizontal fill bar.
 ## Fill color changes based on alignment (player = green, enemy = red).
 
 @export var player_color: Color = Color(0.2, 0.8, 0.2)  # Green for player units
@@ -9,7 +9,7 @@ class_name Healthbar
 @export var fill: Sprite2D = null
 
 var is_enemy: bool = false
-var fill_texture_height: float = 0.0
+var fill_texture_width: float = 0.0
 var fill_original_position: Vector2 = Vector2.ZERO
 var original_x_position: float = 0.0
 
@@ -21,13 +21,13 @@ func _ready() -> void:
 	# Set initial color based on alignment
 	_update_color()
 	
-	# Get the texture height for region calculations
+	# Get the texture width for region calculations
 	if fill and fill.texture:
-		fill_texture_height = fill.texture.get_height()
+		fill_texture_width = fill.texture.get_width()
 		fill_original_position = fill.position
 		# Enable region mode
 		fill.region_enabled = true
-		fill.region_rect = Rect2(0, 0, fill.texture.get_width(), fill_texture_height)
+		fill.region_rect = Rect2(0, 0, fill_texture_width, fill.texture.get_height())
 
 
 func set_alignment(enemy: bool) -> void:
@@ -49,32 +49,31 @@ func update_health(current_hp: int, max_hp: int) -> void:
 		return
 	
 	if max_hp <= 0:
-		fill.region_rect.size.y = 0.0
+		fill.region_rect.size.x = 0.0
 		return
 	
 	# Calculate health fraction (0.0 to 1.0)
 	var health_fraction := clampf(float(current_hp) / float(max_hp), 0.0, 1.0)
 	
-	# Update region rect to show only the health portion (drains from top)
-	var visible_height := fill_texture_height * health_fraction
-	var y_start := fill_texture_height - visible_height
+	# Update region rect to show only the health portion (fills from left)
+	var visible_width := fill_texture_width * health_fraction
 	
 	fill.region_rect = Rect2(
 		0, 
-		y_start,
-		fill.texture.get_width(), 
-		visible_height
+		0,
+		visible_width, 
+		fill.texture.get_height()
 	)
 	
-	# Adjust position to keep the bar anchored at the bottom
-	# The center of the region moves as we change y_start and height
+	# Adjust position to keep the bar anchored at the left
+	# The center of the region moves as we change width
 	if fill.centered:
-		# With centered = true, adjust position to keep bottom edge fixed
-		var height_lost := fill_texture_height - visible_height
-		fill.position = fill_original_position + Vector2(0, height_lost / 2.0)
+		# With centered = true, adjust position to keep left edge fixed
+		var width_lost := fill_texture_width - visible_width
+		fill.position = fill_original_position + Vector2(-width_lost / 2.0, 0)
 	else:
-		# With centered = false, adjust offset to compensate for region y position
-		fill.offset = Vector2(fill.offset.x, y_start)
+		# With centered = false, no offset adjustment needed for horizontal bars
+		fill.offset = Vector2(fill.offset.x, fill.offset.y)
 
 
 func _update_color() -> void:

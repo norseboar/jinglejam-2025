@@ -74,7 +74,9 @@ func stop_music() -> void:
 
 func _start_track_immediate(track: AudioStream) -> void:
 	"""Start playing a track immediately without crossfade."""
-	current_player.stream = track
+	# Ensure the track loops
+	var looping_track = _ensure_looping(track)
+	current_player.stream = looping_track
 	current_player.volume_db = 0
 	current_player.play()
 	current_track = track
@@ -88,7 +90,9 @@ func _crossfade_to(track: AudioStream) -> void:
 	next_player = old_player
 	
 	# Start new track on current_player (start silent)
-	current_player.stream = track
+	# Ensure the track loops
+	var looping_track = _ensure_looping(track)
+	current_player.stream = looping_track
 	current_player.volume_db = -80
 	current_player.play()
 	current_track = track
@@ -122,3 +126,22 @@ func play_jingle_and_duck(jingle: AudioStream) -> void:
 	jingle_player.play()
 	
 	# Note: Music stays ducked until next play_track() call, which will crossfade to full volume
+
+
+func _ensure_looping(track: AudioStream) -> AudioStream:
+	"""Ensure an AudioStream is set to loop. Returns a duplicated stream with loop enabled."""
+	if track == null:
+		return track
+	
+	# Duplicate the stream so we don't modify the original resource
+	var duplicated = track.duplicate()
+	
+	# Set loop property based on stream type
+	if duplicated is AudioStreamMP3:
+		(duplicated as AudioStreamMP3).loop = true
+	elif duplicated is AudioStreamOggVorbis:
+		(duplicated as AudioStreamOggVorbis).loop = true
+	elif duplicated is AudioStreamWAV:
+		(duplicated as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD
+	
+	return duplicated
