@@ -8,7 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://cg6bkuvamg6qw" path="res://assets/sfx/ballista_fire/Arrow Flying Past 6.wav" id="4_rbs72"]
 [ext_resource type="Resource" uid="uid://d4baw5bu55blw" path="res://upgrades/rng_5.tres" id="5_0mfv7"]
 [ext_resource type="AudioStream" uid="uid://bh5723g2yqg4d" path="res://assets/sfx/ballista_fire/Arrow Flying Past 4.wav" id="5_3daft"]
-[ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_10.tres" id="6_0665g"]
+[ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_5.tres" id="6_0665g"]
 [ext_resource type="AudioStream" uid="uid://by5mc88ekd85k" path="res://assets/sfx/ballista_fire/Arrow Flying Past 2.wav" id="6_memip"]
 [ext_resource type="AudioStream" uid="uid://clkxbtrofemwc" path="res://assets/sfx/ballista_fire/Arrow Flying Past 1.wav" id="7_drwih"]
 [ext_resource type="Resource" uid="uid://l0bc24e1i7ds" path="res://upgrades/atk_spd_1.tres" id="7_oqas3"]
@@ -29,8 +29,8 @@ projectile_ignore_until_target = false
 projectile_force_aoe_only = false
 max_hp = 20
 damage = 20
-speed = 50.0
-attack_range = 400.0
+speed = 4.0
+attack_range = 5.0
 attack_speed = 4
 attack_damage_frame = 3
 priority = 2

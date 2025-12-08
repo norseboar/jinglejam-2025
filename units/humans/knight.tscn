@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_8w6po"]
 [ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="3_srxh6"]
 [ext_resource type="Resource" uid="uid://bqm8cfthlmkbj" path="res://upgrades/hp_10.tres" id="4_6ixyc"]
-[ext_resource type="Resource" uid="uid://bi8au7qa005et" path="res://upgrades/def_5.tres" id="5_5hdjj"]
+[ext_resource type="Resource" uid="uid://bi8au7qa005et" path="res://upgrades/def_3.tres" id="5_5hdjj"]
 [ext_resource type="Resource" uid="uid://l0bc24e1i7ds" path="res://upgrades/atk_spd_1.tres" id="6_icd2w"]
 
 [node name="Knight" instance=ExtResource("1_8k1n4")]
@@ -12,7 +12,6 @@ script = ExtResource("1_8w6po")
 max_hp = 40
 damage = 15
 speed = 4.0
-attack_range = 0.0
 attack_speed = 3
 attack_damage_frame = 5
 armor = 5

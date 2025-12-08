@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1_s6xew")
-stat_type = 4
-amount = 1
-label_text = "ATK\\nSPD"
+stat_type = 2
+amount = 2
+label_text = "SPD"

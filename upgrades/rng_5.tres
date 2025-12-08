@@ -4,5 +4,6 @@
 
 [resource]
 script = ExtResource("1_u40cg")
-stat_type = 1
-label_text = "DMG"
+stat_type = 3
+amount = 3
+label_text = "RNG"

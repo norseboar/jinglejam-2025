@@ -7,53 +7,138 @@ class_name Healer
 
 
 func _ready() -> void:
-	# Set default stats for healer (can be overridden in inspector)
-	if max_hp == 3:
-		max_hp = 3  # Moderate HP
-	if attack_range == 50.0:
-		attack_range = 150.0  # Ranged healing
-	if attack_cooldown == 1.0:
-		attack_cooldown = 2.0  # Slower heal cadence
-	if speed == 100.0:
-		speed = 90.0  # Slightly slower movement
-	# Set default heal amount if not set in scene
-	if heal_amount == 0:
-		heal_amount = 2
-
+	# Use values from inspector - don't override them
 	super._ready()
 
 
-func _process(delta: float) -> void:
-	# Override to scan for targets even when idle
-	if state == "idle":
-		_check_for_targets()
-		# If we found a target, switch to moving to approach them
-		if target != null and is_instance_valid(target):
+func set_state(new_state: String) -> void:
+	super.set_state(new_state)
+
+
+func _safe_play_animation(anim_name: String) -> void:
+	super._safe_play_animation(anim_name)
+
+
+## Override _do_fighting to commit to attacks once started
+func _do_fighting(delta: float) -> void:
+	# If we're already attacking, COMMIT to the attack - don't check range
+	# This prevents interruption if target moves during cast animation
+	if is_attacking:
+		super._do_fighting(delta)
+		return
+	
+	# Before starting attack, check if target is still in range
+	if target != null and is_instance_valid(target):
+		var distance := position.distance_to(target.position)
+		var buffer_range := (attack_range * 10.0 + 20.0) * 1.2
+		
+		# If target moved out of range BEFORE we started attacking, chase them
+		if distance > buffer_range:
 			set_state("moving")
+			return
+	else:
+		target = null
+		set_state("moving")
+		return
+	
+	# Target is valid and in range - start or continue the attack
+	super._do_fighting(delta)
+
+
+func _process(delta: float) -> void:
+	# Override to scan for targets even when idle, but only during combat
+	if state == "idle":
+		if _is_combat_active():
+			_check_for_targets()
+			# If we found a target, switch to moving to approach them
+			if target != null and is_instance_valid(target):
+				set_state("moving")
 	else:
 		# For other states, use parent behavior
 		super._process(delta)
 
 
 func _do_movement(delta: float) -> void:
+	# If unit has fly_height set and hasn't reached it yet, fly to that height first
+	if fly_height >= 0 and not has_reached_fly_height:
+		var viewport_rect := get_viewport_rect()
+		var target_y := viewport_rect.position.y + fly_height
+		var current_y := position.y
 
-	# Check for wounded allies
-	_check_for_targets()
+		# Check if we've reached the target height
+		if abs(current_y - target_y) < 5.0:
+			position.y = target_y
+			has_reached_fly_height = true
+		else:
+			# Fly towards target height
+			var direction_y := -1.0 if current_y > target_y else 1.0
+			position.y += direction_y * speed * 10.0 * delta
 
-	# If we have a target, move towards it
+			# Don't overshoot
+			if direction_y < 0 and position.y < target_y:
+				position.y = target_y
+				has_reached_fly_height = true
+			elif direction_y > 0 and position.y > target_y:
+				position.y = target_y
+				has_reached_fly_height = true
+
+		# While flying, don't do normal pathing yet
+		return
+
+	# Check if current target is still valid
+	if target != null and is_instance_valid(target):
+		var target_unit := target as Unit
+		var distance := position.distance_to(target.position)
+		
+		# Check if target went out of range or died
+		if target_unit.state == "dying" or target_unit.current_hp <= 0:
+			target = null
+		elif distance > detection_range:
+			target = null
+
+	# Only check for new targets if we don't have a valid one
+	# This prevents constant retargeting and state thrashing
+	if target == null:
+		_check_for_targets()
+
+	# If we have a target, move towards it (using correct speed multiplier)
 	if target != null and is_instance_valid(target):
 		var target_pos := target.position
 		var direction_to_target := (target_pos - position).normalized()
+		var distance := position.distance_to(target_pos)
+		var effective_range := attack_range * 10.0 + 20.0
 
-		# Move towards target
-		position += direction_to_target * speed * delta
+		# Check if we're now in range to attack
+		if distance <= effective_range:
+			set_state("fighting")
+			# Set time_since_attack high enough to attack immediately (with small random delay)
+			var effective_cooldown := _get_effective_cooldown()
+			time_since_attack = max(0.0, effective_cooldown - randf() * 0.25)
+			# Play idle animation while waiting to attack
+			_safe_play_animation("idle")
+			return  # Don't move this frame, start attacking next frame
+
+		# Move towards target (with 10.0 multiplier like base units)
+		position += direction_to_target * speed * 10.0 * delta
 
 		# Flip sprite to face movement direction
 		animated_sprite.flip_h = direction_to_target.x < 0
 	else:
 		# No target - healers don't move forward, they stay idle
-		# (state will be set to idle by _check_for_targets if we're moving)
+		# This is the key difference from base Unit behavior
 		pass
+
+	# Constrain ground units (fly_height < 0) to level bounds (same as base Unit)
+	if fly_height < 0:
+		var bounds := _get_level_bounds()
+		if not bounds.is_empty():
+			var min_y: float = bounds.get("min_y", 0.0) as float
+			var max_y: float = bounds.get("max_y", 360.0) as float
+			var global_y: float = global_position.y
+			var clamped_global_y: float = clamp(global_y, min_y, max_y)
+			# Convert back to local position
+			if clamped_global_y != global_y:
+				global_position.y = clamped_global_y
 
 
 ## Override targeting to find wounded allies instead of enemies
@@ -61,69 +146,62 @@ func _check_for_targets() -> void:
 	if friendly_container == null:
 		return
 
+	# Categorize allies by priority
+	var damaged_no_armor: Array[Unit] = []
+	var damaged_with_armor: Array[Unit] = []
+	var healthy_no_armor: Array[Unit] = []
+
+	# Scan all friendly units and categorize them
+	for ally in friendly_container.get_children():
+		if not is_instance_valid(ally) or not ally is Unit:
+			continue
+
+		var ally_unit := ally as Unit
+		if ally_unit == self or ally_unit.state == "dying" or ally_unit is Healer:
+			continue  # Skip self, dying units, and other healers
+
+		var distance := position.distance_to(ally.position)
+		if distance >= detection_range:
+			continue
+
+		var is_damaged := ally_unit.current_hp < ally_unit.max_hp
+		var has_heal_armor := ally_unit.heal_armor > 0
+
+		# Categorize based on damage and heal armor status
+		if is_damaged and not has_heal_armor:
+			damaged_no_armor.append(ally_unit)
+		elif is_damaged and has_heal_armor:
+			damaged_with_armor.append(ally_unit)
+		elif not is_damaged and not has_heal_armor:
+			healthy_no_armor.append(ally_unit)
+		# Units with full HP and heal armor are ignored
+
+	# Find closest unit from highest priority group
+	var target_group: Array[Unit] = []
+	if not damaged_no_armor.is_empty():
+		target_group = damaged_no_armor
+	elif not damaged_with_armor.is_empty():
+		target_group = damaged_with_armor
+	elif not healthy_no_armor.is_empty():
+		target_group = healthy_no_armor
+
+	# Find closest in target group
 	var closest_ally: Unit = null
 	var closest_distance := INF
 
-	# Priority-based targeting: find highest priority wounded ally, then closest
-	var highest_priority := -INF
-	var high_priority_allies: Array[Unit] = []
-
-	# First pass: find highest priority among wounded allies
-	for ally in friendly_container.get_children():
-		if not is_instance_valid(ally):
-			continue
-		if not ally is Unit:
-			continue
-
-		var ally_unit := ally as Unit
-		if ally_unit == self or ally_unit.current_hp >= ally_unit.max_hp or ally_unit.state == "dying":
-			continue  # Skip self, healthy, or dying allies
-
-		var distance := position.distance_to(ally.position)
-		if distance >= detection_range:
-			continue
-
-		if ally_unit.priority > highest_priority:
-			highest_priority = ally_unit.priority
-
-	# Second pass: collect all wounded allies with highest priority
-	for ally in friendly_container.get_children():
-		if not is_instance_valid(ally):
-			continue
-		if not ally is Unit:
-			continue
-
-		var ally_unit := ally as Unit
-		if ally_unit == self or ally_unit.current_hp >= ally_unit.max_hp or ally_unit.state == "dying":
-			continue
-
-		var distance := position.distance_to(ally.position)
-		if distance >= detection_range:
-			continue
-
-		if ally_unit.priority == highest_priority:
-			high_priority_allies.append(ally_unit)
-
-	# Third pass: find closest among high priority wounded allies
-	for ally_unit in high_priority_allies:
+	for ally_unit in target_group:
 		var distance := position.distance_to(ally_unit.position)
 		if distance < closest_distance:
 			closest_ally = ally_unit
 			closest_distance = distance
 
+	# Set target (let _do_movement handle state changes based on range)
 	if closest_ally != null:
 		target = closest_ally
-		var distance_to_target := position.distance_to(closest_ally.position)
-
-		# If we're in heal range, start fighting (healing)
-		if distance_to_target <= attack_range:
-			set_state("fighting")
-		# Otherwise, we'll keep moving towards them (state stays "moving")
+		# Don't change state here - let _process() or _do_movement handle it
 	else:
-		# No wounded allies found - healers should idle instead of moving forward
-		target = null
-		if state == "moving":
-			set_state("idle")
+		# No valid targets - stay near nearest ally but don't heal
+		_find_nearest_ally_to_follow()
 
 
 ## Override to play heal sound on attack frame
@@ -146,11 +224,16 @@ func _perform_heal() -> void:
 
 	var target_unit := target as Unit
 
-	# Validate target is still alive, friendly, and wounded
+	# Validate target is still alive and friendly
 	if target_unit.current_hp <= 0 or target_unit.state == "dying":
 		return
-	if target_unit.current_hp >= target_unit.max_hp:
-		return
+
+	# Only heal if damaged OR (healthy but no heal armor)
+	var is_damaged := target_unit.current_hp < target_unit.max_hp
+	var has_heal_armor := target_unit.heal_armor > 0
+
+	if not is_damaged and has_heal_armor:
+		return  # Don't heal - already full HP with heal armor
 
 	# Heal the target
 	target_unit.receive_heal(heal_amount)
@@ -162,3 +245,47 @@ func _perform_heal() -> void:
 			# Add to target's parent so it auto-cleans like other VFX
 			target_unit.get_parent().add_child(vfx)
 			vfx.global_position = target_unit.global_position
+	
+	# Clear target after healing so we look for a new target
+	# DON'T change state here - let the attack animation finish!
+	target = null
+
+
+func _find_nearest_ally_to_follow() -> void:
+	"""Find nearest ally to follow when no one needs healing."""
+	if friendly_container == null:
+		return
+
+	var closest_ally: Unit = null
+	var closest_distance := INF
+
+	for ally in friendly_container.get_children():
+		if not is_instance_valid(ally) or not ally is Unit:
+			continue
+
+		var ally_unit := ally as Unit
+		if ally_unit == self or ally_unit.state == "dying" or ally_unit is Healer:
+			continue  # Skip self, dying units, and other healers
+
+		var distance := position.distance_to(ally.position)
+		if distance < closest_distance:
+			closest_ally = ally_unit
+			closest_distance = distance
+
+	if closest_ally != null:
+		var distance_to_ally := position.distance_to(closest_ally.position)
+
+		# If within attack range, just idle
+		if distance_to_ally <= (attack_range * 10.0 + 20.0):
+			target = null
+			if state == "moving":
+				set_state("idle")
+		else:
+			# Move towards nearest ally (but don't attack/heal them)
+			target = closest_ally
+			set_state("moving")
+	else:
+		# No allies at all - just idle
+		target = null
+		if state == "moving":
+			set_state("idle")

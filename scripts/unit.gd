@@ -19,6 +19,9 @@ signal player_unit_died(army_index: int)  # Emitted by player units with army_in
 @export var armor_piercing := false  # If true, attacks ignore enemy armor
 @export var targets_high_priority := false  # If true, only targets highest priority enemies
 @export var heal_amount := 0         # Heal amount (only used by Healer units)
+@export var heal_armor_duration := 1.0 # How long heal armor lasts in seconds
+var heal_armor := 0                  # Temporary armor from healing (reduces damage)
+@export var fly_height := -1        # Height from top of screen to fly to at battle start (-1 = disabled)
 
 # Display info
 @export var display_name: String = "Unit"
@@ -52,6 +55,8 @@ var time_since_attack := 0.0 # timer for attack cooldown
 var is_attacking := false    # true when attack animation is playing
 var has_triggered_frame_damage := false  # Prevents multiple damage triggers per attack
 var army_index := -1         # Index in Game.army array, or -1 if not from army
+var has_reached_fly_height := false  # True when unit has reached its fly_height target
+var heal_armor_timer := 0.0  # Time remaining on heal armor (in seconds)
 
 # Upgrades
 var upgrades: Dictionary = {}  # e.g., { "hp": 2, "damage": 1 }
@@ -86,6 +91,13 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	# Tick down heal armor timer
+	if heal_armor > 0:
+		heal_armor_timer -= delta
+		if heal_armor_timer <= 0.0:
+			heal_armor = 0
+			heal_armor_timer = 0.0
+
 	match state:
 		"idle":
 			pass  # Do nothing, waiting for battle to start
@@ -105,6 +117,11 @@ func set_state(new_state: String) -> void:
 	if state == "fighting" and new_state != "fighting":
 		is_attacking = false
 	
+	# Reset fly height flag only when transitioning from idle to moving (battle starts)
+	# Don't reset when transitioning from fighting to moving (after attacks)
+	if state == "idle" and new_state == "moving":
+		has_reached_fly_height = false
+	
 	state = new_state
 	match state:
 		"idle":
@@ -118,6 +135,33 @@ func set_state(new_state: String) -> void:
 
 
 func _do_movement(delta: float) -> void:
+	# If unit has fly_height set and hasn't reached it yet, fly to that height first
+	if fly_height >= 0 and not has_reached_fly_height:
+		var viewport_rect := get_viewport_rect()
+		var target_y := viewport_rect.position.y + fly_height  # fly_height is from top of screen
+		var current_y := position.y
+		
+		# Check if we've reached the target height (with small threshold)
+		if abs(current_y - target_y) < 5.0:
+			# Snap to exact position and mark as reached
+			position.y = target_y
+			has_reached_fly_height = true
+		else:
+			# Fly towards target height
+			var direction_y := -1.0 if current_y > target_y else 1.0  # Negative = up, positive = down
+			position.y += direction_y * speed * 10.0 * delta
+			
+			# Don't overshoot
+			if direction_y < 0 and position.y < target_y:
+				position.y = target_y
+				has_reached_fly_height = true
+			elif direction_y > 0 and position.y > target_y:
+				position.y = target_y
+				has_reached_fly_height = true
+		
+		# While flying, don't do normal pathing yet
+		return
+	
 	# Check for enemies first
 	_check_for_targets()
 	
@@ -140,6 +184,19 @@ func _do_movement(delta: float) -> void:
 		
 		# Move horizontally
 		position.x += direction * speed * 10.0 * delta
+	
+	# Constrain ground units (fly_height < 0) to level bounds
+	# Use global_position since bounds are calculated in global space
+	if fly_height < 0:
+		var bounds := _get_level_bounds()
+		if not bounds.is_empty():
+			var min_y: float = bounds.get("min_y", 0.0) as float
+			var max_y: float = bounds.get("max_y", 360.0) as float
+			var global_y: float = global_position.y
+			var clamped_global_y: float = clamp(global_y, min_y, max_y)
+			# Convert back to local position
+			if clamped_global_y != global_y:
+				global_position.y = clamped_global_y
 
 
 func _check_for_targets() -> void:
@@ -224,14 +281,8 @@ func _check_for_targets() -> void:
 		if distance_to_target <= (attack_range * 10.0 + 20.0):
 			set_state("fighting")
 			# Reset cooldown timer when entering combat
-			# Ranged units (not Swordsman) get a random delay for first attack to stagger them
-			var effective_cooldown := _get_effective_cooldown()
-			if self is Archer or self is ArtilleryUnit:
-				# Random delay between 0 and effective_cooldown for first attack
-				time_since_attack = randf() * effective_cooldown
-			else:
-				# Melee units (Swordsman) attack immediately
-				time_since_attack = effective_cooldown  # Set to cooldown value so attack happens immediately
+			# All units get a random delay between 0 and 0.25 seconds for first attack to stagger them
+			time_since_attack = randf() * 0.25
 		# Otherwise, we'll keep moving towards them (state stays "moving")
 
 
@@ -360,6 +411,15 @@ func _is_combat_active() -> bool:
 	return game.phase == "battle"
 
 
+func _get_level_bounds() -> Dictionary:
+	"""Get level bounds from the current level. Returns empty dict if not available."""
+	var game: Game = get_tree().get_first_node_in_group("game") as Game
+	if game == null or game.current_level == null:
+		return {}
+	
+	return game.current_level.get_level_bounds()
+
+
 func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:
 	# Ignore damage if already dead/dying
 	if state == "dying" or current_hp <= 0:
@@ -369,10 +429,11 @@ func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:
 	if not _is_combat_active():
 		return
 
-	# Apply armor reduction unless attacker has armor piercing
+	# Apply armor + heal_armor reduction unless attacker has armor piercing
 	var final_damage := amount
 	if not attacker_armor_piercing:
-		final_damage = max(0, amount - armor)
+		var total_armor := armor + heal_armor
+		final_damage = max(0, amount - total_armor)
 
 	current_hp -= final_damage
 
@@ -395,12 +456,12 @@ func receive_heal(amount: int) -> void:
 	if state == "dying" or current_hp <= 0:
 		return
 
-	# No-op if already at full health
-	if current_hp >= max_hp:
-		return
-
-	# Heal the unit, clamping to max_hp
+	# Heal HP (clamped to max)
 	current_hp = min(current_hp + amount, max_hp)
+
+	# Apply heal armor = half of heal amount (not stacking, just refresh)
+	heal_armor = amount / 2
+	heal_armor_timer = heal_armor_duration
 
 	# Update healthbar
 	if healthbar:
@@ -409,7 +470,6 @@ func receive_heal(amount: int) -> void:
 	# Visual feedback: flash the sprite green
 	if animated_sprite:
 		animated_sprite.modulate = Color.GREEN
-		# Reset color after a short delay
 		get_tree().create_timer(0.1).timeout.connect(_reset_color)
 
 
@@ -497,7 +557,14 @@ func _calculate_gold_reward() -> int:
 	for count in upgrades.values():
 		total_upgrades += count
 	var total_cost := base_recruit_cost + (upgrade_cost * total_upgrades)
-	return int(total_cost / 2.0)
+	
+	# Get the percentage from Game
+	var game: Game = get_tree().get_first_node_in_group("game") as Game
+	var percentage := 0.5  # Default fallback
+	if game != null:
+		percentage = game.unit_value_percentage
+	
+	return int(total_cost * percentage)
 
 
 func _safe_play_animation(anim_name: String) -> void:

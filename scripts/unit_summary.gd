@@ -63,13 +63,23 @@ func show_unit_from_scene(unit_scene: PackedScene, upgrades: Dictionary = {}) ->
 			unit_description_label.text = unit.description
 
 		# Calculate stats with upgrades applied
-		var hp: int = unit.max_hp + upgrades.get("hp", 0) as int
-		var dmg: int = unit.damage + upgrades.get("damage", 0) as int
-		var spd := int(unit.speed / 10.0)
-		var rng := int(unit.attack_range / 10.0)
-
+		var stat_bonuses := _calculate_stat_bonuses(unit, upgrades)
+		var hp: int = unit.max_hp + stat_bonuses.max_hp
+		var atk_spd: int = unit.attack_speed + stat_bonuses.attack_speed
+		var def: int = unit.armor + stat_bonuses.armor
+		var spd: int = int(unit.speed + stat_bonuses.speed)
+		var rng: int = int(unit.attack_range + stat_bonuses.attack_range)
+		
+		# Check if unit is a healer
+		var is_healer := unit is Healer
+		
 		if stats_label:
-			stats_label.text = "HP: %d  DMG: %d  SPD: %d  RNG: %d" % [hp, dmg, spd, rng]
+			if is_healer:
+				var heal: int = unit.heal_amount + stat_bonuses.heal_amount
+				stats_label.text = "HP: %d HEAL: %d CAST: %d\nDEF: %d  SPD: %d RNG: %d" % [hp, heal, atk_spd, def, spd, rng]
+			else:
+				var dmg: int = unit.damage + stat_bonuses.damage
+				stats_label.text = "HP: %d DMG: %d ATK SPD: %d\nDEF: %d  SPD: %d RNG: %d" % [hp, dmg, atk_spd, def, spd, rng]
 
 		# Calculate and display upgrade fraction
 		var total_upgrades: int = 0
@@ -101,13 +111,25 @@ func update_stats(upgrades: Dictionary) -> void:
 
 	if instance is Unit:
 		var unit := instance as Unit
-		var hp: int = unit.max_hp + upgrades.get("hp", 0) as int
-		var dmg: int = unit.damage + upgrades.get("damage", 0) as int
-		var spd := int(unit.speed / 10.0)
-		var rng := int(unit.attack_range / 10.0)
-
+		
+		# Calculate stats with upgrades applied
+		var stat_bonuses := _calculate_stat_bonuses(unit, upgrades)
+		var hp: int = unit.max_hp + stat_bonuses.max_hp
+		var atk_spd: int = unit.attack_speed + stat_bonuses.attack_speed
+		var def: int = unit.armor + stat_bonuses.armor
+		var spd: int = int(unit.speed + stat_bonuses.speed)
+		var rng: int = int(unit.attack_range + stat_bonuses.attack_range)
+		
+		# Check if unit is a healer
+		var is_healer := unit is Healer
+		
 		if stats_label:
-			stats_label.text = "HP: %d  DMG: %d  SPD: %d  RNG: %d" % [hp, dmg, spd, rng]
+			if is_healer:
+				var heal: int = unit.heal_amount + stat_bonuses.heal_amount
+				stats_label.text = "HP: %d HEAL: %d CAST: %d\nDEF: %d  SPD: %d RNG: %d" % [hp, heal, atk_spd, def, spd, rng]
+			else:
+				var dmg: int = unit.damage + stat_bonuses.damage
+				stats_label.text = "HP: %d DMG: %d ATK SPD: %d\nDEF: %d  SPD: %d RNG: %d" % [hp, dmg, atk_spd, def, spd, rng]
 
 		# Update upgrade fraction
 		var total_upgrades: int = 0
@@ -117,3 +139,51 @@ func update_stats(upgrades: Dictionary) -> void:
 			upgrade_fraction_label.text = "%d/3 upgrades" % total_upgrades
 
 	instance.queue_free()
+
+
+func _calculate_stat_bonuses(unit: Unit, upgrades: Dictionary) -> Dictionary:
+	"""Calculate stat bonuses from upgrades dictionary (which uses slot indices as keys)."""
+	var bonuses := {
+		"max_hp": 0,
+		"damage": 0,
+		"speed": 0.0,
+		"attack_range": 0.0,
+		"attack_speed": 0,
+		"armor": 0,
+		"heal_amount": 0
+	}
+	
+	# Iterate through upgrades (keys are slot indices: 0, 1, 2)
+	for upgrade_index in upgrades:
+		if not upgrade_index is int:
+			continue
+		
+		var count: int = upgrades[upgrade_index] as int
+		if count <= 0:
+			continue
+		
+		# Get the upgrade definition from available_upgrades
+		if upgrade_index < 0 or upgrade_index >= unit.available_upgrades.size():
+			continue
+		
+		var upgrade: UnitUpgrade = unit.available_upgrades[upgrade_index]
+		var total_amount := upgrade.amount * count
+		
+		# Apply based on stat type
+		match upgrade.stat_type:
+			UnitUpgrade.StatType.MAX_HP:
+				bonuses.max_hp += total_amount
+			UnitUpgrade.StatType.DAMAGE:
+				bonuses.damage += total_amount
+			UnitUpgrade.StatType.SPEED:
+				bonuses.speed += total_amount
+			UnitUpgrade.StatType.ATTACK_RANGE:
+				bonuses.attack_range += total_amount
+			UnitUpgrade.StatType.ATTACK_SPEED:
+				bonuses.attack_speed += total_amount
+			UnitUpgrade.StatType.ARMOR:
+				bonuses.armor += total_amount
+			UnitUpgrade.StatType.HEAL_AMOUNT:
+				bonuses.heal_amount += total_amount
+	
+	return bonuses

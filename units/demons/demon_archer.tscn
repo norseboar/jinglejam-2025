@@ -9,11 +9,11 @@
 [ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_5v4jw"]
 [ext_resource type="Resource" uid="uid://d4baw5bu55blw" path="res://upgrades/rng_5.tres" id="4_665lu"]
 [ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_fiyps"]
-[ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_10.tres" id="5_hp1l8"]
+[ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_5.tres" id="5_hp1l8"]
 [ext_resource type="Resource" uid="uid://l0bc24e1i7ds" path="res://upgrades/atk_spd_1.tres" id="6_iekho"]
 [ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="8_5v4jw"]
 
-[node name="Unit" type="Node2D"]
+[node name="Unit2" type="Node2D"]
 script = ExtResource("1_71e6i")
 projectile_scene = ExtResource("2_5v4jw")
 projectile_speed = 200.0
@@ -25,6 +25,7 @@ attack_speed = 3
 attack_damage_frame = 4
 armor_piercing = true
 targets_high_priority = true
+fly_height = 70
 display_name = "Mage"
 description = "A ranged spellcaster"
 upgrade_cost = 2

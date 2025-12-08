@@ -1,12 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://ddg0d0euvs07d"]
+[gd_scene load_steps=5 format=3 uid="uid://ddg0d0euvs07d"]
 
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_2j0d6"]
 [ext_resource type="Texture2D" uid="uid://clxoa2k34d7wk" path="res://assets/backgrounds/nature-wood-background-dirty-detail.jpg" id="2_arbo4"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_fo2qi"]
 [ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="4_e28mj"]
-[ext_resource type="Script" uid="uid://dlrficdbgxf5i" path="res://scripts/enemy_spawn_slot.gd" id="5_2j0d6"]
 
-[node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background", "enemy_spawn_slots_container")]
+[node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background", "enemy_spawn_slots_container", "level_bounds_area")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,11 +14,13 @@ offset_right = -640.0
 offset_bottom = -360.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("1_2j0d6")
 background_texture = ExtResource("2_arbo4")
 editor_background = NodePath("EditorBackground")
 army_name = "Humans"
 enemy_spawn_slots_container = NodePath("EnemyMarkers")
+level_bounds_area = NodePath("PlayArea")
 
 [node name="EditorBackground" type="TextureRect" parent="."]
 layout_mode = 0
@@ -119,40 +120,36 @@ offset_bottom = 281.0
 
 [node name="EnemyMarker" parent="EnemyMarkers" instance=ExtResource("4_e28mj")]
 position = Vector2(594, 227)
-script = ExtResource("5_2j0d6")
 
 [node name="EnemyMarker3" parent="EnemyMarkers" instance=ExtResource("4_e28mj")]
 position = Vector2(557, 257)
-script = ExtResource("5_2j0d6")
 
 [node name="EnemyMarker4" parent="EnemyMarkers" instance=ExtResource("4_e28mj")]
 position = Vector2(553, 204)
-script = ExtResource("5_2j0d6")
 
 [node name="EnemyMarker5" parent="EnemyMarkers" instance=ExtResource("4_e28mj")]
 position = Vector2(508, 171)
-script = ExtResource("5_2j0d6")
 
 [node name="EnemyMarker6" parent="EnemyMarkers" instance=ExtResource("4_e28mj")]
 position = Vector2(509, 217)
-script = ExtResource("5_2j0d6")
 
 [node name="EnemyMarker7" parent="EnemyMarkers" instance=ExtResource("4_e28mj")]
 position = Vector2(510, 260)
-script = ExtResource("5_2j0d6")
 
 [node name="EnemyMarker8" parent="EnemyMarkers" instance=ExtResource("4_e28mj")]
 position = Vector2(469, 237)
-script = ExtResource("5_2j0d6")
 
 [node name="EnemyMarker9" parent="EnemyMarkers" instance=ExtResource("4_e28mj")]
 position = Vector2(466, 188)
-script = ExtResource("5_2j0d6")
 
 [node name="EnemyMarker10" parent="EnemyMarkers" instance=ExtResource("4_e28mj")]
 position = Vector2(422, 211)
-script = ExtResource("5_2j0d6")
 
 [node name="EnemyMarker2" parent="EnemyMarkers" instance=ExtResource("4_e28mj")]
 position = Vector2(591, 180)
-script = ExtResource("5_2j0d6")
+
+[node name="PlayArea" type="Control" parent="."]
+anchors_preset = 0
+offset_top = 166.0
+offset_right = 640.0
+offset_bottom = 326.0

@@ -6,7 +6,7 @@
 [ext_resource type="Resource" uid="uid://bqm8cfthlmkbj" path="res://upgrades/hp_10.tres" id="3_ofls6"]
 [ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_tu8x7"]
 [ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_tdcms"]
-[ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_10.tres" id="4_u3kg2"]
+[ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_5.tres" id="4_u3kg2"]
 [ext_resource type="Resource" uid="uid://b8xbtj1olnkiw" path="res://upgrades/spd_3.tres" id="5_60s0h"]
 [ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_lbk56"]
 [ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="6_yt3tj"]
@@ -19,7 +19,6 @@ speed = 10.0
 attack_range = 0.0
 attack_speed = 6
 attack_damage_frame = 5
-targets_high_priority = true
 display_name = "Imp"
 description = "Flies to important units first"
 base_recruit_cost = 5

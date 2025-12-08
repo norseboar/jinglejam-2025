@@ -11,7 +11,7 @@
 [ext_resource type="AudioStream" uid="uid://3yya4e6gpvdp" path="res://assets/sfx/throw/Spear throw 3.wav" id="6_ffc0m"]
 [ext_resource type="AudioStream" uid="uid://cd1epcer4lvk8" path="res://assets/sfx/explosion/EXPLOSION_Medium_Fast_with_Rock_Debris_stereo.wav" id="6_m45cr"]
 [ext_resource type="Resource" uid="uid://d4baw5bu55blw" path="res://upgrades/rng_5.tres" id="6_tilus"]
-[ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_10.tres" id="7_4xvbj"]
+[ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_5.tres" id="7_4xvbj"]
 [ext_resource type="AudioStream" uid="uid://cn2wkbgofawgr" path="res://assets/sfx/throw/Spear throw 4.wav" id="7_csun7"]
 [ext_resource type="AudioStream" uid="uid://b6a2t44iix7x5" path="res://assets/sfx/explosion/EXPLOSION_Medium_Sharp_with_Echo_stereo.wav" id="7_ep4n7"]
 [ext_resource type="Resource" uid="uid://l0bc24e1i7ds" path="res://upgrades/atk_spd_1.tres" id="8_n714i"]

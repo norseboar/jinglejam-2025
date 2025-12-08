@@ -49,4 +49,5 @@ text = "Description"
 
 [node name="Stats" type="Label" parent="HBoxContainer/Info"]
 layout_mode = 2
-text = "HP: 3 DMG: 1 SPD: 10 RNG: 5"
+text = "HP: 3 DMG: 1 ATK SPD: 3
+DEF: 0  SPD: 10 RNG: 5"

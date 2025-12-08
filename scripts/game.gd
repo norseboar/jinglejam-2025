@@ -18,6 +18,9 @@ var army: Array = []  # Array of ArmyUnit
 @export var starting_gold := 20
 var gold: int = 0
 var total_gold_spent: int = 0  # Track gold spent for army value calculation
+## Percentage of unit value used for gold rewards when enemy units die (0.0-1.0)
+## When enemy units die, they give this percentage of their value as gold.
+@export var unit_value_percentage := 0.5  # 50% by default (can be changed to 0.75 for 75%, etc.)
 
 # Level management
 ## Array of LevelPool resources. Each pool contains multiple level scene options for that level.

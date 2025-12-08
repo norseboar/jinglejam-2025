@@ -15,6 +15,119 @@ var _artillery_target_position := Vector2.ZERO
 var _current_target_marker: Node2D = null
 
 
+## Override to filter targets to only those within level bounds (ground targets only)
+func _check_for_targets() -> void:
+	if enemy_container == null:
+		return
+
+	var closest_enemy: Node2D = null
+	var closest_distance := INF
+
+	if targets_high_priority:
+		# Priority-based targeting: find highest priority, then closest of those
+		var highest_priority := -INF
+		var high_priority_enemies: Array[Unit] = []
+		
+		# First pass: find highest priority
+		for enemy in enemy_container.get_children():
+			if not is_instance_valid(enemy):
+				continue
+			if not enemy is Unit:
+				continue
+			
+			var unit_enemy := enemy as Unit
+			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+				continue
+			
+			# Filter out targets outside level bounds
+			if not _is_position_within_bounds(unit_enemy.global_position):
+				continue
+			
+			var distance := position.distance_to(enemy.position)
+			if distance >= detection_range:
+				continue
+			
+			if unit_enemy.priority > highest_priority:
+				highest_priority = unit_enemy.priority
+		
+		# Second pass: collect all enemies with highest priority
+		for enemy in enemy_container.get_children():
+			if not is_instance_valid(enemy):
+				continue
+			if not enemy is Unit:
+				continue
+			
+			var unit_enemy := enemy as Unit
+			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+				continue
+			
+			# Filter out targets outside level bounds
+			if not _is_position_within_bounds(unit_enemy.global_position):
+				continue
+			
+			var distance := position.distance_to(enemy.position)
+			if distance >= detection_range:
+				continue
+			
+			if unit_enemy.priority == highest_priority:
+				high_priority_enemies.append(unit_enemy)
+		
+		# Third pass: find closest among high priority enemies
+		for unit_enemy in high_priority_enemies:
+			var distance := position.distance_to(unit_enemy.position)
+			if distance < closest_distance:
+				closest_enemy = unit_enemy
+				closest_distance = distance
+	else:
+		# Normal targeting: just find closest enemy
+		for enemy in enemy_container.get_children():
+			if not is_instance_valid(enemy):
+				continue
+			# Only consider Unit nodes as valid targets
+			if not enemy is Unit:
+				continue
+			
+			var unit_enemy := enemy as Unit
+			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+				continue  # Skip dead or dying units
+
+			# Filter out targets outside level bounds
+			if not _is_position_within_bounds(unit_enemy.global_position):
+				continue
+
+			var distance := position.distance_to(enemy.position)
+			
+			# Check if enemy is within detection range
+			if distance < detection_range and distance < closest_distance:
+				closest_enemy = enemy
+				closest_distance = distance
+
+	if closest_enemy != null:
+		target = closest_enemy
+		var distance_to_target := position.distance_to(closest_enemy.position)
+		
+		# If we're in attack range, start fighting
+		if distance_to_target <= (attack_range * 10.0 + 20.0):
+			set_state("fighting")
+			# Reset cooldown timer when entering combat
+			var effective_cooldown := _get_effective_cooldown()
+			# Artillery units get random delay for first attack to stagger them
+			time_since_attack = randf() * effective_cooldown
+		# Otherwise, we'll keep moving towards them (state stays "moving")
+
+
+func _is_position_within_bounds(pos: Vector2) -> bool:
+	"""Check if a global position is within the level bounds."""
+	var bounds := _get_level_bounds()
+	if bounds.is_empty():
+		return true  # If no bounds set, allow all targets
+	
+	var min_y: float = bounds.get("min_y", 0.0) as float
+	var max_y: float = bounds.get("max_y", 360.0) as float
+	
+	return pos.y >= min_y and pos.y <= max_y
+
+
 ## Override to play fire sound and spawn target marker on attack frame
 func _trigger_attack_damage() -> void:
 	"""Play fire sound and start artillery attack sequence on the attack frame."""

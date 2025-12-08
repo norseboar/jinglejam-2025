@@ -12,8 +12,12 @@
 script = ExtResource("1_8sn7d")
 max_hp = 150
 damage = 30
-attack_cooldown = 1.0
+speed = 5.0
+attack_range = 1.0
+attack_speed = 4
 attack_damage_frame = 5
+base_recruit_cost = 80
+upgrade_cost = 10
 damage_sounds = Array[AudioStream]([ExtResource("2_umbpk")])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

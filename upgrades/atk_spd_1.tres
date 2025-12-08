@@ -4,5 +4,6 @@
 
 [resource]
 script = ExtResource("1_yntem")
-stat_type = 1
-label_text = "DMG"
+stat_type = 4
+amount = 1
+label_text = "ATK\\nSPD"

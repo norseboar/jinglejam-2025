@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_50rdu"]
 [ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="4_hhytr"]
 
-[node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background")]
+[node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background", "enemy_spawn_slots_container", "level_bounds_area")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,6 +18,8 @@ script = ExtResource("1_vukk4")
 background_texture = ExtResource("2_odrfp")
 editor_background = NodePath("EditorBackground")
 army_name = "Humans"
+enemy_spawn_slots_container = NodePath("EnemyMarkers")
+level_bounds_area = NodePath("PlayArea")
 
 [node name="EditorBackground" type="TextureRect" parent="."]
 layout_mode = 0
@@ -105,13 +107,13 @@ offset_bottom = 262.0
 position = Vector2(528, 151)
 
 [node name="EnemyMarker2" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
-position = Vector2(476, 141)
+position = Vector2(474, 153)
 
 [node name="EnemyMarker3" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
 position = Vector2(482, 178)
 
 [node name="EnemyMarker4" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
-position = Vector2(429, 141)
+position = Vector2(429, 152)
 
 [node name="EnemyMarker6" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
 position = Vector2(438, 183)
@@ -121,3 +123,10 @@ position = Vector2(386, 154)
 
 [node name="EnemyMarker8" parent="EnemyMarkers" instance=ExtResource("4_hhytr")]
 position = Vector2(392, 192)
+
+[node name="PlayArea" type="Control" parent="."]
+anchors_preset = 0
+offset_top = 155.0
+offset_right = 640.0
+offset_bottom = 295.0
+mouse_filter = 2
