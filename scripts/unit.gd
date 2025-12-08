@@ -83,6 +83,9 @@ func _ready() -> void:
 		healthbar.set_alignment(is_enemy)
 		healthbar.update_health(current_hp, max_hp)
 
+	# Initialize upgrade markers visibility
+	_update_upgrade_markers()
+
 	# Flip sprite to face correct direction based on team
 	# This must happen in _ready() so enemies face the correct direction immediately
 	if animated_sprite:
@@ -648,6 +651,7 @@ func _update_upgrade_markers() -> void:
 	if upgrade_markers == null:
 		return
 	
+	var background := upgrade_markers.get_node_or_null("Background") as Sprite2D
 	var marker_1 := upgrade_markers.get_node_or_null("Marker1") as Sprite2D
 	var marker_2 := upgrade_markers.get_node_or_null("Marker2") as Sprite2D
 	var marker_3 := upgrade_markers.get_node_or_null("Marker3") as Sprite2D
@@ -659,6 +663,11 @@ func _update_upgrade_markers() -> void:
 	for count in upgrades.values():
 		total += count
 	
+	# Show background if there are any upgrades
+	if background != null:
+		background.visible = (total > 0)
+	
+	# Show the appropriate marker sprite (only one at a time)
 	marker_1.visible = (total == 1)
 	marker_2.visible = (total == 2)
 	marker_3.visible = (total >= 3)

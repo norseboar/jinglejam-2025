@@ -27,7 +27,6 @@ projectile_use_target = false
 projectile_arc_amplitude = 0.0
 projectile_ignore_until_target = false
 projectile_force_aoe_only = false
-max_hp = 30
 damage = 20
 speed = 4.0
 attack_range = 7.0
@@ -48,5 +47,8 @@ sprite_frames = ExtResource("3_tjwou")
 frame = 8
 frame_progress = 0.668208
 
+[node name="UpgradeMarkers" parent="." index="2"]
+position = Vector2(0, 5)
+
 [node name="Healthbar" parent="." index="3"]
-position = Vector2(-18, 4)
+position = Vector2(0, -3)

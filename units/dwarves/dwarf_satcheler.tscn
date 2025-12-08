@@ -45,8 +45,10 @@ impact_sounds = Array[AudioStream]([ExtResource("5_bpibc"), ExtResource("6_m45cr
 [node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = ExtResource("4_t1dey")
 autoplay = "idle"
-frame = 4
-frame_progress = 0.4655029
+frame_progress = 0.96331173
 
 [node name="UpgradeMarkers" parent="." index="2"]
-position = Vector2(0, -4)
+position = Vector2(3, 7)
+
+[node name="Healthbar" parent="." index="3"]
+position = Vector2(3, -1)

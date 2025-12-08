@@ -1,24 +1,25 @@
-[gd_scene load_steps=13 format=3 uid="uid://64c08orlqwik"]
+[gd_scene load_steps=10 format=3 uid="uid://64c08orlqwik"]
 
 [ext_resource type="Script" uid="uid://c36sx2wogsgew" path="res://scripts/archer.gd" id="1_71e6i"]
+[ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_unit"]
 [ext_resource type="PackedScene" uid="uid://bdw82wxhs38s0" path="res://units/demons/demon_archer_projectile.tscn" id="2_5v4jw"]
 [ext_resource type="AudioStream" uid="uid://jgo3qfi4dpcd" path="res://assets/sfx/demons/Dark Sigil B.wav" id="2_71e6i"]
 [ext_resource type="SpriteFrames" uid="uid://h0c0lfbqiyj8" path="res://assets/spriteframes/demons_archer.tres" id="2_d40i1"]
-[ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_71e6i"]
 [ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="3_ub768"]
-[ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_5v4jw"]
 [ext_resource type="Resource" uid="uid://d4baw5bu55blw" path="res://upgrades/rng_5.tres" id="4_665lu"]
-[ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_fiyps"]
 [ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_5.tres" id="5_hp1l8"]
 [ext_resource type="Resource" uid="uid://l0bc24e1i7ds" path="res://upgrades/atk_spd_1.tres" id="6_iekho"]
-[ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="8_5v4jw"]
 
-[node name="Unit2" type="Node2D"]
+[node name="Mage" instance=ExtResource("1_unit")]
 script = ExtResource("1_71e6i")
 projectile_scene = ExtResource("2_5v4jw")
 projectile_speed = 200.0
-max_hp = 30
-damage = 10
+splash_radius = 0.0
+impact_animation_scene = null
+projectile_use_target = false
+projectile_arc_amplitude = 0.0
+projectile_ignore_until_target = false
+projectile_force_aoe_only = false
 speed = 10.0
 attack_range = 5.0
 attack_speed = 3
@@ -31,28 +32,12 @@ available_upgrades = Array[ExtResource("3_ub768")]([ExtResource("4_665lu"), ExtR
 damage_sounds = Array[AudioStream]([])
 fire_sounds = Array[AudioStream]([ExtResource("2_71e6i")])
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = ExtResource("2_d40i1")
-animation = &"attack"
 frame_progress = 0.700168
 
-[node name="UpgradeMarkers" type="Node2D" parent="."]
-position = Vector2(0, -2)
+[node name="UpgradeMarkers" parent="." index="2"]
+position = Vector2(0, -4)
 
-[node name="Marker1" type="Sprite2D" parent="UpgradeMarkers"]
-position = Vector2(0, -11)
-texture = ExtResource("3_71e6i")
-
-[node name="Marker2" type="Sprite2D" parent="UpgradeMarkers"]
-position = Vector2(0, -11)
-texture = ExtResource("4_5v4jw")
-
-[node name="Marker3" type="Sprite2D" parent="UpgradeMarkers"]
-position = Vector2(0, -11)
-texture = ExtResource("5_fiyps")
-
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-bus = &"SFX"
-
-[node name="Healthbar" parent="." instance=ExtResource("8_5v4jw")]
-position = Vector2(-13, -4)
+[node name="Healthbar" parent="." index="3"]
+position = Vector2(0, -12)

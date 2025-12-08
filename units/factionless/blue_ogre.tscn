@@ -1,18 +1,15 @@
-[gd_scene load_steps=12 format=3 uid="uid://d8emyhc2jsnq"]
+[gd_scene load_steps=9 format=3 uid="uid://d8emyhc2jsnq"]
 
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_8sn7d"]
+[ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_unit"]
 [ext_resource type="SpriteFrames" uid="uid://bi6xwgs2hqn2l" path="res://assets/spriteframes/blue_ogre.tres" id="2_8sn7d"]
 [ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="2_djdsy"]
 [ext_resource type="AudioStream" uid="uid://bklc3p4acvet1" path="res://assets/sfx/ogre_club/HAMMER_Hit_Body_stereo.wav" id="2_umbpk"]
 [ext_resource type="Resource" uid="uid://dhaa5yrfn7frh" path="res://upgrades/hp_20.tres" id="3_djdsy"]
-[ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_rscdi"]
 [ext_resource type="Resource" uid="uid://bjhdh7tc83o52" path="res://upgrades/dmg_10.tres" id="4_djdsy"]
-[ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_dxbas"]
 [ext_resource type="Resource" uid="uid://l0bc24e1i7ds" path="res://upgrades/atk_spd_1.tres" id="4_jryw3"]
-[ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_1ne5f"]
-[ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="7_rscdi"]
 
-[node name="Unit" type="Node2D"]
+[node name="OgreElite" instance=ExtResource("1_unit")]
 script = ExtResource("1_8sn7d")
 max_hp = 200
 damage = 30
@@ -28,27 +25,11 @@ upgrade_cost = 10
 available_upgrades = Array[ExtResource("2_djdsy")]([ExtResource("3_djdsy"), ExtResource("4_djdsy"), ExtResource("4_jryw3")])
 damage_sounds = Array[AudioStream]([ExtResource("2_umbpk")])
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = ExtResource("2_8sn7d")
-animation = &"attack"
 
-[node name="UpgradeMarkers" type="Node2D" parent="."]
-position = Vector2(2, -5)
+[node name="UpgradeMarkers" parent="." index="2"]
+position = Vector2(4, -7)
 
-[node name="Marker1" type="Sprite2D" parent="UpgradeMarkers"]
-position = Vector2(0, -11)
-texture = ExtResource("3_rscdi")
-
-[node name="Marker2" type="Sprite2D" parent="UpgradeMarkers"]
-position = Vector2(0, -11)
-texture = ExtResource("4_dxbas")
-
-[node name="Marker3" type="Sprite2D" parent="UpgradeMarkers"]
-position = Vector2(0, -11)
-texture = ExtResource("5_1ne5f")
-
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-bus = &"SFX"
-
-[node name="Healthbar" parent="." instance=ExtResource("7_rscdi")]
-position = Vector2(-11, 5)
+[node name="Healthbar" parent="." index="3"]
+position = Vector2(4, -15)
