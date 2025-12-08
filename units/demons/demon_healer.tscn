@@ -6,10 +6,10 @@
 [ext_resource type="SpriteFrames" uid="uid://cssgylvptdirv" path="res://assets/spriteframes/demons_healer.tres" id="2_nlkpr"]
 [ext_resource type="Texture2D" uid="uid://c0a2kgms3r56x" path="res://assets/sprites/upgrade1.png" id="3_c0hlw"]
 [ext_resource type="Resource" uid="uid://bqm8cfthlmkbj" path="res://upgrades/hp_10.tres" id="3_ib0gl"]
-[ext_resource type="Resource" uid="uid://d4baw5bu55blw" path="res://upgrades/rng_5.tres" id="4_gqxij"]
 [ext_resource type="Texture2D" uid="uid://chrar41ut5ldr" path="res://assets/sprites/upgrade2.png" id="4_vnq4l"]
 [ext_resource type="Resource" uid="uid://dg86uoe2i7sud" path="res://upgrades/heal_10.tres" id="5_8mu1x"]
 [ext_resource type="Texture2D" uid="uid://q4xxobn6grp1" path="res://assets/sprites/upgrade3.png" id="5_ad8s3"]
+[ext_resource type="Resource" uid="uid://ddrbwuyyfgm6q" path="res://upgrades/cast_spd_1.tres" id="5_mncll"]
 [ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="7_c0hlw"]
 
 [node name="Unit2" type="Node2D"]
@@ -17,15 +17,15 @@ script = ExtResource("1_w1g8w")
 max_hp = 10
 damage = 0
 speed = 8.0
-attack_range = 10.0
-attack_speed = 4
+attack_range = 6.0
+attack_speed = 2
 attack_damage_frame = 4
 priority = 2
 heal_amount = 10
-display_name = "Demonic Priest"
-description = "A healer"
-upgrade_cost = 2
-available_upgrades = Array[ExtResource("2_mncll")]([ExtResource("3_ib0gl"), ExtResource("4_gqxij"), ExtResource("5_8mu1x")])
+display_name = "Shadow Priest"
+description = "Heals and shields units"
+base_recruit_cost = 15
+available_upgrades = Array[ExtResource("2_mncll")]([ExtResource("3_ib0gl"), ExtResource("5_8mu1x"), ExtResource("5_mncll")])
 damage_sounds = Array[AudioStream]([])
 fire_sounds = Array[AudioStream]([ExtResource("2_c0hlw")])
 
