@@ -482,9 +482,9 @@ func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:
 		die()
 
 
-func _spawn_damage_number(damage_amount: int) -> void:
-	"""Spawn a floating damage number at this unit's position."""
-	var damage_number := DamageNumberScene.instantiate()
+func _spawn_number(amount: int, number_type: String = "damage", horizontal_offset: float = 0.0) -> void:
+	"""Spawn a floating number at this unit's position with the specified type and optional horizontal offset."""
+	var number := DamageNumberScene.instantiate()
 
 	# Calculate spawn position at the top of the sprite
 	var spawn_position := global_position
@@ -500,16 +500,16 @@ func _spawn_damage_number(damage_amount: int) -> void:
 					if frame_texture:
 						sprite_height = frame_texture.get_height()
 
-		# Position at top of sprite
-		spawn_position = animated_sprite.global_position + Vector2(0, -sprite_height / 2)
+		# Position at top of sprite with optional horizontal offset
+		spawn_position = animated_sprite.global_position + Vector2(horizontal_offset, -sprite_height / 2)
 
 	# Set position BEFORE adding as child (so _ready() sees correct position)
-	damage_number.global_position = spawn_position
+	number.global_position = spawn_position
 
-	# Setup the damage number BEFORE adding as child (so _ready() can use the setup data)
-	damage_number.setup(damage_amount)
+	# Setup the number BEFORE adding as child (so _ready() can use the setup data)
+	number.setup(amount, number_type)
 
-	# Find the parent container to add the damage number to
+	# Find the parent container to add the number to
 	# We want to add it to the same level as units (not as a child of this unit)
 	var world_container: Node2D = null
 	if is_enemy and enemy_container != null:
@@ -522,7 +522,12 @@ func _spawn_damage_number(damage_amount: int) -> void:
 		world_container = get_parent()
 
 	# Add to world - this triggers _ready() which starts the animation
-	world_container.add_child(damage_number)
+	world_container.add_child(number)
+
+
+func _spawn_damage_number(damage_amount: int) -> void:
+	"""Spawn a floating damage number at this unit's position."""
+	_spawn_number(damage_amount, "damage")
 
 
 func receive_heal(amount: int) -> void:
@@ -530,12 +535,23 @@ func receive_heal(amount: int) -> void:
 	if state == "dying" or current_hp <= 0:
 		return
 
-	# Heal HP (clamped to max)
+	# Calculate actual heal amount (may be clamped to max HP)
+	var old_hp := current_hp
 	current_hp = min(current_hp + amount, max_hp)
+	var actual_heal := current_hp - old_hp
 
 	# Apply heal armor = half of heal amount (not stacking, just refresh)
-	heal_armor = floor(amount / 2.0)
+	var shield_amount: int = int(floor(amount / 2.0))
+	heal_armor = shield_amount
 	heal_armor_timer = heal_armor_duration
+
+	# Spawn healing numbers: heal amount (green) and shield amount (cyan/blue)
+	# Always show heal number if we attempted to heal (even if 0 due to being at max HP)
+	if amount > 0:
+		_spawn_number(actual_heal, "heal", -10.0)  # Heal number, offset left
+	# Always show shield number if shield was applied
+	if shield_amount > 0:
+		_spawn_number(shield_amount, "shield", 10.0)  # Shield number, offset right
 
 	# Update healthbar
 	if healthbar:
