@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bv6hwkfbeqwx1"]
 
-[ext_resource type="SpriteFrames" uid="uid://bxrc3tg4tm4s3" path="res://assets/spriteframes/healing_vfx.tres" id="1_j4avj"]
-[ext_resource type="Script" uid="uid://dy2btsg3gbwbw" path="res://scripts/impact_animation.gd" id="2_j4avj"]
+[ext_resource type="SpriteFrames" uid="uid://bxrc3tg4tm4s3" path="res://assets/misc_spriteframes/healing_vfx.tres" id="1_j4avj"]
+[ext_resource type="Script" path="res://scripts/impact_animation.gd" id="2_j4avj"]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D"]
 texture_filter = 1

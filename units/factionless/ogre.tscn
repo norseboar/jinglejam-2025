@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_unit"]
 [ext_resource type="AudioStream" uid="uid://bklc3p4acvet1" path="res://assets/sfx/ogre_club/HAMMER_Hit_Body_stereo.wav" id="2_4ly1c"]
 [ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="2_q28u0"]
-[ext_resource type="SpriteFrames" uid="uid://dut5wdvjr0ypa" path="res://assets/spriteframes/ogre.tres" id="2_t42t4"]
+[ext_resource type="SpriteFrames" uid="uid://dut5wdvjr0ypa" path="res://assets/sprites/factionless/ogre.tres" id="2_t42t4"]
 [ext_resource type="Resource" uid="uid://dhaa5yrfn7frh" path="res://upgrades/hp_20.tres" id="3_q28u0"]
 [ext_resource type="Resource" uid="uid://bjhdh7tc83o52" path="res://upgrades/dmg_10.tres" id="4_geo24"]
 [ext_resource type="Resource" uid="uid://l0bc24e1i7ds" path="res://upgrades/atk_spd_1.tres" id="5_ijv5w"]

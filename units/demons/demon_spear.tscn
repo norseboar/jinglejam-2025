@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_ndutp"]
 [ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_unit"]
 [ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="2_4w8yq"]
-[ext_resource type="SpriteFrames" uid="uid://djkxbys6oii26" path="res://assets/spriteframes/demon_spear.tres" id="2_ndutp"]
+[ext_resource type="SpriteFrames" uid="uid://djkxbys6oii26" path="res://assets/sprites/demons/demon_spear.tres" id="2_ndutp"]
 [ext_resource type="Resource" uid="uid://bqm8cfthlmkbj" path="res://upgrades/hp_10.tres" id="3_ofls6"]
 [ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_5.tres" id="4_u3kg2"]
 [ext_resource type="Resource" uid="uid://l0bc24e1i7ds" path="res://upgrades/atk_spd_1.tres" id="5_4w8yq"]
@@ -21,6 +21,6 @@ description = "Flies to dangerous units"
 upgrade_cost = 2
 available_upgrades = Array[ExtResource("2_4w8yq")]([ExtResource("3_ofls6"), ExtResource("4_u3kg2"), ExtResource("5_4w8yq")])
 
-[node name="AnimatedSprite2D" parent="." index="0"]
+[node name="AnimatedSprite2D" parent="." index="1"]
 sprite_frames = ExtResource("2_ndutp")
 animation = &"idle"

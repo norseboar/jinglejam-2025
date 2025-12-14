@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_2rwqy"]
 [ext_resource type="Script" uid="uid://c36sx2wogsgew" path="res://scripts/archer.gd" id="1_tjwou"]
 [ext_resource type="PackedScene" uid="uid://bfpx6jiop0s3q" path="res://units/humans/projectile_ballista.tscn" id="2_kb8w8"]
-[ext_resource type="SpriteFrames" uid="uid://dkfjiynmfyb40" path="res://assets/spriteframes/ballista.tres" id="3_tjwou"]
+[ext_resource type="SpriteFrames" uid="uid://dkfjiynmfyb40" path="res://assets/sprites/human/ballista.tres" id="3_tjwou"]
 [ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="4_12rvi"]
 [ext_resource type="AudioStream" uid="uid://cg6bkuvamg6qw" path="res://assets/sfx/ballista_fire/Arrow Flying Past 6.wav" id="4_rbs72"]
 [ext_resource type="Resource" uid="uid://d4baw5bu55blw" path="res://upgrades/rng_5.tres" id="5_0mfv7"]

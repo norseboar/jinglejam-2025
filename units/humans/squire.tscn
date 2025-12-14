@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_de5d7"]
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="1_e8w7h"]
-[ext_resource type="SpriteFrames" uid="uid://knqbris7i53u" path="res://assets/spriteframes/squire.tres" id="2_e8w7h"]
+[ext_resource type="SpriteFrames" uid="uid://knqbris7i53u" path="res://assets/sprites/human/squire.tres" id="2_e8w7h"]
 [ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="3_e42qj"]
 [ext_resource type="Resource" uid="uid://bqm8cfthlmkbj" path="res://upgrades/hp_10.tres" id="4_5673y"]
 [ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_5.tres" id="5_2k6kh"]
@@ -21,5 +21,5 @@ base_recruit_cost = 5
 upgrade_cost = 1
 available_upgrades = Array[ExtResource("3_e42qj")]([ExtResource("4_5673y"), ExtResource("5_2k6kh"), ExtResource("6_e42qj")])
 
-[node name="AnimatedSprite2D" parent="." index="0"]
+[node name="AnimatedSprite2D" parent="." index="1"]
 sprite_frames = ExtResource("2_e8w7h")

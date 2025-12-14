@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://s7jjret7o6yr"]
 
-[ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/spriteframes/knight.tres" id="1_bepfd"]
+[ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/sprites/human/knight.tres" id="1_bepfd"]
 
 [node name="DragPreview" type="Control"]
 layout_mode = 3

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dglhowo45qkr4"]
 
-[ext_resource type="SpriteFrames" uid="uid://ytk03xe3jse0" path="res://assets/spriteframes/satchel_vfx.tres" id="1_khrfs"]
-[ext_resource type="Script" uid="uid://dy2btsg3gbwbw" path="res://scripts/impact_animation.gd" id="2_k3epr"]
+[ext_resource type="SpriteFrames" uid="uid://ytk03xe3jse0" path="res://assets/sprites/dwarves/satchel_vfx.tres" id="1_khrfs"]
+[ext_resource type="Script" path="res://scripts/impact_animation.gd" id="2_k3epr"]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D"]
 sprite_frames = ExtResource("1_khrfs")

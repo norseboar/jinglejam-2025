@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_unit"]
 [ext_resource type="PackedScene" uid="uid://bdw82wxhs38s0" path="res://units/demons/demon_archer_projectile.tscn" id="2_5v4jw"]
 [ext_resource type="AudioStream" uid="uid://jgo3qfi4dpcd" path="res://assets/sfx/demons/Dark Sigil B.wav" id="2_71e6i"]
-[ext_resource type="SpriteFrames" uid="uid://h0c0lfbqiyj8" path="res://assets/spriteframes/demons_archer.tres" id="2_d40i1"]
+[ext_resource type="SpriteFrames" uid="uid://h0c0lfbqiyj8" path="res://assets/sprites/demons/demons_archer.tres" id="2_d40i1"]
 [ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="3_ub768"]
 [ext_resource type="Resource" uid="uid://d4baw5bu55blw" path="res://upgrades/rng_5.tres" id="4_665lu"]
 [ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_5.tres" id="5_hp1l8"]
@@ -32,12 +32,12 @@ available_upgrades = Array[ExtResource("3_ub768")]([ExtResource("4_665lu"), ExtR
 damage_sounds = Array[AudioStream]([])
 fire_sounds = Array[AudioStream]([ExtResource("2_71e6i")])
 
-[node name="AnimatedSprite2D" parent="." index="0"]
+[node name="AnimatedSprite2D" parent="." index="1"]
 sprite_frames = ExtResource("2_d40i1")
 frame_progress = 0.700168
 
-[node name="UpgradeMarkers" parent="." index="2"]
+[node name="UpgradeMarkers" parent="." index="3"]
 position = Vector2(0, -4)
 
-[node name="Healthbar" parent="." index="3"]
+[node name="Healthbar" parent="." index="4"]
 position = Vector2(0, -12)

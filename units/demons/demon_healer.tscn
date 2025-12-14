@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://cndk3otdr1x8c" path="res://scripts/healer.gd" id="1_w1g8w"]
 [ext_resource type="AudioStream" uid="uid://ddiujl58sj6d6" path="res://assets/sfx/demons/Dark Heal A.wav" id="2_c0hlw"]
 [ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="2_mncll"]
-[ext_resource type="SpriteFrames" uid="uid://cssgylvptdirv" path="res://assets/spriteframes/demons_healer.tres" id="2_nlkpr"]
+[ext_resource type="SpriteFrames" uid="uid://cssgylvptdirv" path="res://assets/sprites/demons/demons_healer.tres" id="2_nlkpr"]
 [ext_resource type="PackedScene" uid="uid://bv6hwkfbeqwx1" path="res://units/demons/healing_vfx.tscn" id="3_ad8s3"]
 [ext_resource type="Resource" uid="uid://dhaa5yrfn7frh" path="res://upgrades/hp_20.tres" id="3_mncll"]
 [ext_resource type="Resource" uid="uid://dg86uoe2i7sud" path="res://upgrades/heal_10.tres" id="5_8mu1x"]
@@ -28,12 +28,12 @@ available_upgrades = Array[ExtResource("2_mncll")]([ExtResource("3_mncll"), ExtR
 damage_sounds = Array[AudioStream]([])
 fire_sounds = Array[AudioStream]([ExtResource("2_c0hlw")])
 
-[node name="AnimatedSprite2D" parent="." index="0"]
+[node name="AnimatedSprite2D" parent="." index="1"]
 sprite_frames = ExtResource("2_nlkpr")
 autoplay = "idle"
 
-[node name="UpgradeMarkers" parent="." index="2"]
+[node name="UpgradeMarkers" parent="." index="3"]
 position = Vector2(1, -4)
 
-[node name="Healthbar" parent="." index="3"]
+[node name="Healthbar" parent="." index="4"]
 position = Vector2(1, -12)

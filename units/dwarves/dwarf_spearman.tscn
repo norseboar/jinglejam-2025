@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_pw30i"]
 [ext_resource type="Script" uid="uid://d2ysyfkg3evqb" path="res://scripts/swordsman.gd" id="2_66k5u"]
 [ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="3_jryk5"]
-[ext_resource type="SpriteFrames" uid="uid://d23wfea1q7erd" path="res://assets/spriteframes/dwarf_spearman.tres" id="3_u18bb"]
+[ext_resource type="SpriteFrames" uid="uid://d23wfea1q7erd" path="res://assets/sprites/dwarves/dwarf_spearman.tres" id="3_u18bb"]
 [ext_resource type="Resource" uid="uid://bqm8cfthlmkbj" path="res://upgrades/hp_10.tres" id="4_ubojj"]
 [ext_resource type="Resource" uid="uid://duxu0cw7jtaoy" path="res://upgrades/dmg_5.tres" id="5_vwamq"]
 [ext_resource type="Resource" uid="uid://bi8au7qa005et" path="res://upgrades/def_3.tres" id="6_jryk5"]
@@ -21,6 +21,6 @@ upgrade_cost = 2
 available_upgrades = Array[ExtResource("3_jryk5")]([ExtResource("4_ubojj"), ExtResource("5_vwamq"), ExtResource("6_jryk5")])
 damage_sounds = Array[AudioStream]([])
 
-[node name="AnimatedSprite2D" parent="." index="0"]
+[node name="AnimatedSprite2D" parent="." index="1"]
 sprite_frames = ExtResource("3_u18bb")
 autoplay = "idle"

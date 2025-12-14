@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://b6ra1cx32f7ve" path="res://units/unit.tscn" id="1_ccyet"]
 [ext_resource type="Script" uid="uid://cehfsnecuy0pa" path="res://scripts/artillery_unit.gd" id="2_xgns3"]
 [ext_resource type="PackedScene" uid="uid://thp8cavfgw4e" path="res://units/dwarves/projectile_mortar.tscn" id="3_7n0xh"]
-[ext_resource type="SpriteFrames" uid="uid://kil0yya47sgr" path="res://assets/spriteframes/dwarf_mortarman.tres" id="3_ccyet"]
+[ext_resource type="SpriteFrames" uid="uid://kil0yya47sgr" path="res://assets/sprites/dwarves/dwarf_mortarman.tres" id="3_ccyet"]
 [ext_resource type="PackedScene" uid="uid://bmxoi03d6ndhn" path="res://units/dwarves/target_marker.tscn" id="4_817ri"]
 [ext_resource type="PackedScene" uid="uid://b15ykhsliiwx4" path="res://scenes/vfx/mortar_vfx.tscn" id="5_a5k0m"]
 [ext_resource type="Script" uid="uid://dwm4ib0hbyy4y" path="res://scripts/upgrade.gd" id="6_8sdwu"]

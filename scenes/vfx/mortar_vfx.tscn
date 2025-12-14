@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b15ykhsliiwx4"]
 
-[ext_resource type="SpriteFrames" uid="uid://ccermlmjkhydw" path="res://assets/spriteframes/mortar_vfx.tres" id="1_o10pb"]
-[ext_resource type="Script" uid="uid://dy2btsg3gbwbw" path="res://scripts/impact_animation.gd" id="2_qdwp1"]
+[ext_resource type="SpriteFrames" uid="uid://ccermlmjkhydw" path="res://assets/sprites/dwarves/mortar_vfx.tres" id="1_o10pb"]
+[ext_resource type="Script" path="res://scripts/impact_animation.gd" id="2_qdwp1"]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D"]
 sprite_frames = ExtResource("1_o10pb")

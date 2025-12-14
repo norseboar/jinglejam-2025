@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://xhr2hltddjyk" path="res://scripts/coin_animation.gd" id="1_coin_anim"]
 [ext_resource type="AudioStream" uid="uid://b57jpuneg83vs" path="res://assets/sfx/coins/Coin in purse shaking 2.wav" id="2_6hf7y"]
 [ext_resource type="AudioStream" uid="uid://dftvo5tbil2lf" path="res://assets/sfx/coins/Coin in purse shaking.wav" id="2_q3pqi"]
-[ext_resource type="SpriteFrames" uid="uid://6aqvq4cdcoqs" path="res://assets/spriteframes/coin.tres" id="2_spriteframes"]
+[ext_resource type="SpriteFrames" uid="uid://6aqvq4cdcoqs" path="res://assets/misc_spriteframes/coin.tres" id="2_spriteframes"]
 [ext_resource type="AudioStream" uid="uid://dmlh812cgkt4r" path="res://assets/sfx/coins/Coin in purse shaking 7.wav" id="3_rov02"]
 [ext_resource type="AudioStream" uid="uid://c53708uiyucka" path="res://assets/sfx/coins/Coin in purse shaking 8.wav" id="4_o1e4y"]
 [ext_resource type="AudioStream" uid="uid://wlbpxfg0bl6" path="res://assets/sfx/coins/Coin in purse shaking 9.wav" id="5_fnbs6"]
