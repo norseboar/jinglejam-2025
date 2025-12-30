@@ -1,4 +1,4 @@
-[gd_scene load_steps=67 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=62 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="1_ca42v"]
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="3_05nbr"]
 [ext_resource type="Texture2D" uid="uid://bxnr8frb2awil" path="res://assets/backgrounds/autumn-leaves-forest.jpg" id="4_0sl42"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="5_oaba0"]
-[ext_resource type="PackedScene" path="res://scenes/enemy_spawn_slot.tscn" id="6_458eo"]
+[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="6_458eo"]
 [ext_resource type="PackedScene" uid="uid://c0d47vd87vlmt" path="res://scenes/ui/hud.tscn" id="6_p57ef"]
 [ext_resource type="Script" uid="uid://bwkdnef87rpc7" path="res://scripts/upgrade_screen.gd" id="7_0tnpc"]
 [ext_resource type="Resource" uid="uid://ccncwdniynkcg" path="res://units/rosters/starting_rosters/humans.tres" id="7_e1j6l"]
@@ -37,18 +37,11 @@
 [ext_resource type="Resource" uid="uid://q7vi0odeibft" path="res://levels/level_10.tres" id="18_o8ni1"]
 [ext_resource type="Texture2D" uid="uid://belfmhbyw1w1s" path="res://assets/sprites/ui/buy_button/buy_button_pressed.png" id="19_bt5mj"]
 [ext_resource type="Texture2D" uid="uid://cadwb1i3siefs" path="res://assets/sprites/ui/buy_button/buy_button_highlight.png" id="20_e1j6l"]
-[ext_resource type="Script" path="res://scripts/tinted_button.gd" id="23_pl11u"]
-[ext_resource type="Texture2D" uid="uid://bduybapepv747" path="res://assets/sprites/human/Knight.png" id="26_3hbvx"]
-[ext_resource type="Material" uid="uid://cyw5aohyrrd4p" path="res://resources/background_mat.tres" id="26_q8j3a"]
-[ext_resource type="Texture2D" uid="uid://1xufpkwejdwp" path="res://resources/background_gradient_bridge.tres" id="27_ms3bu"]
-[ext_resource type="Texture2D" uid="uid://01p7222oltqo" path="res://assets/sprites/demons/demons_archer.png" id="27_q8j3a"]
+[ext_resource type="Script" uid="uid://d4eh8dp6lwy7d" path="res://scripts/tinted_button.gd" id="23_pl11u"]
 [ext_resource type="Texture2D" uid="uid://do3fnx1lc1ppm" path="res://assets/sprites/ui/map.png" id="27_v2yb1"]
 [ext_resource type="Script" uid="uid://ba8mk545ccyla" path="res://scripts/faction_select_screen.gd" id="27_wljb1"]
-[ext_resource type="Texture2D" uid="uid://b674x3rq0v6h7" path="res://assets/sprites/dwarves/dwarf_satcheler.png" id="28_ms3bu"]
-[ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/sprites/human/knight.tres" id="28_suyxu"]
 [ext_resource type="Resource" uid="uid://cptdpd3b8m1h0" path="res://units/rosters/starting_rosters/dwarves.tres" id="28_v2yb1"]
 [ext_resource type="Resource" uid="uid://dvenpd2yimxv5" path="res://units/rosters/starting_rosters/demons.tres" id="29_js0lu"]
-[ext_resource type="SpriteFrames" uid="uid://h0c0lfbqiyj8" path="res://assets/sprites/demons/demons_archer.tres" id="29_sgl2t"]
 [ext_resource type="Texture2D" uid="uid://dfw3054d00mvj" path="res://assets/sprites/ui/sound1.png" id="33_twgab"]
 [ext_resource type="Texture2D" uid="uid://qpuxv3d6ifma" path="res://assets/sprites/ui/sound3.png" id="34_02fa5"]
 [ext_resource type="Texture2D" uid="uid://c2e2rntjvj64l" path="res://assets/sprites/ui/sound2.png" id="35_nepv3"]
@@ -56,6 +49,8 @@
 [ext_resource type="Script" uid="uid://gfq4k1nlmm6l" path="res://scripts/sound_toggle_button.gd" id="36_7025r"]
 [ext_resource type="Texture2D" uid="uid://riiup36r0iud" path="res://assets/sprites/ui/sell_button/sell_button_pressed.png" id="36_o8ni1"]
 [ext_resource type="Texture2D" uid="uid://d3jjil1h762ms" path="res://assets/sprites/ui/sell_button/sell_button_highlight.png" id="37_3hbvx"]
+[ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/sprites/human/knight.tres" id="46_i4re6"]
+[ext_resource type="SpriteFrames" uid="uid://h0c0lfbqiyj8" path="res://assets/sprites/demons/demons_archer.tres" id="46_rm0al"]
 
 [sub_resource type="PackedScene" id="PackedScene_o8ni1"]
 _bundled = {
@@ -140,14 +135,12 @@ spacing_bottom = -10
 [sub_resource type="FontVariation" id="FontVariation_ms3bu"]
 spacing_bottom = -8
 
-[node name="Game" type="Control" node_paths=PackedStringArray("background_rect", "gradient_overlay", "gameplay", "player_units", "enemy_units", "hud", "ui_layer", "faction_select_screen") groups=["game"]]
+[node name="Game" type="Control" node_paths=PackedStringArray("background_rect", "gameplay", "player_units", "enemy_units", "hud", "ui_layer", "faction_select_screen") groups=["game"]]
 texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 1.0
-offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_ca42v")
@@ -160,97 +153,31 @@ upgrade_background = ExtResource("7_gee14")
 starting_roster = ExtResource("7_e1j6l")
 full_rosters = Array[ExtResource("8_pl11u")]([ExtResource("10_qnb83"), ExtResource("11_sww3w"), ExtResource("11_pl11u")])
 neutral_roster = ExtResource("12_bhx41")
-background_rect = NodePath("BackgroundRect")
-gradient_overlay = NodePath("BackgroundRect/TextureRect")
-gameplay = NodePath("SubViewportContainer/SubViewport/Gameplay")
-player_units = NodePath("SubViewportContainer/SubViewport/Gameplay/PlayerUnits")
-enemy_units = NodePath("SubViewportContainer/SubViewport/Gameplay/EnemyUnits")
-hud = NodePath("SubViewportContainer/SubViewport/UI/HUD")
-ui_layer = NodePath("SubViewportContainer/SubViewport/UI")
-faction_select_screen = NodePath("SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen")
+background_rect = NodePath("TextureRect")
+gameplay = NodePath("Gameplay")
+player_units = NodePath("Gameplay/PlayerUnits")
+enemy_units = NodePath("Gameplay/EnemyUnits")
+hud = NodePath("UI/HUD")
+ui_layer = NodePath("UI")
+faction_select_screen = NodePath("UI/HUD/FactionSelectScreen")
 
-[node name="BackgroundRect" type="TextureRect" parent="."]
-texture_filter = 2
-material = ExtResource("26_q8j3a")
+[node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("4_0sl42")
-expand_mode = 3
 
-[node name="TextureRect" type="TextureRect" parent="BackgroundRect"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("27_ms3bu")
+[node name="UI" type="CanvasLayer" parent="."]
 
-[node name="TestUnits" type="Node2D" parent="."]
-visible = false
-
-[node name="Sprite2D" type="Sprite2D" parent="TestUnits"]
-position = Vector2(282, 338)
-texture = ExtResource("26_3hbvx")
-hframes = 10
-vframes = 4
-
-[node name="Sprite2D2" type="Sprite2D" parent="TestUnits"]
-position = Vector2(398, 344)
-texture = ExtResource("26_3hbvx")
-hframes = 10
-vframes = 4
-
-[node name="Sprite2D3" type="Sprite2D" parent="TestUnits"]
-position = Vector2(345, 317)
-texture = ExtResource("26_3hbvx")
-hframes = 10
-vframes = 4
-
-[node name="Sprite2D4" type="Sprite2D" parent="TestUnits"]
-position = Vector2(477, 337)
-texture = ExtResource("27_q8j3a")
-hframes = 10
-vframes = 4
-
-[node name="Sprite2D5" type="Sprite2D" parent="TestUnits"]
-position = Vector2(579, 345)
-texture = ExtResource("28_ms3bu")
-hframes = 10
-vframes = 4
-
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-stretch = true
-
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
-transparent_bg = true
-handle_input_locally = false
-canvas_item_default_texture_filter = 0
-audio_listener_enable_2d = true
-size = Vector2i(1280, 720)
-size_2d_override = Vector2i(640, 360)
-size_2d_override_stretch = true
-render_target_update_mode = 4
-
-[node name="UI" type="CanvasLayer" parent="SubViewportContainer/SubViewport"]
-
-[node name="HUD" parent="SubViewportContainer/SubViewport/UI" node_paths=PackedStringArray("upgrade_screen", "battle_select_screen") instance=ExtResource("6_p57ef")]
+[node name="HUD" parent="UI" node_paths=PackedStringArray("upgrade_screen", "battle_select_screen") instance=ExtResource("6_p57ef")]
 offset_right = 0.0
 offset_bottom = 0.0
 upgrade_screen = NodePath("UpgradeScreen")
 battle_select_screen = NodePath("BattleSelectScreen")
 
-[node name="UpgradeScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "start_battle_button", "editor_background", "upgrade_instructions", "upgrade_data", "upgrade_button_1", "upgrade_button_2", "upgrade_button_3", "upgrade_label_1", "upgrade_label_2", "upgrade_label_3", "upgrade_price_label", "sell_button", "sell_price_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_price_label", "gold_label", "draft_label", "recruit_label")]
+[node name="UpgradeScreen" type="Control" parent="UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "start_battle_button", "editor_background", "upgrade_instructions", "upgrade_data", "upgrade_button_1", "upgrade_button_2", "upgrade_button_3", "upgrade_label_1", "upgrade_label_2", "upgrade_label_3", "upgrade_price_label", "sell_button", "sell_price_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_price_label", "gold_label", "draft_label", "recruit_label")]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -284,7 +211,7 @@ gold_label = NodePath("CenterPanel/VBoxContainer/GoldLabel")
 draft_label = NodePath("Control/EnemyArmy/MarginContainer/VBoxContainer/RecruitStartTeamLabel")
 recruit_label = NodePath("Control/EnemyArmy/MarginContainer/VBoxContainer/RecruitEnemyLabel")
 
-[node name="DebugBackground" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+[node name="DebugBackground" type="TextureRect" parent="UI/HUD/UpgradeScreen"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -295,14 +222,14 @@ mouse_filter = 2
 texture = ExtResource("7_gee14")
 expand_mode = 3
 
-[node name="Control" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+[node name="Control" type="Control" parent="UI/HUD/UpgradeScreen"]
 anchors_preset = 0
 offset_left = -7.25
 offset_top = -161.0
 offset_right = 32.75
 offset_bottom = -121.0
 
-[node name="EnemyArmy" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control"]
+[node name="EnemyArmy" type="Panel" parent="UI/HUD/UpgradeScreen/Control"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -316,7 +243,7 @@ offset_bottom = 249.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/EnemyArmy"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/HUD/UpgradeScreen/Control/EnemyArmy"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -325,24 +252,24 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_top = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/EnemyArmy/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/HUD/UpgradeScreen/Control/EnemyArmy/MarginContainer"]
 layout_mode = 2
 
-[node name="RecruitEnemyLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/EnemyArmy/MarginContainer/VBoxContainer"]
+[node name="RecruitEnemyLabel" type="Label" parent="UI/HUD/UpgradeScreen/Control/EnemyArmy/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "They will join you, for a price"
 horizontal_alignment = 1
 
-[node name="RecruitStartTeamLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/EnemyArmy/MarginContainer/VBoxContainer"]
+[node name="RecruitStartTeamLabel" type="Label" parent="UI/HUD/UpgradeScreen/Control/EnemyArmy/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Select your army"
 horizontal_alignment = 1
 
-[node name="EnemyGroup" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/EnemyArmy/MarginContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
+[node name="EnemyGroup" parent="UI/HUD/UpgradeScreen/Control/EnemyArmy/MarginContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="PlayerArmy" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control"]
+[node name="PlayerArmy" type="Panel" parent="UI/HUD/UpgradeScreen/Control"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -356,7 +283,7 @@ offset_bottom = 249.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/PlayerArmy"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/HUD/UpgradeScreen/Control/PlayerArmy"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -365,26 +292,26 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_top = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/PlayerArmy/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/HUD/UpgradeScreen/Control/PlayerArmy/MarginContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/PlayerArmy/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="UI/HUD/UpgradeScreen/Control/PlayerArmy/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Upgrade your army"
 horizontal_alignment = 1
 
-[node name="PlayerGroup" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/PlayerArmy/MarginContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
+[node name="PlayerGroup" parent="UI/HUD/UpgradeScreen/Control/PlayerArmy/MarginContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="UpgradePane" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control"]
+[node name="UpgradePane" type="Panel" parent="UI/HUD/UpgradeScreen/Control"]
 layout_mode = 0
 offset_left = 390.0
 offset_top = 297.75
 offset_right = 640.0
 offset_bottom = 467.75
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/HUD/UpgradeScreen/Control/UpgradePane"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -396,22 +323,22 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="UpgradeInstructions" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer"]
+[node name="UpgradeInstructions" type="Label" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer"]
 visible = false
 layout_mode = 2
 text = "Select a unit to upgrade"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="UpgradeData" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer"]
+[node name="UpgradeData" type="Control" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer"]
 layout_mode = 2
 
-[node name="UnitSummary" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData" instance=ExtResource("11_kvpfn")]
+[node name="UnitSummary" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData" instance=ExtResource("11_kvpfn")]
 layout_mode = 1
 offset_right = 0.0
 offset_bottom = 0.0
 
-[node name="Divider" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData"]
+[node name="Divider" type="ColorRect" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData"]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -423,7 +350,7 @@ grow_horizontal = 2
 grow_vertical = 0
 color = Color(0.42352942, 0.11372549, 0.105882354, 1)
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData"]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -433,69 +360,69 @@ offset_top = -21.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="UpgradePriceLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2"]
+[node name="UpgradePriceLabel" type="Label" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2"]
 layout_mode = 2
 text = "Upgrade: 5 Gold"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2"]
 layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="UpgradeGroup" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
+[node name="UpgradeGroup" type="HBoxContainer" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup"]
+[node name="Label" type="Label" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup"]
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_rm0al")
 text = "+1 HP"
 
-[node name="Upgrade1" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup"]
+[node name="Upgrade1" type="TextureButton" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup"]
 layout_mode = 2
 texture_normal = ExtResource("18_37s47")
 texture_pressed = ExtResource("19_bt5mj")
 texture_hover = ExtResource("20_e1j6l")
 script = ExtResource("23_pl11u")
 
-[node name="UpgradeGroup2" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
+[node name="UpgradeGroup2" type="HBoxContainer" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup2"]
+[node name="Label" type="Label" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup2"]
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_8qswn")
 text = "+1 ATK
 SPD"
 
-[node name="Upgrade2" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup2"]
+[node name="Upgrade2" type="TextureButton" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup2"]
 layout_mode = 2
 texture_normal = ExtResource("18_37s47")
 texture_pressed = ExtResource("19_bt5mj")
 texture_hover = ExtResource("20_e1j6l")
 script = ExtResource("23_pl11u")
 
-[node name="UpgradeGroup3" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
+[node name="UpgradeGroup3" type="HBoxContainer" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup3"]
+[node name="Label" type="Label" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup3"]
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_rm0al")
 text = "+1 DMG"
 
-[node name="Upgrade3" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup3"]
+[node name="Upgrade3" type="TextureButton" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup3"]
 layout_mode = 2
 texture_normal = ExtResource("18_37s47")
 texture_pressed = ExtResource("19_bt5mj")
 texture_hover = ExtResource("20_e1j6l")
 script = ExtResource("23_pl11u")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -506,7 +433,7 @@ grow_horizontal = 0
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="SellButton" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer"]
+[node name="SellButton" type="TextureButton" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
@@ -515,19 +442,19 @@ texture_pressed = ExtResource("36_o8ni1")
 texture_hover = ExtResource("37_3hbvx")
 script = ExtResource("23_pl11u")
 
-[node name="SellLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer"]
+[node name="SellLabel" type="Label" parent="UI/HUD/UpgradeScreen/Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer"]
 layout_mode = 2
 text = "+5 Gold"
 horizontal_alignment = 2
 
-[node name="RecruitPane" type="Panel" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control"]
+[node name="RecruitPane" type="Panel" parent="UI/HUD/UpgradeScreen/Control"]
 layout_mode = 0
 offset_left = 32.1875
 offset_top = 297.75
 offset_right = 232.1875
 offset_bottom = 467.75
 
-[node name="MarginContainer" type="MarginContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/HUD/UpgradeScreen/Control/RecruitPane"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -539,21 +466,21 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="RecruitInstructions" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer"]
+[node name="RecruitInstructions" type="Label" parent="UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer"]
 layout_mode = 2
 text = "Select a unit to recruit"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="RecruitData" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer"]
+[node name="RecruitData" type="Control" parent="UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer"]
 layout_mode = 2
 
-[node name="UnitSummary" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData" instance=ExtResource("11_kvpfn")]
+[node name="UnitSummary" parent="UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData" instance=ExtResource("11_kvpfn")]
 layout_mode = 1
 offset_right = 0.0
 offset_bottom = 0.0
 
-[node name="Divider" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData"]
+[node name="Divider" type="ColorRect" parent="UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData"]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -565,7 +492,7 @@ grow_horizontal = 2
 grow_vertical = 0
 color = Color(0.42352942, 0.11372549, 0.105882354, 1)
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData"]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -575,12 +502,12 @@ offset_top = -21.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="RecruitPriceLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData/VBoxContainer2"]
+[node name="RecruitPriceLabel" type="Label" parent="UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData/VBoxContainer2"]
 layout_mode = 2
 text = "Recruit: 5 Gold"
 horizontal_alignment = 1
 
-[node name="RecruitButton" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData/VBoxContainer2"]
+[node name="RecruitButton" type="TextureButton" parent="UI/HUD/UpgradeScreen/Control/RecruitPane/MarginContainer/RecruitData/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -589,7 +516,7 @@ texture_pressed = ExtResource("19_bt5mj")
 texture_hover = ExtResource("20_e1j6l")
 script = ExtResource("23_pl11u")
 
-[node name="CenterPanel" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen"]
+[node name="CenterPanel" type="PanelContainer" parent="UI/HUD/UpgradeScreen"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -603,30 +530,31 @@ offset_bottom = 10.5
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/CenterPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/HUD/UpgradeScreen/CenterPanel"]
 layout_mode = 2
 
-[node name="GoldLabel" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/CenterPanel/VBoxContainer"]
+[node name="GoldLabel" type="Label" parent="UI/HUD/UpgradeScreen/CenterPanel/VBoxContainer"]
 layout_mode = 2
 text = "Gold: 10"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="NextBattleButton" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/CenterPanel/VBoxContainer"]
+[node name="NextBattleButton" type="TextureButton" parent="UI/HUD/UpgradeScreen/CenterPanel/VBoxContainer"]
 layout_mode = 2
 texture_normal = ExtResource("13_264po")
 texture_pressed = ExtResource("14_1kice")
 texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
-[node name="FirstBattleButton" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/UpgradeScreen/CenterPanel/VBoxContainer"]
+[node name="FirstBattleButton" type="TextureButton" parent="UI/HUD/UpgradeScreen/CenterPanel/VBoxContainer"]
 layout_mode = 2
 texture_normal = ExtResource("13_264po")
 texture_pressed = ExtResource("14_1kice")
 texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
-[node name="BattleSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("options_container", "advance_button", "player_army_slot_group")]
+[node name="BattleSelectScreen" type="Control" parent="UI/HUD" node_paths=PackedStringArray("options_container", "advance_button", "player_army_slot_group")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -640,14 +568,14 @@ player_army_slot_group = NodePath("Panel/PanelContainer/VBoxContainer/UnitSlotGr
 battle_option_scene = ExtResource("14_trtic")
 background_texture = ExtResource("27_v2yb1")
 
-[node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen"]
+[node name="TextureRect" type="TextureRect" parent="UI/HUD/BattleSelectScreen"]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("27_v2yb1")
 
-[node name="Panel" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen"]
+[node name="Panel" type="Control" parent="UI/HUD/BattleSelectScreen"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -657,7 +585,7 @@ offset_right = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PanelContainer2" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel"]
+[node name="PanelContainer2" type="PanelContainer" parent="UI/HUD/BattleSelectScreen/Panel"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -668,14 +596,14 @@ offset_right = 41.0
 offset_bottom = 96.5
 grow_horizontal = 2
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/PanelContainer2"]
+[node name="Label2" type="Label" parent="UI/HUD/BattleSelectScreen/Panel/PanelContainer2"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Challenge
 an army"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/HUD/BattleSelectScreen/Panel"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -687,7 +615,7 @@ grow_horizontal = 2
 theme_override_constants/separation = 120
 alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel"]
+[node name="PanelContainer" type="PanelContainer" parent="UI/HUD/BattleSelectScreen/Panel"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -701,15 +629,15 @@ offset_bottom = -18.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/HUD/BattleSelectScreen/Panel/PanelContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="UnitSlotGroup" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
+[node name="UnitSlotGroup" parent="UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
 layout_mode = 2
 selection_mode = 0
 
-[node name="Button" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer"]
+[node name="Button" type="TextureButton" parent="UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 texture_normal = ExtResource("13_264po")
@@ -717,7 +645,7 @@ texture_pressed = ExtResource("14_1kice")
 texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
-[node name="FactionSelectScreen" type="Control" parent="SubViewportContainer/SubViewport/UI/HUD" node_paths=PackedStringArray("slot_group", "confirm_button", "faction_name_label")]
+[node name="FactionSelectScreen" type="Control" parent="UI/HUD" node_paths=PackedStringArray("slot_group", "confirm_button", "faction_name_label")]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -732,14 +660,14 @@ faction_name_label = NodePath("PanelContainer/VBoxContainer/Label2")
 rosters = Array[ExtResource("8_pl11u")]([ExtResource("7_e1j6l"), ExtResource("28_v2yb1"), ExtResource("29_js0lu")])
 background_texture = ExtResource("27_v2yb1")
 
-[node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen"]
+[node name="TextureRect" type="TextureRect" parent="UI/HUD/FactionSelectScreen"]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("27_v2yb1")
 
-[node name="PanelContainer" type="PanelContainer" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen"]
+[node name="PanelContainer" type="PanelContainer" parent="UI/HUD/FactionSelectScreen"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -753,11 +681,11 @@ offset_bottom = 79.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/HUD/FactionSelectScreen/PanelContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="Label3" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
+[node name="Label3" type="Label" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_ms3bu")
@@ -766,54 +694,54 @@ text = "The realm has fractured into roaming armies.
 Defeat all ten of them in battle to unite them under your banner."
 autowrap_mode = 3
 
-[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
+[node name="ColorRect" type="ColorRect" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
 color = Color(0.42352942, 0.11372549, 0.105882354, 1)
 
-[node name="Label" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Select a faction:"
 horizontal_alignment = 1
 
-[node name="UnitSlotGroup" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
+[node name="UnitSlotGroup" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup/UnitSlot/Panel" index="0"]
-sprite_frames = ExtResource("28_suyxu")
+[node name="AnimatedSprite2D" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup/UnitSlot/Panel" index="0"]
+sprite_frames = ExtResource("46_i4re6")
 
-[node name="AnimatedSprite2D" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup/UnitSlot3/Panel" index="0"]
+[node name="AnimatedSprite2D" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup/UnitSlot3/Panel" index="0"]
 position = Vector2(16, 15)
-sprite_frames = ExtResource("29_sgl2t")
+sprite_frames = ExtResource("46_rm0al")
 
-[node name="UnitSlot4" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="3"]
+[node name="UnitSlot4" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="3"]
 visible = false
 
-[node name="UnitSlot5" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="4"]
+[node name="UnitSlot5" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="4"]
 visible = false
 
-[node name="UnitSlot6" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="5"]
+[node name="UnitSlot6" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="5"]
 visible = false
 
-[node name="UnitSlot7" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="6"]
+[node name="UnitSlot7" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="6"]
 visible = false
 
-[node name="UnitSlot8" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="7"]
+[node name="UnitSlot8" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="7"]
 visible = false
 
-[node name="UnitSlot9" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="8"]
+[node name="UnitSlot9" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="8"]
 visible = false
 
-[node name="UnitSlot10" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="9"]
+[node name="UnitSlot10" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup" index="9"]
 visible = false
 
-[node name="Label2" type="Label" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Humans"
 horizontal_alignment = 1
 
-[node name="Button" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
+[node name="Button" type="TextureButton" parent="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 texture_normal = ExtResource("13_264po")
@@ -821,7 +749,7 @@ texture_pressed = ExtResource("14_1kice")
 texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
-[node name="SoundToggle" type="TextureButton" parent="SubViewportContainer/SubViewport/UI/HUD"]
+[node name="SoundToggle" type="TextureButton" parent="UI/HUD"]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -841,16 +769,17 @@ script = ExtResource("36_7025r")
 sound_on_texture = ExtResource("33_twgab")
 sound_off_texture = ExtResource("34_02fa5")
 
-[node name="Gameplay" type="Node2D" parent="SubViewportContainer/SubViewport"]
+[node name="Gameplay" type="Node2D" parent="."]
+position = Vector2(0, -1)
 
-[node name="PlayerUnits" type="Node2D" parent="SubViewportContainer/SubViewport/Gameplay"]
+[node name="PlayerUnits" type="Node2D" parent="Gameplay"]
 y_sort_enabled = true
 texture_filter = 1
 
-[node name="EnemyUnits" type="Node2D" parent="SubViewportContainer/SubViewport/Gameplay"]
+[node name="EnemyUnits" type="Node2D" parent="Gameplay"]
 y_sort_enabled = true
 texture_filter = 1
 
-[editable path="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup"]
-[editable path="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup/UnitSlot"]
-[editable path="SubViewportContainer/SubViewport/UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup/UnitSlot3"]
+[editable path="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup"]
+[editable path="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup/UnitSlot"]
+[editable path="UI/HUD/FactionSelectScreen/PanelContainer/VBoxContainer/UnitSlotGroup/UnitSlot3"]

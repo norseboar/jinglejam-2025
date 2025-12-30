@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="1_812al"]
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_v0msx"]
-[ext_resource type="PackedScene" path="res://scenes/enemy_spawn_slot.tscn" id="4_40h0h"]
+[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="4_40h0h"]
 [ext_resource type="Texture2D" uid="uid://bi1grelftlq6s" path="res://resources/background_gradient_grass.tres" id="4_r83ro"]
 [ext_resource type="TileSet" uid="uid://ccnes7bhueddo" path="res://battlefields/grass.tres" id="4_v0msx"]
 
@@ -39,6 +39,7 @@ grow_vertical = 2
 texture = ExtResource("4_r83ro")
 
 [node name="tilemap" type="Node2D" parent="EditorBackground"]
+position = Vector2(1, -243)
 
 [node name="TileMapLayer" type="TileMapLayer" parent="EditorBackground/tilemap"]
 texture_filter = 1
