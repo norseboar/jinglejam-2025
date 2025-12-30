@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1hxiefrdtgtf"
-path="res://.godot/imported/demon_skeleton.png-e289cc392d4d8cd4a6bf7e64a9aec699.ctex"
+uid="uid://clbf7tqiswuxm"
+path="res://.godot/imported/demon_necromancer.png-d2f5c70234795c117d327712a877ad5a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/demons/demon_skeleton.png"
-dest_files=["res://.godot/imported/demon_skeleton.png-e289cc392d4d8cd4a6bf7e64a9aec699.ctex"]
+source_file="res://assets/sprites/demons/demon_necromancer.png"
+dest_files=["res://.godot/imported/demon_necromancer.png-d2f5c70234795c117d327712a877ad5a.ctex"]
 
 [params]
 
