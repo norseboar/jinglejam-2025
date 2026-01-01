@@ -76,10 +76,14 @@ var enemy_container: Node2D = null
 # Reference to the container holding friendly units (set by Game.gd when spawning)
 var friendly_container: Node2D = null
 
+# Reference to the spawn slot this unit is placed on (for re-dragging during preparation)
+var spawn_slot: SpawnSlot = null
+
 # Node references
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
 @onready var healthbar: Healthbar = $Healthbar
+@onready var drag_handle: Control = $DragHandle
 
 
 func _ready() -> void:

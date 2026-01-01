@@ -4,6 +4,8 @@ class_name UnitDragHandle
 ## Drag handle overlay for placed units
 ## Allows dragging units between spawn slots during preparation phase
 
+@export var drag_preview_scene: PackedScene  # Custom scene for drag preview (optional - falls back to simple preview if not set)
+
 var spawn_slot: SpawnSlot = null  # Reference to the spawn slot this unit is on
 
 
@@ -21,11 +23,13 @@ func _ready() -> void:
 	# Center on parent unit
 	position = Vector2(-24, -24)
 	
-	# Ensure drag handle is on top
-	z_index = 100
+	# Get spawn slot reference from parent unit
+	var unit := get_parent() as Unit
+	if unit:
+		spawn_slot = unit.spawn_slot
 	
-	print("UnitDragHandle setup complete - position: %s, size: %s, mouse_filter: %s, z_index: %d" % [position, size, mouse_filter, z_index])
-	print("Parent: %s, global_position: %s" % [get_parent(), global_position])
+	print("UnitDragHandle setup complete - position: %s, size: %s, mouse_filter: %s" % [position, size, mouse_filter])
+	print("Parent: %s, global_position: %s, spawn_slot: %s" % [get_parent(), global_position, spawn_slot])
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -67,21 +71,24 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		print("UnitDragHandle: spawn_slot is null")
 		return null
 	
-	# Create drag preview - use the unit's sprite
-	var preview := TextureRect.new()
-	preview.custom_minimum_size = Vector2(32, 32)
+	# Create drag preview - use custom scene if provided, otherwise fallback to simple preview
+	var preview: Control = null
 	
-	# Try to get texture from unit's animated sprite
-	if unit.animated_sprite and unit.animated_sprite.sprite_frames:
-		var anim_name := "idle" if unit.animated_sprite.sprite_frames.has_animation("idle") else "default"
-		if unit.animated_sprite.sprite_frames.has_animation(anim_name):
-			var frame_count := unit.animated_sprite.sprite_frames.get_frame_count(anim_name)
-			if frame_count > 0:
-				var texture := unit.animated_sprite.sprite_frames.get_frame_texture(anim_name, 0)
-				if texture:
-					preview.texture = texture
-					preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-					preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	if drag_preview_scene:
+		# Use custom drag preview scene (assumes it has an AnimatedSprite2D child)
+		preview = drag_preview_scene.instantiate() as Control
+		if preview:
+			# Find AnimatedSprite2D child (assumes it exists)
+			var preview_sprite: AnimatedSprite2D = preview.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+			if preview_sprite and unit.animated_sprite and unit.animated_sprite.sprite_frames:
+				preview_sprite.sprite_frames = unit.animated_sprite.sprite_frames
+				preview_sprite.play("idle")
+	else:
+		# Fallback to colored rectangle if no preview scene
+		var color_preview := ColorRect.new()
+		color_preview.custom_minimum_size = Vector2(32, 32)
+		color_preview.color = Color(0.5, 0.5, 1.0, 0.7)
+		preview = color_preview
 	
 	set_drag_preview(preview)
 	

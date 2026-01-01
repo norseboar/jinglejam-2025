@@ -621,7 +621,17 @@ func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
 	
 	unit.upgrades = army_unit.upgrades.duplicate()  # Copy upgrades
 	unit.army_index = army_index  # Track which army slot this unit came from
+	unit.spawn_slot = slot  # Store slot reference for re-dragging
+	print("Game.place_unit_from_army: Set unit.spawn_slot to %s" % slot)
 	unit.apply_upgrades()  # Apply after positioning
+	
+	# Update drag handle's spawn slot reference (if it exists)
+	if unit.drag_handle:
+		print("Game.place_unit_from_army: Found drag_handle: %s" % unit.drag_handle)
+		unit.drag_handle.spawn_slot = slot
+		print("Game.place_unit_from_army: Set drag_handle.spawn_slot to %s" % slot)
+	else:
+		print("Game.place_unit_from_army: No drag_handle on unit")
 	
 	# Connect player unit death signal
 	unit.player_unit_died.connect(_on_player_unit_died)

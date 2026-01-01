@@ -48,7 +48,9 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	if not data.has("army_index") and not data.has("army_unit"):
 		return false
 	
-	if is_occupied:
+	# Allow repositioning onto occupied slots (will swap/move)
+	# But block initial placement onto occupied slots
+	if is_occupied and not data.get("is_repositioning", false):
 		return false
 	
 	return true
@@ -58,18 +60,42 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	if not data is Dictionary:
 		return
 	
-	var army_index: int = -1
+	var army_index: int = data.get("army_index", -1)
+	if army_index < 0:
+		return
 	
-	# Handle new UnitSlot format (has army_unit and army_index)
-	if data.has("army_index"):
-		army_index = data.get("army_index", -1)
-	# Fallback: if only army_unit provided, we'd need to look it up
-	# But UnitSlot always provides army_index, so this shouldn't be needed
+	var game := get_tree().get_first_node_in_group("game") as Game
+	if not game:
+		return
 	
-	if army_index >= 0:
-		var game := get_tree().get_first_node_in_group("game") as Game
-		if game:
-			game.place_unit_from_army(army_index, self)
+	# Check if this is a repositioning operation
+	if data.get("is_repositioning", false):
+		# Moving an existing unit
+		var source_slot: SpawnSlot = data.get("source_spawn_slot")
+		if source_slot and source_slot != self:
+			# Free up the source slot
+			source_slot.set_occupied(false)
+		
+		# Find the unit in the player_units container
+		if game.current_level and game.current_level.player_units:
+			for child in game.current_level.player_units.get_children():
+				if child is Unit:
+					var unit := child as Unit
+					if unit.army_index == army_index:
+						# Move the unit to new position
+						unit.global_position = get_slot_center()
+						unit.spawn_slot = self
+						
+						# Update drag handle reference
+						if unit.drag_handle:
+							unit.drag_handle.spawn_slot = self
+						
+						# Mark new slot as occupied
+						set_occupied(true)
+						break
+	else:
+		# Initial placement - use existing logic
+		game.place_unit_from_army(army_index, self)
 
 
 func _on_mouse_entered() -> void:

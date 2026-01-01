@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://b6ra1cx32f7ve"]
+[gd_scene load_steps=11 format=3 uid="uid://b6ra1cx32f7ve"]
 
 [ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/sprites/human/knight.tres" id="1_6k8ya"]
 [ext_resource type="Script" uid="uid://bwvnqebjgqrsx" path="res://scripts/unit.gd" id="1_33c7x"]
@@ -8,8 +8,10 @@
 [ext_resource type="Texture2D" uid="uid://cho112nbh4u2i" path="res://assets/sprites/ui/upgrades_icons2.png" id="5_urgnh"]
 [ext_resource type="PackedScene" uid="uid://bntf8d8dx0sl8" path="res://scenes/healthbar.tscn" id="6_3nj72"]
 [ext_resource type="Texture2D" uid="uid://d175gqkut1wr0" path="res://assets/sprites/ui/upgrades_icons3.png" id="6_vtl0n"]
+[ext_resource type="Script" uid="uid://b1s82sjbiaglc" path="res://scripts/unit_drag_handle.gd" id="9_urgnh"]
+[ext_resource type="PackedScene" uid="uid://s7jjret7o6yr" path="res://scenes/ui/drag_preview.tscn" id="10_d7xs0"]
 
-[node name="Unit2" type="Node2D"]
+[node name="Unit" type="Node2D"]
 script = ExtResource("1_33c7x")
 max_hp = 30
 damage = 10
@@ -49,3 +51,14 @@ texture = ExtResource("6_vtl0n")
 
 [node name="Healthbar" parent="." instance=ExtResource("6_3nj72")]
 position = Vector2(0, -7)
+
+[node name="DragHandle" type="Control" parent="."]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 3
+anchors_preset = 0
+offset_left = -16.0
+offset_top = -8.0
+offset_right = 16.0
+offset_bottom = 24.0
+script = ExtResource("9_urgnh")
+drag_preview_scene = ExtResource("10_d7xs0")
