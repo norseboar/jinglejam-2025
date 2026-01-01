@@ -23,12 +23,9 @@ var total_gold_spent: int = 0  # Track gold spent for army value calculation
 @export var unit_value_percentage := 0.5  # 50% by default (can be changed to 0.75 for 75%, etc.)
 
 # Level management
-## Array of LevelPool resources. Each pool contains multiple level scene options for that level.
-@export var level_pools: Array[Resource] = []
 ## Array of level data resources (defines difficulty progression)
 @export var levels: Array[LevelData] = []
 var current_level_index := 0
-var selected_level_scene: PackedScene = null  # The specific scene chosen from the pool
 
 # Upgrade screen
 @export var upgrade_background: Texture2D
@@ -56,7 +53,9 @@ var is_draft_mode: bool = true
 # Node references (assign in inspector)
 @export var background_rect: TextureRect
 @export var gameplay: Node2D
+## DEPRECATED: Unit containers now live in the level. Use current_level.player_units instead.
 @export var player_units: Node2D
+## DEPRECATED: Unit containers now live in the level. Use current_level.enemy_units instead.
 @export var enemy_units: Node2D
 
 # UI references (assign in inspector)
@@ -291,8 +290,11 @@ func _process(_delta: float) -> void:
 	if phase != "battle":
 		return
 
-	var player_count := _count_living_units(player_units)
-	var enemy_count := _count_living_units(enemy_units)
+	if current_level == null:
+		return
+	
+	var player_count := _count_living_units(current_level.player_units)
+	var enemy_count := _count_living_units(current_level.enemy_units)
 
 	if enemy_count == 0:
 		_end_battle(true)  # Player wins
@@ -301,13 +303,17 @@ func _process(_delta: float) -> void:
 
 
 func _clear_all_units() -> void:
-	# Remove all player units
-	for child in player_units.get_children():
-		child.queue_free()
-
-	# Remove all enemy units
-	for child in enemy_units.get_children():
-		child.queue_free()
+	# Clear units from current level if it exists
+	if current_level == null:
+		return
+	
+	if current_level.player_units:
+		for child in current_level.player_units.get_children():
+			child.queue_free()
+	
+	if current_level.enemy_units:
+		for child in current_level.enemy_units.get_children():
+			child.queue_free()
 
 
 func _end_battle(victory: bool) -> void:
@@ -318,12 +324,16 @@ func _end_battle(victory: bool) -> void:
 		hud.set_phase(phase, current_level_index + 1)
 
 	# Stop all units (but don't reset dying units - they need to stay "dying" to prevent double gold)
-	for child in player_units.get_children():
-		if child is Unit and child.state != "dying":
-			child.set_state("idle")
-	for child in enemy_units.get_children():
-		if child is Unit and child.state != "dying":
-			child.set_state("idle")
+	if current_level:
+		if current_level.player_units:
+			for child in current_level.player_units.get_children():
+				if child is Unit and child.state != "dying":
+					child.set_state("idle")
+		
+		if current_level.enemy_units:
+			for child in current_level.enemy_units.get_children():
+				if child is Unit and child.state != "dying":
+					child.set_state("idle")
 
 	# Capture enemy data for upgrade screen (only if victory and not last level, defeat will restart)
 	if victory and current_level_index < levels.size() - 1:
@@ -343,30 +353,6 @@ func _end_battle(victory: bool) -> void:
 		hud._update_auto_deploy_button_state()
 
 
-func load_level(index: int) -> void:
-	"""Load a level by index, picking the first scene from that level's pool."""
-	# Validate index first
-	if index < 0 or index >= level_pools.size():
-		push_error("Invalid level index: %d (pool count: %d)" % [index, level_pools.size()])
-		return
-	
-	var pool = level_pools[index]
-	if not pool is LevelPool:
-		push_error("Level pool at index %d is not a LevelPool resource!" % index)
-		return
-	
-	var level_pool: LevelPool = pool as LevelPool
-	if level_pool == null or level_pool.level_scenes.size() == 0:
-		push_error("Level pool at index %d is empty or invalid!" % index)
-		return
-	
-	var level_scene: PackedScene = level_pool.level_scenes[0]
-	if level_scene == null:
-		push_error("First scene in level pool %d is null!" % index)
-		return
-	
-	# Use the new load method
-	await load_level_scene(level_scene)
 
 
 func load_level_scene(level_scene: PackedScene) -> void:
@@ -395,18 +381,19 @@ func load_level_scene(level_scene: PackedScene) -> void:
 		push_error("Level scene is not a LevelRoot!")
 		return
 	
-	# Add level to gameplay node (NOT ui_layer) so it renders in same space as units
-	# Insert at index 0 so background renders BEHIND PlayerUnits/EnemyUnits
+	# Add level to gameplay node
 	if gameplay:
 		gameplay.add_child(current_level)
-		gameplay.move_child(current_level, 0)
-		
-		# Set level position to counteract Gameplay's offset and ensure it fills viewport
-		# LevelRoot is a Control, so set its position/size explicitly
-		current_level.position = Vector2(0, 1)  # Counteract Gameplay's (0, -1) offset
-		current_level.size = get_viewport().get_visible_rect().size
 	else:
 		push_error("gameplay not assigned!")
+		return
+	
+	# Validate that level has required unit containers
+	if current_level.player_units == null:
+		push_error("Level '%s' is missing player_units container!" % current_level.name)
+		return
+	if current_level.enemy_units == null:
+		push_error("Level '%s' is missing enemy_units container!" % current_level.name)
 		return
 	
 	# Reset all spawn slots to unoccupied
@@ -460,14 +447,13 @@ func _spawn_enemies_from_level() -> void:
 		
 		# Configure enemy properties BEFORE adding to scene tree (so _ready() sees correct values)
 		enemy.is_enemy = true
-		enemy.enemy_container = player_units
-		enemy.friendly_container = enemy_units
+		enemy.enemy_container = current_level.player_units
+		enemy.friendly_container = current_level.enemy_units
 		enemy.upgrades = enemy_marker.upgrades.duplicate()  # Copy upgrades
 		
-		enemy_units.add_child(enemy)
+		current_level.enemy_units.add_child(enemy)
 		
-		# Convert marker position to world position for Node2D
-		# Marker is Node2D in level (which is now in Gameplay), so use its global_position directly
+		# Set position directly - all in same coordinate space now
 		enemy.global_position = enemy_marker.global_position
 		
 		enemy.apply_upgrades()  # Apply after added to tree
@@ -518,14 +504,13 @@ func _spawn_enemies_from_generated_army() -> void:
 
 		# Configure enemy
 		enemy.is_enemy = true
-		enemy.enemy_container = player_units
-		enemy.friendly_container = enemy_units
+		enemy.enemy_container = current_level.player_units
+		enemy.friendly_container = current_level.enemy_units
 		enemy.upgrades = army_unit.upgrades.duplicate()
 
-		enemy_units.add_child(enemy)
+		current_level.enemy_units.add_child(enemy)
 		
-		# Convert slot position to world position for Node2D
-		# EnemySpawnSlot is Node2D in level (which is now in Gameplay), so use its global_position directly
+		# Set position directly - all in same coordinate space now
 		enemy.global_position = slot.global_position
 		
 		enemy.apply_upgrades()
@@ -572,48 +557,6 @@ func _capture_enemies_faced() -> void:
 		})
 
 
-func get_current_pool_size() -> int:
-	"""Get the number of level options in the current level's pool."""
-	if current_level_index < 0 or current_level_index >= level_pools.size():
-		return 0
-	var pool = level_pools[current_level_index]
-	if not pool is LevelPool:
-		return 0
-	var level_pool: LevelPool = pool as LevelPool
-	if level_pool == null:
-		return 0
-	return level_pool.level_scenes.size()
-
-
-func get_random_level_options(pool_index: int, count: int = 2) -> Array[PackedScene]:
-	"""Pick up to 'count' distinct random scenes from the specified pool."""
-	var result: Array[PackedScene] = []
-	
-	if pool_index < 0 or pool_index >= level_pools.size():
-		return result
-	
-	var pool = level_pools[pool_index]
-	if not pool is LevelPool:
-		return result
-	
-	var level_pool: LevelPool = pool as LevelPool
-	if level_pool == null or level_pool.level_scenes.size() == 0:
-		return result
-	
-	# Create a shuffled copy of indices
-	var indices: Array[int] = []
-	for i in range(level_pool.level_scenes.size()):
-		indices.append(i)
-	indices.shuffle()
-	
-	# Pick up to 'count' scenes
-	var pick_count := mini(count, level_pool.level_scenes.size())
-	for i in range(pick_count):
-		var scene: PackedScene = level_pool.level_scenes[indices[i]]
-		if scene != null:
-			result.append(scene)
-	
-	return result
 
 
 func _set_spawn_slots_visible(should_show: bool) -> void:
@@ -633,8 +576,8 @@ func _reset_spawn_slots() -> void:
 
 func _on_unit_placed(_unit_type: String) -> void:
 	# Update HUD to reflect placed unit count
-	if hud:
-		hud.update_placed_count(player_units.get_child_count())
+	if hud and current_level and current_level.player_units:
+		hud.update_placed_count(current_level.player_units.get_child_count())
 		hud._update_auto_deploy_button_state()
 
 
@@ -667,17 +610,14 @@ func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
 		push_error("Failed to instantiate unit from scene at army index %d" % army_index)
 		return
 	
-	player_units.add_child(unit)
+	# Add unit to level's player_units container
+	current_level.player_units.add_child(unit)
 	unit.is_enemy = false
-	unit.enemy_container = enemy_units
-	unit.friendly_container = player_units
+	unit.enemy_container = current_level.enemy_units
+	unit.friendly_container = current_level.player_units
 	
-	# Convert slot screen position to world position for Node2D
-	# Slot is a Control in a CanvasLayer (level is now in Gameplay, but slots report screen coords)
-	# We need to convert from screen coordinates to Gameplay's local coordinate space
-	var slot_screen_pos := slot.get_slot_center()
-	var world_pos := slot_screen_pos - gameplay.global_position
-	unit.position = world_pos
+	# Set position directly - spawn slots and units are now in the same coordinate space
+	unit.global_position = slot.get_slot_center()
 	
 	unit.upgrades = army_unit.upgrades.duplicate()  # Copy upgrades
 	unit.army_index = army_index  # Track which army slot this unit came from
@@ -783,11 +723,12 @@ func _on_player_unit_died(army_index: int) -> void:
 	army.remove_at(army_index)
 	
 	# Update army indices for remaining units (since array shifted)
-	for child in player_units.get_children():
-		if child is Unit:
-			var unit := child as Unit
-			if unit.army_index > army_index:
-				unit.army_index -= 1
+	if current_level and current_level.player_units:
+		for child in current_level.player_units.get_children():
+			if child is Unit:
+				var unit := child as Unit
+				if unit.army_index > army_index:
+					unit.army_index -= 1
 	
 	# Update HUD tray
 	if hud:
@@ -797,8 +738,15 @@ func _on_player_unit_died(army_index: int) -> void:
 func _on_start_battle_requested() -> void:
 	if phase != "preparation":
 		return
+	
+	if not current_level:
+		return
+	
+	if not current_level.player_units:
+		push_error("Current level has no player_units container!")
+		return
 
-	if player_units.get_child_count() == 0:
+	if current_level.player_units.get_child_count() == 0:
 		push_warning("Cannot start battle with no units!")
 		return
 
@@ -807,12 +755,15 @@ func _on_start_battle_requested() -> void:
 	_set_spawn_slots_visible(false)
 
 	# Set all units to moving
-	for child in player_units.get_children():
-		if child is Unit:
-			child.set_state("moving")
-	for child in enemy_units.get_children():
-		if child is Unit:
-			child.set_state("moving")
+	if current_level.player_units:
+		for child in current_level.player_units.get_children():
+			if child is Unit:
+				child.set_state("moving")
+	
+	if current_level.enemy_units:
+		for child in current_level.enemy_units.get_children():
+			if child is Unit:
+				child.set_state("moving")
 	
 	# Update auto-deploy button state (should be disabled during battle)
 	if hud:

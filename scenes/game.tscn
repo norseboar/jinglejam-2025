@@ -1,28 +1,18 @@
-[gd_scene load_steps=62 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=45 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="1_ca42v"]
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
 [ext_resource type="Resource" uid="uid://dengaonc622oh" path="res://levels/level1.tres" id="2_dinhu"]
-[ext_resource type="Script" uid="uid://c1xfa808secb5" path="res://scripts/level_root.gd" id="3_05nbr"]
-[ext_resource type="Texture2D" uid="uid://bxnr8frb2awil" path="res://assets/backgrounds/autumn-leaves-forest.jpg" id="4_0sl42"]
-[ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="5_oaba0"]
-[ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="6_458eo"]
 [ext_resource type="PackedScene" uid="uid://c0d47vd87vlmt" path="res://scenes/ui/hud.tscn" id="6_p57ef"]
 [ext_resource type="Script" uid="uid://bwkdnef87rpc7" path="res://scripts/upgrade_screen.gd" id="7_0tnpc"]
 [ext_resource type="Resource" uid="uid://ccncwdniynkcg" path="res://units/rosters/starting_rosters/humans.tres" id="7_e1j6l"]
 [ext_resource type="Texture2D" uid="uid://cv4fsh4q3oll" path="res://assets/backgrounds/reward_bg.jpg" id="7_gee14"]
-[ext_resource type="PackedScene" uid="uid://b2gg7627166nr" path="res://units/dwarves/dwarf_mortarman.tscn" id="7_h3rex"]
-[ext_resource type="PackedScene" uid="uid://dhf2ohsvwac2b" path="res://units/dwarves/dwarf_spearman.tscn" id="8_fedci"]
 [ext_resource type="Script" uid="uid://clvfy8mjj8pl3" path="res://scripts/roster.gd" id="8_pl11u"]
-[ext_resource type="Script" uid="uid://3ckw4rqc0bfv" path="res://scripts/level_pool.gd" id="9_8qswn"]
 [ext_resource type="Resource" uid="uid://cqbdneupe6hhs" path="res://units/rosters/full_rosters/dwarves_full.tres" id="10_qnb83"]
-[ext_resource type="Texture2D" uid="uid://clxoa2k34d7wk" path="res://assets/backgrounds/nature-wood-background-dirty-detail.jpg" id="10_rm0al"]
-[ext_resource type="PackedScene" uid="uid://bbp51u1lohgx" path="res://units/humans/knight.tscn" id="11_i4re6"]
 [ext_resource type="PackedScene" uid="uid://qu7tcqixa2mi" path="res://scenes/ui/unit_summary.tscn" id="11_kvpfn"]
 [ext_resource type="Resource" uid="uid://cweq82v4c5xjm" path="res://units/rosters/full_rosters/demons_full.tres" id="11_pl11u"]
 [ext_resource type="Resource" uid="uid://dcdd1vps5sd0k" path="res://units/rosters/full_rosters/humans_full.tres" id="11_sww3w"]
 [ext_resource type="Resource" uid="uid://ehqsv8r3oc67" path="res://units/rosters/full_rosters/neutral.tres" id="12_bhx41"]
-[ext_resource type="Texture2D" uid="uid://bw7jftfbecibg" path="res://assets/backgrounds/selective-focus-shot-tree-log-covered-with-moss.jpg" id="12_pf7vy"]
 [ext_resource type="Script" uid="uid://vkkyrt2e3lsm" path="res://scripts/level_data.gd" id="13_8qswn"]
 [ext_resource type="Texture2D" uid="uid://c6eydxw58l61v" path="res://assets/sprites/ui/next_button/next_button_80x40.png" id="13_264po"]
 [ext_resource type="PackedScene" uid="uid://cu6uv6d63rbjb" path="res://scenes/ui/unit_slot_group.tscn" id="13_ca42v"]
@@ -52,80 +42,6 @@
 [ext_resource type="SpriteFrames" uid="uid://vhcoqd31eji" path="res://assets/sprites/human/knight.tres" id="46_i4re6"]
 [ext_resource type="SpriteFrames" uid="uid://h0c0lfbqiyj8" path="res://assets/sprites/demons/demons_archer.tres" id="46_rm0al"]
 
-[sub_resource type="PackedScene" id="PackedScene_o8ni1"]
-_bundled = {
-"conn_count": 0,
-"conns": PackedInt32Array(),
-"editable_instances": [],
-"names": PackedStringArray("LevelRoot", "Control", "layout_mode", "anchors_preset", "anchor_right", "anchor_bottom", "offset_right", "offset_bottom", "grow_horizontal", "grow_vertical", "script", "background_texture", "editor_background", "army_name", "EditorBackground", "TextureRect", "layout_mode", "offset_right", "offset_bottom", "texture", "expand_mode", "PlayerSpawnSlots", "Control", "anchors_preset", "SpawnSlot2", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot3", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot4", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot6", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot7", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot8", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "EnemyMarkers", "Node2D", "EnemyMarker", "position", "unit_scene", "EnemyMarker2", "position", "unit_scene", "EnemyMarker3", "position", "unit_scene"),
-"node_count": 13,
-"node_paths": [NodePath("."), NodePath("."), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("."), NodePath("./EnemyMarkers"), NodePath("./EnemyMarkers"), NodePath("./EnemyMarkers")],
-"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 5, 16, 12, 17, 13, 18, 14, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 1, 23, 17, 0, 1073741826, 0, 2147483647, 24, 18, 5, 25, 19, 26, 20, 27, 21, 28, 22, 29, 23, 0, 1073741827, 0, 2147483647, 30, 24, 5, 31, 25, 32, 26, 33, 27, 34, 28, 35, 29, 0, 1073741828, 0, 2147483647, 36, 30, 5, 37, 31, 38, 32, 39, 33, 40, 34, 41, 35, 0, 1073741829, 0, 2147483647, 42, 36, 5, 43, 37, 44, 38, 45, 39, 46, 40, 47, 41, 0, 1073741830, 0, 2147483647, 48, 42, 5, 49, 43, 50, 44, 51, 45, 52, 46, 53, 47, 0, 1073741831, 0, 2147483647, 54, 48, 5, 55, 49, 56, 50, 57, 51, 58, 52, 59, 53, 0, 1073741832, 0, 61, 60, -1, 0, 0, 1073741833, 0, 2147483647, 62, 54, 2, 63, 55, 64, 56, 0, 1073741834, 0, 2147483647, 65, 57, 2, 66, 58, 67, 59, 0, 1073741835, 0, 2147483647, 68, 60, 2, 69, 61, 70, 62, 0),
-"variants": [3, 15, 1.0, 1.0, -640.0, -360.0, 2, 2, ExtResource("3_05nbr"), ExtResource("4_0sl42"), NodePath("EditorBackground"), "Humans", 0, 640.0, 360.0, ExtResource("4_0sl42"), 3, 0, ExtResource("5_oaba0"), 0, 141.0, 146.0, 173.0, 178.0, ExtResource("5_oaba0"), 0, 211.0, 146.0, 243.0, 178.0, ExtResource("5_oaba0"), 0, 279.0, 147.0, 311.0, 179.0, ExtResource("5_oaba0"), 0, 111.0, 175.0, 143.0, 207.0, ExtResource("5_oaba0"), 0, 178.0, 176.0, 210.0, 208.0, ExtResource("5_oaba0"), 0, 247.0, 177.0, 279.0, 209.0, ExtResource("6_458eo"), Vector2(527, 160), ExtResource("7_h3rex"), ExtResource("6_458eo"), Vector2(487, 160), ExtResource("8_fedci"), ExtResource("6_458eo"), Vector2(487, 198), ExtResource("8_fedci")],
-"version": 3
-}
-
-[sub_resource type="Resource" id="Resource_3hbvx"]
-script = ExtResource("9_8qswn")
-level_scenes = Array[PackedScene]([SubResource("PackedScene_o8ni1")])
-
-[sub_resource type="PackedScene" id="PackedScene_q8j3a"]
-_bundled = {
-"conn_count": 0,
-"conns": PackedInt32Array(),
-"editable_instances": [],
-"names": PackedStringArray("LevelRoot", "Control", "layout_mode", "anchors_preset", "anchor_right", "anchor_bottom", "offset_right", "offset_bottom", "grow_horizontal", "grow_vertical", "script", "background_texture", "editor_background", "army_name", "EditorBackground", "TextureRect", "layout_mode", "offset_right", "offset_bottom", "texture", "expand_mode", "PlayerSpawnSlots", "Control", "anchors_preset", "SpawnSlot", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot2", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot3", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot4", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot5", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot6", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot7", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot8", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot9", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot10", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot11", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot12", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "EnemyMarkers", "Node2D", "EnemyMarker", "position", "unit_scene", "upgrades", "EnemyMarker2", "position", "unit_scene", "upgrades"),
-"node_count": 18,
-"node_paths": [NodePath("."), NodePath("."), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("."), NodePath("./EnemyMarkers"), NodePath("./EnemyMarkers")],
-"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 5, 16, 12, 17, 13, 18, 14, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 1, 23, 17, 0, 1073741826, 0, 2147483647, 24, 18, 5, 25, 19, 26, 20, 27, 21, 28, 22, 29, 23, 0, 1073741827, 0, 2147483647, 30, 24, 5, 31, 25, 32, 26, 33, 27, 34, 28, 35, 29, 0, 1073741828, 0, 2147483647, 36, 30, 5, 37, 31, 38, 32, 39, 33, 40, 34, 41, 35, 0, 1073741829, 0, 2147483647, 42, 36, 5, 43, 37, 44, 38, 45, 39, 46, 40, 47, 41, 0, 1073741830, 0, 2147483647, 48, 42, 5, 49, 43, 50, 44, 51, 45, 52, 46, 53, 47, 0, 1073741831, 0, 2147483647, 54, 48, 5, 55, 49, 56, 50, 57, 51, 58, 52, 59, 53, 0, 1073741832, 0, 2147483647, 60, 54, 5, 61, 55, 62, 56, 63, 57, 64, 58, 65, 59, 0, 1073741833, 0, 2147483647, 66, 60, 5, 67, 61, 68, 62, 69, 63, 70, 64, 71, 65, 0, 1073741834, 0, 2147483647, 72, 66, 5, 73, 67, 74, 68, 75, 69, 76, 70, 77, 71, 0, 1073741835, 0, 2147483647, 78, 72, 5, 79, 73, 80, 74, 81, 75, 82, 76, 83, 77, 0, 1073741836, 0, 2147483647, 84, 78, 5, 85, 79, 86, 80, 87, 81, 88, 82, 89, 83, 0, 1073741837, 0, 2147483647, 90, 84, 5, 91, 85, 92, 86, 93, 87, 94, 88, 95, 89, 0, 1073741838, 0, 97, 96, -1, 0, 0, 1073741839, 0, 2147483647, 98, 90, 3, 99, 91, 100, 92, 101, 93, 0, 1073741840, 0, 2147483647, 102, 94, 3, 103, 95, 104, 96, 105, 97, 0),
-"variants": [3, 15, 1.0, 1.0, -640.0, -360.0, 2, 2, ExtResource("3_05nbr"), ExtResource("10_rm0al"), NodePath("EditorBackground"), "Humans", 0, 640.0, 360.0, ExtResource("10_rm0al"), 3, 0, ExtResource("5_oaba0"), 0, 79.0, 196.0, 111.0, 228.0, ExtResource("5_oaba0"), 0, 141.0, 197.0, 173.0, 229.0, ExtResource("5_oaba0"), 0, 211.0, 197.0, 243.0, 229.0, ExtResource("5_oaba0"), 0, 279.0, 198.0, 311.0, 230.0, ExtResource("5_oaba0"), 0, 40.0, 225.0, 72.0, 257.0, ExtResource("5_oaba0"), 0, 111.0, 226.0, 143.0, 258.0, ExtResource("5_oaba0"), 0, 178.0, 227.0, 210.0, 259.0, ExtResource("5_oaba0"), 0, 247.0, 228.0, 279.0, 260.0, ExtResource("5_oaba0"), 0, 75.0, 245.0, 107.0, 277.0, ExtResource("5_oaba0"), 0, 144.0, 247.0, 176.0, 279.0, ExtResource("5_oaba0"), 0, 215.0, 248.0, 247.0, 280.0, ExtResource("5_oaba0"), 0, 283.0, 249.0, 315.0, 281.0, ExtResource("6_458eo"), Vector2(511, 218), ExtResource("11_i4re6"), {
-"hp": 1
-}, ExtResource("6_458eo"), Vector2(559, 231), ExtResource("11_i4re6"), {
-"damage": 3,
-"hp": 0
-}],
-"version": 3
-}
-
-[sub_resource type="PackedScene" id="PackedScene_ms3bu"]
-_bundled = {
-"conn_count": 0,
-"conns": PackedInt32Array(),
-"editable_instances": [],
-"names": PackedStringArray("LevelRoot", "Control", "layout_mode", "anchors_preset", "anchor_right", "anchor_bottom", "offset_right", "offset_bottom", "grow_horizontal", "grow_vertical", "script", "background_texture", "editor_background", "army_name", "EditorBackground", "TextureRect", "layout_mode", "offset_right", "offset_bottom", "texture", "expand_mode", "PlayerSpawnSlots", "Control", "anchors_preset", "SpawnSlot", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot2", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot3", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot4", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot5", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot6", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot7", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot8", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot9", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot10", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot11", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot12", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "EnemyMarkers", "Node2D", "EnemyMarker", "position", "unit_scene", "upgrades", "EnemyMarker2", "position", "unit_scene", "upgrades"),
-"node_count": 18,
-"node_paths": [NodePath("."), NodePath("."), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("."), NodePath("./EnemyMarkers"), NodePath("./EnemyMarkers")],
-"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 5, 16, 12, 17, 13, 18, 14, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 1, 23, 17, 0, 1073741826, 0, 2147483647, 24, 18, 5, 25, 19, 26, 20, 27, 21, 28, 22, 29, 23, 0, 1073741827, 0, 2147483647, 30, 24, 5, 31, 25, 32, 26, 33, 27, 34, 28, 35, 29, 0, 1073741828, 0, 2147483647, 36, 30, 5, 37, 31, 38, 32, 39, 33, 40, 34, 41, 35, 0, 1073741829, 0, 2147483647, 42, 36, 5, 43, 37, 44, 38, 45, 39, 46, 40, 47, 41, 0, 1073741830, 0, 2147483647, 48, 42, 5, 49, 43, 50, 44, 51, 45, 52, 46, 53, 47, 0, 1073741831, 0, 2147483647, 54, 48, 5, 55, 49, 56, 50, 57, 51, 58, 52, 59, 53, 0, 1073741832, 0, 2147483647, 60, 54, 5, 61, 55, 62, 56, 63, 57, 64, 58, 65, 59, 0, 1073741833, 0, 2147483647, 66, 60, 5, 67, 61, 68, 62, 69, 63, 70, 64, 71, 65, 0, 1073741834, 0, 2147483647, 72, 66, 5, 73, 67, 74, 68, 75, 69, 76, 70, 77, 71, 0, 1073741835, 0, 2147483647, 78, 72, 5, 79, 73, 80, 74, 81, 75, 82, 76, 83, 77, 0, 1073741836, 0, 2147483647, 84, 78, 5, 85, 79, 86, 80, 87, 81, 88, 82, 89, 83, 0, 1073741837, 0, 2147483647, 90, 84, 5, 91, 85, 92, 86, 93, 87, 94, 88, 95, 89, 0, 1073741838, 0, 97, 96, -1, 0, 0, 1073741839, 0, 2147483647, 98, 90, 3, 99, 91, 100, 92, 101, 93, 0, 1073741840, 0, 2147483647, 102, 94, 3, 103, 95, 104, 96, 105, 97, 0),
-"variants": [3, 15, 1.0, 1.0, -640.0, -360.0, 2, 2, ExtResource("3_05nbr"), ExtResource("10_rm0al"), NodePath("EditorBackground"), "Dwarves", 0, 640.0, 360.0, ExtResource("10_rm0al"), 3, 0, ExtResource("5_oaba0"), 0, 79.0, 196.0, 111.0, 228.0, ExtResource("5_oaba0"), 0, 141.0, 197.0, 173.0, 229.0, ExtResource("5_oaba0"), 0, 211.0, 197.0, 243.0, 229.0, ExtResource("5_oaba0"), 0, 279.0, 198.0, 311.0, 230.0, ExtResource("5_oaba0"), 0, 40.0, 225.0, 72.0, 257.0, ExtResource("5_oaba0"), 0, 111.0, 226.0, 143.0, 258.0, ExtResource("5_oaba0"), 0, 178.0, 227.0, 210.0, 259.0, ExtResource("5_oaba0"), 0, 247.0, 228.0, 279.0, 260.0, ExtResource("5_oaba0"), 0, 75.0, 245.0, 107.0, 277.0, ExtResource("5_oaba0"), 0, 144.0, 247.0, 176.0, 279.0, ExtResource("5_oaba0"), 0, 215.0, 248.0, 247.0, 280.0, ExtResource("5_oaba0"), 0, 283.0, 249.0, 315.0, 281.0, ExtResource("6_458eo"), Vector2(511, 218), ExtResource("8_fedci"), {
-"hp": 1
-}, ExtResource("6_458eo"), Vector2(559, 231), ExtResource("7_h3rex"), {
-"damage": 3,
-"hp": 0
-}],
-"version": 3
-}
-
-[sub_resource type="Resource" id="Resource_7ixpq"]
-script = ExtResource("9_8qswn")
-level_scenes = Array[PackedScene]([SubResource("PackedScene_q8j3a"), SubResource("PackedScene_ms3bu")])
-
-[sub_resource type="PackedScene" id="PackedScene_bk1p3"]
-_bundled = {
-"conn_count": 0,
-"conns": PackedInt32Array(),
-"editable_instances": [],
-"names": PackedStringArray("LevelRoot", "Control", "layout_mode", "anchors_preset", "anchor_right", "anchor_bottom", "offset_right", "offset_bottom", "grow_horizontal", "grow_vertical", "script", "background_texture", "editor_background", "army_name", "EditorBackground", "TextureRect", "layout_mode", "offset_right", "offset_bottom", "texture", "expand_mode", "PlayerSpawnSlots", "Control", "anchors_preset", "SpawnSlot", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot2", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot3", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot4", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot5", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot6", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot7", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot8", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot9", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot10", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot11", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "SpawnSlot12", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "EnemyMarkers", "Node2D", "Marker2D2", "Marker2D", "position", "Marker2D5", "Marker2D", "position", "Marker2D", "Marker2D", "position", "Marker2D3", "Marker2D", "position", "Marker2D4", "Marker2D", "position"),
-"node_count": 21,
-"node_paths": [NodePath("."), NodePath("."), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("./PlayerSpawnSlots"), NodePath("."), NodePath("./EnemyMarkers"), NodePath("./EnemyMarkers"), NodePath("./EnemyMarkers"), NodePath("./EnemyMarkers"), NodePath("./EnemyMarkers")],
-"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 5, 16, 12, 17, 13, 18, 14, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 1, 23, 17, 0, 1073741826, 0, 2147483647, 24, 18, 5, 25, 19, 26, 20, 27, 21, 28, 22, 29, 23, 0, 1073741827, 0, 2147483647, 30, 24, 5, 31, 25, 32, 26, 33, 27, 34, 28, 35, 29, 0, 1073741828, 0, 2147483647, 36, 30, 5, 37, 31, 38, 32, 39, 33, 40, 34, 41, 35, 0, 1073741829, 0, 2147483647, 42, 36, 5, 43, 37, 44, 38, 45, 39, 46, 40, 47, 41, 0, 1073741830, 0, 2147483647, 48, 42, 5, 49, 43, 50, 44, 51, 45, 52, 46, 53, 47, 0, 1073741831, 0, 2147483647, 54, 48, 5, 55, 49, 56, 50, 57, 51, 58, 52, 59, 53, 0, 1073741832, 0, 2147483647, 60, 54, 5, 61, 55, 62, 56, 63, 57, 64, 58, 65, 59, 0, 1073741833, 0, 2147483647, 66, 60, 5, 67, 61, 68, 62, 69, 63, 70, 64, 71, 65, 0, 1073741834, 0, 2147483647, 72, 66, 5, 73, 67, 74, 68, 75, 69, 76, 70, 77, 71, 0, 1073741835, 0, 2147483647, 78, 72, 5, 79, 73, 80, 74, 81, 75, 82, 76, 83, 77, 0, 1073741836, 0, 2147483647, 84, 78, 5, 85, 79, 86, 80, 87, 81, 88, 82, 89, 83, 0, 1073741837, 0, 2147483647, 90, 84, 5, 91, 85, 92, 86, 93, 87, 94, 88, 95, 89, 0, 1073741838, 0, 97, 96, -1, 0, 0, 1073741839, 0, 99, 98, -1, 1, 100, 90, 0, 1073741840, 0, 102, 101, -1, 1, 103, 91, 0, 1073741841, 0, 105, 104, -1, 1, 106, 92, 0, 1073741842, 0, 108, 107, -1, 1, 109, 93, 0, 1073741843, 0, 111, 110, -1, 1, 112, 94, 0),
-"variants": [3, 15, 1.0, 1.0, -640.0, -360.0, 2, 2, ExtResource("3_05nbr"), ExtResource("12_pf7vy"), NodePath("EditorBackground"), "Humans", 0, 640.0, 360.0, ExtResource("12_pf7vy"), 3, 0, ExtResource("5_oaba0"), 0, 79.0, 196.0, 111.0, 228.0, ExtResource("5_oaba0"), 0, 141.0, 197.0, 173.0, 229.0, ExtResource("5_oaba0"), 0, 211.0, 197.0, 243.0, 229.0, ExtResource("5_oaba0"), 0, 279.0, 198.0, 311.0, 230.0, ExtResource("5_oaba0"), 0, 40.0, 225.0, 72.0, 257.0, ExtResource("5_oaba0"), 0, 111.0, 226.0, 143.0, 258.0, ExtResource("5_oaba0"), 0, 178.0, 227.0, 210.0, 259.0, ExtResource("5_oaba0"), 0, 247.0, 228.0, 279.0, 260.0, ExtResource("5_oaba0"), 0, 75.0, 245.0, 107.0, 277.0, ExtResource("5_oaba0"), 0, 144.0, 247.0, 176.0, 279.0, ExtResource("5_oaba0"), 0, 215.0, 248.0, 247.0, 280.0, ExtResource("5_oaba0"), 0, 283.0, 249.0, 315.0, 281.0, Vector2(538, 234), Vector2(597, 247), Vector2(521, 214), Vector2(494, 226), Vector2(567, 227)],
-"version": 3
-}
-
-[sub_resource type="Resource" id="Resource_n8ral"]
-script = ExtResource("9_8qswn")
-level_scenes = Array[PackedScene]([SubResource("PackedScene_bk1p3")])
-
 [sub_resource type="FontVariation" id="FontVariation_rm0al"]
 spacing_bottom = -10
 
@@ -147,7 +63,6 @@ theme = ExtResource("1_ca42v")
 script = ExtResource("1_yqjtg")
 starting_gold = 50
 unit_value_percentage = 0.66
-level_pools = Array[Resource]([SubResource("Resource_3hbvx"), SubResource("Resource_7ixpq"), SubResource("Resource_n8ral")])
 levels = Array[ExtResource("13_8qswn")]([ExtResource("2_dinhu"), ExtResource("15_rm0al"), ExtResource("15_rm0al"), ExtResource("15_rm0al"), ExtResource("16_i4re6"), ExtResource("17_pf7vy"), ExtResource("17_pf7vy"), ExtResource("17_pf7vy"), ExtResource("17_pf7vy"), ExtResource("18_o8ni1")])
 upgrade_background = ExtResource("7_gee14")
 starting_roster = ExtResource("7_e1j6l")

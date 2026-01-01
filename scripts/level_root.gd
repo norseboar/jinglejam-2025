@@ -1,4 +1,4 @@
-extends Control
+extends Node2D
 class_name LevelRoot
 
 ## The background texture for this level (used by non-battle screens like upgrade screen)
@@ -12,6 +12,12 @@ class_name LevelRoot
 
 ## Container node holding EnemySpawnSlot markers (optional - if not set, will search entire scene)
 @export var enemy_spawn_slots_container: Node2D
+
+## Container for player units (should be a Node2D with y_sort_enabled)
+@export var player_units: Node2D
+
+## Container for enemy units (should be a Node2D with y_sort_enabled)
+@export var enemy_units: Node2D
 
 ## Visual bounds area for unit movement (Control node like ColorRect or Panel)
 ## Units with fly_height < 0 (ground units) will be constrained to stay within these bounds
