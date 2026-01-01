@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cc687hbuntfu2" path="res://scenes/ui/spawn_slot.tscn" id="3_fo2qi"]
 [ext_resource type="PackedScene" uid="uid://bbde4iyw8daot" path="res://scenes/enemy_spawn_slot.tscn" id="4_e28mj"]
 
-[node name="LevelRoot" type="Control" node_paths=PackedStringArray("editor_background", "enemy_spawn_slots_container", "level_bounds_area")]
+[node name="LevelRoot" type="Control" node_paths=PackedStringArray("enemy_spawn_slots_container", "level_bounds_area")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,19 +19,18 @@ mouse_filter = 2
 script = ExtResource("1_2j0d6")
 background_texture = ExtResource("2_arbo4")
 gradient_texture = ExtResource("3_2j0d6")
-editor_background = NodePath("EditorBackground")
 army_name = "Humans"
 enemy_spawn_slots_container = NodePath("EnemyMarkers")
 level_bounds_area = NodePath("PlayArea")
 
-[node name="EditorBackground" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 0
 offset_right = 640.0
 offset_bottom = 360.0
 texture = ExtResource("2_arbo4")
 expand_mode = 3
 
-[node name="TextureRect" type="TextureRect" parent="EditorBackground"]
+[node name="TextureRect" type="TextureRect" parent="Background"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

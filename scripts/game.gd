@@ -55,7 +55,6 @@ var is_draft_mode: bool = true
 
 # Node references (assign in inspector)
 @export var background_rect: TextureRect
-@export var gradient_overlay: TextureRect
 @export var gameplay: Node2D
 @export var player_units: Node2D
 @export var enemy_units: Node2D
@@ -396,25 +395,20 @@ func load_level_scene(level_scene: PackedScene) -> void:
 		push_error("Level scene is not a LevelRoot!")
 		return
 	
-	# Add level to UI layer BEFORE HUD (so it renders behind)
-	if ui_layer:
-		ui_layer.add_child(current_level)
-		ui_layer.move_child(current_level, 0)
+	# Add level to gameplay node (NOT ui_layer) so it renders in same space as units
+	# Insert at index 0 so background renders BEHIND PlayerUnits/EnemyUnits
+	if gameplay:
+		gameplay.add_child(current_level)
+		gameplay.move_child(current_level, 0)
+		
+		# Set level position to counteract Gameplay's offset and ensure it fills viewport
+		# LevelRoot is a Control, so set its position/size explicitly
+		current_level.position = Vector2(0, 1)  # Counteract Gameplay's (0, -1) offset
+		current_level.size = get_viewport().get_visible_rect().size
 	else:
-		push_error("ui_layer not assigned!")
+		push_error("gameplay not assigned!")
 		return
 	
-	# Hide editor background (only for editing)
-	current_level.hide_editor_background()
-	
-	# Set the game's background from level
-	if background_rect and current_level.background_texture:
-		background_rect.texture = current_level.background_texture
-	
-	# Set the gradient overlay from level (if specified)
-	if gradient_overlay and current_level.gradient_texture:
-		gradient_overlay.texture = current_level.gradient_texture
-
 	# Reset all spawn slots to unoccupied
 	_reset_spawn_slots()
 
@@ -468,10 +462,14 @@ func _spawn_enemies_from_level() -> void:
 		enemy.is_enemy = true
 		enemy.enemy_container = player_units
 		enemy.friendly_container = enemy_units
-		enemy.global_position = enemy_marker.global_position
 		enemy.upgrades = enemy_marker.upgrades.duplicate()  # Copy upgrades
 		
 		enemy_units.add_child(enemy)
+		
+		# Convert marker position to world position for Node2D
+		# Marker is Node2D in level (which is now in Gameplay), so use its global_position directly
+		enemy.global_position = enemy_marker.global_position
+		
 		enemy.apply_upgrades()  # Apply after added to tree
 		
 		# Connect death signal to award gold
@@ -522,10 +520,14 @@ func _spawn_enemies_from_generated_army() -> void:
 		enemy.is_enemy = true
 		enemy.enemy_container = player_units
 		enemy.friendly_container = enemy_units
-		enemy.global_position = slot.global_position
 		enemy.upgrades = army_unit.upgrades.duplicate()
 
 		enemy_units.add_child(enemy)
+		
+		# Convert slot position to world position for Node2D
+		# EnemySpawnSlot is Node2D in level (which is now in Gameplay), so use its global_position directly
+		enemy.global_position = slot.global_position
+		
 		enemy.apply_upgrades()
 
 		# Connect death signal
@@ -669,7 +671,14 @@ func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
 	unit.is_enemy = false
 	unit.enemy_container = enemy_units
 	unit.friendly_container = player_units
-	unit.global_position = slot.get_slot_center()
+	
+	# Convert slot screen position to world position for Node2D
+	# Slot is a Control in a CanvasLayer (level is now in Gameplay, but slots report screen coords)
+	# We need to convert from screen coordinates to Gameplay's local coordinate space
+	var slot_screen_pos := slot.get_slot_center()
+	var world_pos := slot_screen_pos - gameplay.global_position
+	unit.position = world_pos
+	
 	unit.upgrades = army_unit.upgrades.duplicate()  # Copy upgrades
 	unit.army_index = army_index  # Track which army slot this unit came from
 	unit.apply_upgrades()  # Apply after positioning

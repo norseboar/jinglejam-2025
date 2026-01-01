@@ -1,14 +1,11 @@
 extends Control
 class_name LevelRoot
 
-## The background texture for this level (applied to Game's BackgroundRect at runtime)
+## The background texture for this level (used by non-battle screens like upgrade screen)
 @export var background_texture: Texture2D
 
-## The gradient overlay texture for this level (applied to Game's gradient overlay at runtime)
+## The gradient overlay texture for this level (deprecated - levels now use tilemaps)
 @export var gradient_texture: Texture2D
-
-## Editor-only background for placement reference (hidden at runtime)
-@export var editor_background: CanvasItem
 
 ## The name of the enemy army for this level (shown in battle select screen)
 @export var army_name: String = "Enemy Army"
@@ -22,13 +19,7 @@ class_name LevelRoot
 @export var level_bounds_area: Control
 
 func _ready() -> void:
-	hide_editor_background()
-
-
-func hide_editor_background() -> void:
-	# Hide the editor-only background at runtime
-	if editor_background:
-		editor_background.visible = false
+	pass
 
 
 func get_level_bounds() -> Dictionary:
