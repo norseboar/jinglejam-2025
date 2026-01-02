@@ -11,15 +11,21 @@
 [ext_resource type="Script" uid="uid://b1s82sjbiaglc" path="res://scripts/unit_drag_handle.gd" id="9_urgnh"]
 [ext_resource type="PackedScene" uid="uid://s7jjret7o6yr" path="res://scenes/ui/drag_preview.tscn" id="10_d7xs0"]
 
-[node name="Unit" type="Node2D"]
+[node name="Unit" type="Node2D" node_paths=PackedStringArray("navigation_center")]
 script = ExtResource("1_33c7x")
 max_hp = 30
 damage = 10
 speed = 3.0
 attack_range = 0.0
 heal_armor_duration = 5.0
+separation_radius = 30.0
+separation_strength = 100.0
+navigation_center = NodePath("NavCenter")
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+[node name="NavCenter" type="Node2D" parent="."]
+position = Vector2(0, 16)
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="NavCenter"]
 path_desired_distance = 10.0
 
 [node name="Shadow" type="Sprite2D" parent="."]

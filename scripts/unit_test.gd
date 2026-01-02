@@ -46,4 +46,3 @@ func _start_battle() -> void:
 		player_unit.state = "moving"
 	if enemy_unit:
 		enemy_unit.state = "moving"
-	print("Battle started!")

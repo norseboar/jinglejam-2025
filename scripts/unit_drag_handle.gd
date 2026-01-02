@@ -10,8 +10,6 @@ var spawn_slot: SpawnSlot = null  # Reference to the spawn slot this unit is on
 
 
 func _ready() -> void:
-	print("UnitDragHandle._ready() called")
-	
 	# Make the control clickable but invisible
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	mouse_force_pass_scroll_events = false
@@ -27,48 +25,32 @@ func _ready() -> void:
 	var unit := get_parent() as Unit
 	if unit:
 		spawn_slot = unit.spawn_slot
-	
-	print("UnitDragHandle setup complete - position: %s, size: %s, mouse_filter: %s" % [position, size, mouse_filter])
-	print("Parent: %s, global_position: %s, spawn_slot: %s" % [get_parent(), global_position, spawn_slot])
 
 
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		var mouse_event := event as InputEventMouseButton
-		print("UnitDragHandle: MOUSE BUTTON EVENT - button: %d, pressed: %s, position: %s" % [mouse_event.button_index, mouse_event.pressed, mouse_event.position])
+	pass
 
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	"""Handle drag-and-drop during preparation phase."""
-	print("UnitDragHandle._get_drag_data() called at position: %s" % _at_position)
-	
 	# Get parent unit
 	var unit := get_parent() as Unit
 	if not unit:
-		print("UnitDragHandle: No parent unit found")
 		return null
-	
-	print("UnitDragHandle: Parent unit found - army_index: %d" % unit.army_index)
 	
 	# Check phase - only allow dragging during preparation
 	var game := get_tree().get_first_node_in_group("game") as Game
 	if not game:
-		print("UnitDragHandle: Game not found")
 		return null
 	
-	print("UnitDragHandle: Game phase: %s" % game.phase)
-	
 	if game.phase != "preparation":
-		print("UnitDragHandle: Not in preparation phase, blocking drag")
 		return null
 	
 	# Ensure we have valid data
 	if unit.army_index < 0:
-		print("UnitDragHandle: Invalid army_index: %d" % unit.army_index)
 		return null
 	
 	if spawn_slot == null:
-		print("UnitDragHandle: spawn_slot is null")
 		return null
 	
 	# Create drag preview - use custom scene if provided, otherwise fallback to simple preview

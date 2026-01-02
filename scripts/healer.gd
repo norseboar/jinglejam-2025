@@ -59,10 +59,14 @@ func _do_movement(delta: float) -> void:
 		# While flying, don't do normal pathing yet
 		return
 
+	# Get navigation position for distance calculations
+	var nav_pos := _get_nav_position()
+
 	# Check if current target is still valid
 	if target != null and is_instance_valid(target):
 		var target_unit := target as Unit
-		var distance := position.distance_to(target.position)
+		var target_nav_pos := target_unit._get_nav_position()
+		var distance := nav_pos.distance_to(target_nav_pos)
 		
 		# Check if target went out of range or died
 		if target_unit.state == "dying" or target_unit.current_hp <= 0:
@@ -75,11 +79,11 @@ func _do_movement(delta: float) -> void:
 	if target == null:
 		_check_for_targets()
 
-	# If we have a target, move towards it (using correct speed multiplier)
+	# If we have a target, move towards it using pathfinding
 	if target != null and is_instance_valid(target):
-		var target_pos := target.position
-		var direction_to_target := (target_pos - position).normalized()
-		var distance := position.distance_to(target_pos)
+		var target_unit := target as Unit
+		var target_nav_pos := target_unit._get_nav_position()
+		var distance := nav_pos.distance_to(target_nav_pos)
 		var effective_range := attack_range * 10.0 + 20.0
 
 		# Check if we're now in range to attack
@@ -87,11 +91,47 @@ func _do_movement(delta: float) -> void:
 			set_state("fighting")
 			return  # Don't move this frame, start attacking next frame
 
-		# Move towards target (with 10.0 multiplier like base units)
-		position += direction_to_target * speed * 10.0 * delta
-
-		# Flip sprite to face movement direction
-		animated_sprite.flip_h = direction_to_target.x < 0
+		# Use pathfinding for ground units, direct movement for flying units
+		if fly_height >= 0:
+			# Flying units: move directly toward target
+			var direction_to_target := (target_nav_pos - nav_pos).normalized()
+			position += direction_to_target * speed * 10.0 * delta
+			animated_sprite.flip_h = direction_to_target.x < 0
+		else:
+			# Ground units: use navigation pathfinding
+			if navigation_agent == null:
+				push_error("[Navigation] Ground healer missing NavigationAgent2D node! Cannot pathfind.")
+				return
+			
+			# Update navigation target
+			if navigation_agent.target_position.distance_to(target_nav_pos) > 1.0:
+				navigation_agent.target_position = target_nav_pos
+			
+			# Check distance to target
+			if distance <= 5.0:
+				# Close enough to target, don't move
+				return
+			
+			# Try to get next position on path
+			var next_path_position := navigation_agent.get_next_path_position()
+			var distance_to_next := next_path_position.distance_to(nav_pos)
+			
+			# Follow navigation path if we have a valid one
+			if distance_to_next > 1.0:
+				# We have a valid path, follow it
+				var direction: Vector2 = (next_path_position - nav_pos).normalized()
+				var movement: Vector2 = direction * speed * 10.0 * delta
+				var separation: Vector2 = _apply_separation_force() * delta
+				position += movement + separation
+				animated_sprite.flip_h = direction.x < 0
+			else:
+				# No valid path - log why
+				if navigation_agent.is_navigation_finished():
+					# Pathfinding finished but we're not at target - might be stuck
+					push_warning("[Navigation] Healer '%s' navigation finished but not at target. Target: %s, Current: %s, Distance: %.1f" % [name, target_nav_pos, nav_pos, distance])
+				else:
+					# Pathfinding in progress but no next position - might be unreachable or nav map issue
+					push_warning("[Navigation] Healer '%s' has no valid path. Target: %s, Current: %s, Nav map: %s" % [name, target_nav_pos, nav_pos, navigation_agent.get_navigation_map()])
 	else:
 		# No target - healers don't move forward, they stay idle
 		# This is the key difference from base Unit behavior
@@ -102,6 +142,8 @@ func _do_movement(delta: float) -> void:
 func _check_for_targets() -> void:
 	if friendly_container == null:
 		return
+
+	var nav_pos := _get_nav_position()
 
 	# Categorize allies by priority
 	var damaged_no_armor: Array[Unit] = []
@@ -117,7 +159,8 @@ func _check_for_targets() -> void:
 		if ally_unit == self or ally_unit.state == "dying" or ally_unit is Healer:
 			continue  # Skip self, dying units, and other healers
 
-		var distance := position.distance_to(ally.position)
+		var ally_nav_pos := ally_unit._get_nav_position()
+		var distance := nav_pos.distance_to(ally_nav_pos)
 		if distance >= detection_range:
 			continue
 		
@@ -151,7 +194,8 @@ func _check_for_targets() -> void:
 	var closest_distance := INF
 
 	for ally_unit in target_group:
-		var distance := position.distance_to(ally_unit.position)
+		var ally_nav_pos := ally_unit._get_nav_position()
+		var distance := nav_pos.distance_to(ally_nav_pos)
 		if distance < closest_distance:
 			closest_ally = ally_unit
 			closest_distance = distance
@@ -199,12 +243,6 @@ func _perform_heal() -> void:
 	# Heal the target
 	target_unit.receive_heal(heal_amount)
 	
-	# Log healing event with timestamp for debugging (player healers only)
-	if not is_enemy:
-		var timestamp := Time.get_ticks_msec() / 1000.0
-		var effective_cd := _get_effective_cooldown()
-		print("[%.2f] Healer healed %s (HP: %d/%d) | time_since_attack: %.2f | effective_cd: %.2f" % [timestamp, target_unit.display_name, target_unit.current_hp, target_unit.max_hp, time_since_attack, effective_cd])
-
 	# Spawn healing VFX at target position
 	if heal_vfx_scene != null:
 		var vfx: Node2D = heal_vfx_scene.instantiate() as Node2D
@@ -223,6 +261,7 @@ func _find_nearest_ally_to_follow() -> void:
 	if friendly_container == null:
 		return
 
+	var nav_pos := _get_nav_position()
 	var closest_ally: Unit = null
 	var closest_distance := INF
 
@@ -234,13 +273,15 @@ func _find_nearest_ally_to_follow() -> void:
 		if ally_unit == self or ally_unit.state == "dying" or ally_unit is Healer:
 			continue  # Skip self, dying units, and other healers
 
-		var distance := position.distance_to(ally.position)
+		var ally_nav_pos := ally_unit._get_nav_position()
+		var distance := nav_pos.distance_to(ally_nav_pos)
 		if distance < closest_distance:
 			closest_ally = ally_unit
 			closest_distance = distance
 
 	if closest_ally != null:
-		var distance_to_ally := position.distance_to(closest_ally.position)
+		var ally_nav_pos := closest_ally._get_nav_position()
+		var distance_to_ally := nav_pos.distance_to(ally_nav_pos)
 
 		# If within attack range, just idle
 		if distance_to_ally <= (attack_range * 10.0 + 20.0):

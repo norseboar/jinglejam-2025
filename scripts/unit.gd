@@ -83,6 +83,7 @@ var spawn_slot: SpawnSlot = null
 var navigation_agent: NavigationAgent2D = null  # Optional - only exists for ground units, set in _ready()
 var initial_y_position: float = 0.0  # Stored Y position for end zone calculation
 var has_line_of_sight_to_target: bool = false  # Whether current target has clear LOS
+@export var navigation_center: Node2D = null  # Optional - Node2D offset for pathfinding center
 
 # Node references
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -95,7 +96,11 @@ func _ready() -> void:
 	current_hp = max_hp
 
 	# Get NavigationAgent2D if it exists (optional - only ground units have it)
-	navigation_agent = get_node_or_null("NavigationAgent2D")
+	# Look for it as a child of navigation_center if that exists, otherwise look for it directly
+	if navigation_center:
+		navigation_agent = navigation_center.get_node_or_null("NavigationAgent2D")
+	else:
+		navigation_agent = get_node_or_null("NavigationAgent2D")
 
 	# Initialize healthbar
 	if healthbar:
@@ -211,44 +216,47 @@ func _do_movement(delta: float) -> void:
 	# Ground units (fly_height < 0) use navigation pathfinding
 	# NavigationAgent2D should exist for all ground units
 	if navigation_agent == null:
-		push_warning("Ground unit missing NavigationAgent2D node!")
-		# Fallback: move directly toward target
-		var direction_to_target := (nav_target - global_position).normalized()
-		var movement := direction_to_target * speed * 10.0 * delta
-		var separation := _apply_separation_force() * delta
-		position += movement + separation
-		animated_sprite.flip_h = direction_to_target.x < 0
+		push_error("[Navigation] Ground unit '%s' missing NavigationAgent2D node! Cannot pathfind." % name)
+		return  # Don't move if no navigation agent
+	
+	# Check if navigation map is available
+	if not navigation_agent.is_navigation_finished() and navigation_agent.get_navigation_map() == RID():
+		push_warning("[Navigation] Unit '%s' navigation map not ready yet. Position: %s" % [name, global_position])
 		return
 	
 	# Always update target position (agent will recalculate path if needed)
 	if navigation_agent.target_position.distance_to(nav_target) > 1.0:
 		navigation_agent.target_position = nav_target
 	
+	# Get navigation position (use navigation_center if set, otherwise use unit position)
+	var nav_position := _get_nav_position()
+	
 	# Check distance to target
-	var distance_to_target := nav_target.distance_to(global_position)
+	var distance_to_target := nav_target.distance_to(nav_position)
 	if distance_to_target <= 5.0:
 		# Close enough to target, don't move
 		return
 	
 	# Try to get next position on path
 	var next_path_position := navigation_agent.get_next_path_position()
-	var distance_to_next := next_path_position.distance_to(global_position)
+	var distance_to_next := next_path_position.distance_to(nav_position)
 	
-	# Use navigation path if we have a valid one, otherwise move directly
+	# Follow navigation path if we have a valid one
 	if distance_to_next > 1.0:
 		# We have a valid path, follow it
-		var direction := (next_path_position - global_position).normalized()
-		var movement := direction * speed * 10.0 * delta
-		var separation := _apply_separation_force() * delta
+		var direction: Vector2 = (next_path_position - nav_position).normalized()
+		var movement: Vector2 = direction * speed * 10.0 * delta
+		var separation: Vector2 = _apply_separation_force() * delta
 		position += movement + separation
 		animated_sprite.flip_h = direction.x < 0
 	else:
-		# No valid path yet, move directly toward target
-		var direction_to_target := (nav_target - global_position).normalized()
-		var movement := direction_to_target * speed * 10.0 * delta
-		var separation := _apply_separation_force() * delta
-		position += movement + separation
-		animated_sprite.flip_h = direction_to_target.x < 0
+		# No valid path - log why
+		if navigation_agent.is_navigation_finished():
+			# Pathfinding finished but we're not at target - might be stuck
+			push_warning("[Navigation] Unit '%s' navigation finished but not at target. Target: %s, Current: %s, Distance: %.1f" % [name, nav_target, global_position, distance_to_target])
+		else:
+			# Pathfinding in progress but no next position - might be unreachable or nav map issue
+			push_warning("[Navigation] Unit '%s' has no valid path. Target: %s, Current: %s, Nav map: %s" % [name, nav_target, global_position, navigation_agent.get_navigation_map()])
 
 
 func _apply_separation_force() -> Vector2:
@@ -256,6 +264,7 @@ func _apply_separation_force() -> Vector2:
 	if not enable_separation or friendly_container == null:
 		return Vector2.ZERO
 	
+	var nav_pos := _get_nav_position()
 	var separation_force := Vector2.ZERO
 	var nearby_count := 0
 	
@@ -271,12 +280,13 @@ func _apply_separation_force() -> Vector2:
 		if ally_unit.state == "dying" or ally_unit.current_hp <= 0:
 			continue
 		
-		var distance := position.distance_to(ally_unit.position)
+		var ally_nav_pos := ally_unit._get_nav_position()
+		var distance := nav_pos.distance_to(ally_nav_pos)
 		
 		# If within separation radius, add repulsion force
 		if distance < separation_radius and distance > 0.1:  # Avoid divide by zero
 			# Direction away from ally
-			var away_direction := (position - ally_unit.position).normalized()
+			var away_direction := (nav_pos - ally_nav_pos).normalized()
 			# Stronger force when closer (inverse square)
 			var force_magnitude := separation_strength * (1.0 - distance / separation_radius)
 			separation_force += away_direction * force_magnitude
@@ -483,9 +493,6 @@ func _on_attack_animation_finished() -> void:
 		# Reset cooldown timer - it will count up during idle animation
 		var effective_cooldown := _get_effective_cooldown()
 		if effective_cooldown > 0.0:
-			if not is_enemy and self is Healer:
-				var timestamp := Time.get_ticks_msec() / 1000.0
-				print("[%.2f] Healer attack animation finished, resetting time_since_attack to 0" % timestamp)
 			time_since_attack = 0.0
 
 
@@ -521,6 +528,11 @@ func _execute_attack() -> void:
 	pass
 
 
+func _get_nav_position() -> Vector2:
+	"""Get the navigation position (navigation_center if set, otherwise global_position)."""
+	return navigation_center.global_position if navigation_center else global_position
+
+
 func _is_combat_active() -> bool:
 	"""Check if combat is still active by finding the Game node and checking phase."""
 	var game: Game = get_tree().get_first_node_in_group("game") as Game
@@ -549,24 +561,85 @@ func has_clear_line_of_sight_to(target_unit: Unit) -> bool:
 
 func _get_navigation_target() -> Vector2:
 	"""Determine where the unit should move toward.
-	Returns either: enemy position (for melee) or end zone (default/ranged)."""
+	Finds closest enemy (respecting priority targeting), preferring enemies with LOS."""
 	
-	# If we have a target with line of sight
-	if target != null and is_instance_valid(target) and has_line_of_sight_to_target:
-		# Melee units move toward the enemy
-		# We don't have a specific "melee" flag, so use attack_range as proxy
-		# Units with short range (< 100) are melee, move toward enemy
-		if attack_range < 100:
-			return target.global_position
+	if enemy_container == null:
+		# No enemies to target, stay in place
+		return _get_nav_position()
 	
-	# Default: move toward end zone at our starting Y
-	var game: Game = get_tree().get_first_node_in_group("game") as Game
-	if game != null and game.current_level != null:
-		return game.current_level.get_end_zone_position(is_enemy, initial_y_position)
+	var nav_pos := _get_nav_position()
+	var closest_with_los: Unit = null
+	var closest_with_los_distance := INF
+	var closest_without_los: Unit = null
+	var closest_without_los_distance := INF
 	
-	# Fallback: move in default direction
-	var direction := 1.0 if not is_enemy else -1.0
-	return global_position + Vector2(direction * 1000.0, 0)
+	if targets_high_priority:
+		# Priority-based targeting: find highest priority enemies first
+		var highest_priority := -INF
+		
+		# First pass: find highest priority
+		for enemy in enemy_container.get_children():
+			if not is_instance_valid(enemy) or not enemy is Unit:
+				continue
+			
+			var unit_enemy := enemy as Unit
+			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+				continue
+			
+			if unit_enemy.priority > highest_priority:
+				highest_priority = unit_enemy.priority
+		
+		# Second pass: find closest with/without LOS among highest priority
+		for enemy in enemy_container.get_children():
+			if not is_instance_valid(enemy) or not enemy is Unit:
+				continue
+			
+			var unit_enemy := enemy as Unit
+			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+				continue
+			
+			if unit_enemy.priority != highest_priority:
+				continue
+			
+			var enemy_nav_pos := unit_enemy._get_nav_position()
+			var distance := nav_pos.distance_to(enemy_nav_pos)
+			var has_los := (self is ArtilleryUnit) or has_clear_line_of_sight_to(unit_enemy)
+			
+			if has_los and distance < closest_with_los_distance:
+				closest_with_los = unit_enemy
+				closest_with_los_distance = distance
+			elif distance < closest_without_los_distance:
+				closest_without_los = unit_enemy
+				closest_without_los_distance = distance
+	else:
+		# Normal targeting: just find closest enemy with/without LOS
+		for enemy in enemy_container.get_children():
+			if not is_instance_valid(enemy) or not enemy is Unit:
+				continue
+			
+			var unit_enemy := enemy as Unit
+			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
+				continue
+			
+			var enemy_nav_pos := unit_enemy._get_nav_position()
+			var distance := nav_pos.distance_to(enemy_nav_pos)
+			var has_los := (self is ArtilleryUnit) or has_clear_line_of_sight_to(unit_enemy)
+			
+			if has_los and distance < closest_with_los_distance:
+				closest_with_los = unit_enemy
+				closest_with_los_distance = distance
+			elif distance < closest_without_los_distance:
+				closest_without_los = unit_enemy
+				closest_without_los_distance = distance
+	
+	# Prefer enemy with LOS, otherwise move toward closest without LOS
+	if closest_with_los != null:
+		return closest_with_los._get_nav_position()
+	elif closest_without_los != null:
+		return closest_without_los._get_nav_position()
+	
+	# No enemies found, stay in place
+	return nav_pos
 
 
 func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:

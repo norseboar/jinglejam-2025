@@ -145,10 +145,6 @@ func show_upgrade_screen(victory: bool, player_army: Array, enemies_faced: Array
 
 func show_draft_screen(roster: Roster) -> void:
 	"""Show the upgrade screen in draft mode with roster units to buy."""
-	print("UpgradeScreen: show_draft_screen roster=%s units=%s" % [
-		roster.team_name if roster else "null",
-		roster.units.size() if roster else 0
-	])
 	is_draft_mode = true
 	current_victory_state = true  # Not really relevant for draft
 
@@ -169,7 +165,6 @@ func show_draft_screen(roster: Roster) -> void:
 			army_unit.placed = false
 			army_unit.upgrades = {}
 			draft_roster.append(army_unit)
-	print("UpgradeScreen: draft_roster size=%d" % draft_roster.size())
 
 	# Use draft_roster as the "enemies" to recruit from
 	enemies_faced_ref = draft_roster

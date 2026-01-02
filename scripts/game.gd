@@ -92,10 +92,6 @@ func _ready() -> void:
 
 func _show_draft_screen() -> void:
 	"""Show the draft screen at game start."""
-	if starting_roster:
-		print("Game: showing draft with starting roster '%s' (%d units)" % [starting_roster.team_name, starting_roster.units.size()])
-	else:
-		print("Game: starting_roster is null when showing draft")
 	# Set upgrade background
 	if background_rect and upgrade_background:
 		background_rect.texture = upgrade_background
@@ -110,22 +106,16 @@ func _show_draft_screen() -> void:
 func _show_faction_selection() -> void:
 	"""Display the faction select screen and pause draft flow until a roster is chosen."""
 	if faction_select_screen:
-		print("Game: showing faction selector")
 		if hud:
 			hud.hide_battle_section_for_faction_select()
 		faction_select_screen.show_selector()
 	else:
 		# Fallback: proceed directly with whatever starting_roster is set
-		print("Game: no faction selector assigned, skipping to draft")
 		_show_draft_screen()
 
 
 func _on_faction_roster_selected(roster: Roster) -> void:
 	"""Handle roster selection from the faction select screen."""
-	if roster:
-		print("Game: roster selected '%s'" % roster.team_name)
-	else:
-		print("Game: roster selected was null")
 	if roster:
 		starting_roster = roster
 	_show_draft_screen()
@@ -215,9 +205,6 @@ func generate_battle_options() -> Array[BattleOptionData]:
 	low_target = max(low_target, level_data.minimum_gold)
 	high_target = max(high_target, level_data.minimum_gold)
 
-	print("Player army value: %d" % army_value)
-	print("Target values - Low: %d (%.1fx), High: %d (%.1fx)" % [low_target, level_data.low_multiplier, high_target, level_data.high_multiplier])
-
 	# Pick 2 random rosters
 	var roster_indices: Array[int] = []
 	for i in range(full_rosters.size()):
@@ -239,8 +226,7 @@ func generate_battle_options() -> Array[BattleOptionData]:
 
 	var slot_count_a := _count_enemy_slots(battlefield_a)
 	var army_a := ArmyGenerator.generate_army(roster_a, targets[0], slot_count_a, level_data.forced_units, level_data.neutral_roster, level_data.minimum_gold)
-	var value_a := ArmyGenerator.calculate_army_value(army_a)
-	print("Generated '%s' army worth %d gold (target: %d)" % [roster_a.team_name, value_a, targets[0]])
+	var _value_a := ArmyGenerator.calculate_army_value(army_a)
 	result.append(BattleOptionData.create(roster_a, battlefield_a, army_a, targets[0]))
 
 	# Generate option B
@@ -251,8 +237,7 @@ func generate_battle_options() -> Array[BattleOptionData]:
 
 	var slot_count_b := _count_enemy_slots(battlefield_b)
 	var army_b := ArmyGenerator.generate_army(roster_b, targets[1], slot_count_b, level_data.forced_units, level_data.neutral_roster, level_data.minimum_gold)
-	var value_b := ArmyGenerator.calculate_army_value(army_b)
-	print("Generated '%s' army worth %d gold (target: %d)" % [roster_b.team_name, value_b, targets[1]])
+	var _value_b := ArmyGenerator.calculate_army_value(army_b)
 	result.append(BattleOptionData.create(roster_b, battlefield_b, army_b, targets[1]))
 
 	return result
@@ -631,16 +616,11 @@ func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
 	unit.upgrades = army_unit.upgrades.duplicate()  # Copy upgrades
 	unit.army_index = army_index  # Track which army slot this unit came from
 	unit.spawn_slot = slot  # Store slot reference for re-dragging
-	print("Game.place_unit_from_army: Set unit.spawn_slot to %s" % slot)
 	unit.apply_upgrades()  # Apply after positioning
 	
 	# Update drag handle's spawn slot reference (if it exists)
 	if unit.drag_handle:
-		print("Game.place_unit_from_army: Found drag_handle: %s" % unit.drag_handle)
 		unit.drag_handle.spawn_slot = slot
-		print("Game.place_unit_from_army: Set drag_handle.spawn_slot to %s" % slot)
-	else:
-		print("Game.place_unit_from_army: No drag_handle on unit")
 	
 	# Connect player unit death signal
 	unit.player_unit_died.connect(_on_player_unit_died)

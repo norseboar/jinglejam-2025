@@ -32,7 +32,6 @@ func _ready() -> void:
 func show_selector() -> void:
 	"""Show the selector modal and reset state."""
 	available_rosters = _get_available_rosters()
-	print("FactionSelect: loaded %d rosters" % available_rosters.size())
 	_apply_background_texture()
 	_populate_slots()
 	if available_rosters.size() > 0:
@@ -135,13 +134,10 @@ func _update_faction_label() -> void:
 
 func _on_confirm_pressed() -> void:
 	if selected_index < 0 or selected_index >= available_rosters.size():
-		print("FactionSelect: confirm ignored, invalid index %d" % selected_index)
 		return
 	var roster := available_rosters[selected_index]
 	if roster == null:
-		print("FactionSelect: confirm ignored, roster null at index %d" % selected_index)
 		return
-	print("FactionSelect: confirmed roster '%s'" % roster.team_name)
 	hide_selector()
 	roster_selected.emit(roster)
 

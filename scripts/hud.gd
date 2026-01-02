@@ -271,7 +271,6 @@ func show_upgrade_screen(victory: bool, player_army: Array, enemies_faced: Array
 
 func show_draft_screen(roster: Roster) -> void:
 	"""Show the upgrade screen in draft mode."""
-	print("HUD: show_draft_screen with roster %s" % (roster.team_name if roster else "null"))
 	# Hide HUD elements (tray, phase label, etc.)
 	hide_hud_elements()
 	
