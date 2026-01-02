@@ -97,18 +97,6 @@ func _do_movement(delta: float) -> void:
 		# This is the key difference from base Unit behavior
 		pass
 
-	# Constrain ground units (fly_height < 0) to level bounds (same as base Unit)
-	if fly_height < 0:
-		var bounds := _get_level_bounds()
-		if not bounds.is_empty():
-			var min_y: float = bounds.get("min_y", 0.0) as float
-			var max_y: float = bounds.get("max_y", 360.0) as float
-			var global_y: float = global_position.y
-			var clamped_global_y: float = clamp(global_y, min_y, max_y)
-			# Convert back to local position
-			if clamped_global_y != global_y:
-				global_position.y = clamped_global_y
-
 
 ## Override targeting to find wounded allies instead of enemies
 func _check_for_targets() -> void:
@@ -131,6 +119,10 @@ func _check_for_targets() -> void:
 
 		var distance := position.distance_to(ally.position)
 		if distance >= detection_range:
+			continue
+		
+		# Check line of sight (healers can't heal through walls)
+		if not has_clear_line_of_sight_to(ally_unit):
 			continue
 
 		var is_damaged := ally_unit.current_hp < ally_unit.max_hp

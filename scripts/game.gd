@@ -456,6 +456,9 @@ func _spawn_enemies_from_level() -> void:
 		# Set position directly - all in same coordinate space now
 		enemy.global_position = enemy_marker.global_position
 		
+		# Store initial Y position for end zone calculation
+		enemy.initial_y_position = enemy.global_position.y
+		
 		enemy.apply_upgrades()  # Apply after added to tree
 		
 		# Connect death signal to award gold
@@ -512,6 +515,9 @@ func _spawn_enemies_from_generated_army() -> void:
 		
 		# Set position directly - all in same coordinate space now
 		enemy.global_position = slot.global_position
+		
+		# Store initial Y position for end zone calculation
+		enemy.initial_y_position = enemy.global_position.y
 		
 		enemy.apply_upgrades()
 
@@ -618,6 +624,9 @@ func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
 	
 	# Set position directly - spawn slots and units are now in the same coordinate space
 	unit.global_position = slot.get_slot_center()
+	
+	# Store initial Y position for end zone calculation
+	unit.initial_y_position = unit.global_position.y
 	
 	unit.upgrades = army_unit.upgrades.duplicate()  # Copy upgrades
 	unit.army_index = army_index  # Track which army slot this unit came from

@@ -79,6 +79,11 @@ var friendly_container: Node2D = null
 # Reference to the spawn slot this unit is placed on (for re-dragging during preparation)
 var spawn_slot: SpawnSlot = null
 
+# Navigation system
+var navigation_agent: NavigationAgent2D = null  # Optional - only exists for ground units, set in _ready()
+var initial_y_position: float = 0.0  # Stored Y position for end zone calculation
+var has_line_of_sight_to_target: bool = false  # Whether current target has clear LOS
+
 # Node references
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
@@ -88,6 +93,9 @@ var spawn_slot: SpawnSlot = null
 
 func _ready() -> void:
 	current_hp = max_hp
+
+	# Get NavigationAgent2D if it exists (optional - only ground units have it)
+	navigation_agent = get_node_or_null("NavigationAgent2D")
 
 	# Initialize healthbar
 	if healthbar:
@@ -189,42 +197,58 @@ func _do_movement(delta: float) -> void:
 	# Check for enemies first
 	_check_for_targets()
 	
-	# If we have a target, move towards it
-	if target != null and is_instance_valid(target):
-		var target_pos := target.position
-		var direction_to_target := (target_pos - position).normalized()
-		
-		# Move towards target
+	# Determine where to move
+	var nav_target := _get_navigation_target()
+	
+	# Flying units ignore navigation and move directly (fly_height >= 0 means flying)
+	if fly_height >= 0:
+		var direction_to_target := (nav_target - global_position).normalized()
+		var movement := direction_to_target * speed * 10.0 * delta
+		position += movement
+		animated_sprite.flip_h = direction_to_target.x < 0
+		return
+	
+	# Ground units (fly_height < 0) use navigation pathfinding
+	# NavigationAgent2D should exist for all ground units
+	if navigation_agent == null:
+		push_warning("Ground unit missing NavigationAgent2D node!")
+		# Fallback: move directly toward target
+		var direction_to_target := (nav_target - global_position).normalized()
 		var movement := direction_to_target * speed * 10.0 * delta
 		var separation := _apply_separation_force() * delta
 		position += movement + separation
-		
-		# Flip sprite to face movement direction
 		animated_sprite.flip_h = direction_to_target.x < 0
-	else:
-		# No target - move in default direction based on team
-		var direction := 1.0 if not is_enemy else -1.0  # Player moves right, enemy moves left
-		
-		# Flip sprite to face movement direction
-		animated_sprite.flip_h = is_enemy
-		
-		# Move horizontally
-		var movement := Vector2(direction * speed * 10.0 * delta, 0)
+		return
+	
+	# Always update target position (agent will recalculate path if needed)
+	if navigation_agent.target_position.distance_to(nav_target) > 1.0:
+		navigation_agent.target_position = nav_target
+	
+	# Check distance to target
+	var distance_to_target := nav_target.distance_to(global_position)
+	if distance_to_target <= 5.0:
+		# Close enough to target, don't move
+		return
+	
+	# Try to get next position on path
+	var next_path_position := navigation_agent.get_next_path_position()
+	var distance_to_next := next_path_position.distance_to(global_position)
+	
+	# Use navigation path if we have a valid one, otherwise move directly
+	if distance_to_next > 1.0:
+		# We have a valid path, follow it
+		var direction := (next_path_position - global_position).normalized()
+		var movement := direction * speed * 10.0 * delta
 		var separation := _apply_separation_force() * delta
 		position += movement + separation
-	
-	# Constrain ground units (fly_height < 0) to level bounds
-	# Use global_position since bounds are calculated in global space
-	if fly_height < 0:
-		var bounds := _get_level_bounds()
-		if not bounds.is_empty():
-			var min_y: float = bounds.get("min_y", 0.0) as float
-			var max_y: float = bounds.get("max_y", 360.0) as float
-			var global_y: float = global_position.y
-			var clamped_global_y: float = clamp(global_y, min_y, max_y)
-			# Convert back to local position
-			if clamped_global_y != global_y:
-				global_position.y = clamped_global_y
+		animated_sprite.flip_h = direction.x < 0
+	else:
+		# No valid path yet, move directly toward target
+		var direction_to_target := (nav_target - global_position).normalized()
+		var movement := direction_to_target * speed * 10.0 * delta
+		var separation := _apply_separation_force() * delta
+		position += movement + separation
+		animated_sprite.flip_h = direction_to_target.x < 0
 
 
 func _apply_separation_force() -> Vector2:
@@ -341,10 +365,24 @@ func _check_for_targets() -> void:
 
 	if closest_enemy != null:
 		target = closest_enemy
+		
+		# Check line of sight (unless we're artillery - they ignore obstacles)
+		if self is ArtilleryUnit:
+			has_line_of_sight_to_target = true  # Artillery always has LOS
+		else:
+			has_line_of_sight_to_target = has_clear_line_of_sight_to(target as Unit)
+		
 		var distance_to_target := position.distance_to(closest_enemy.position)
 		
-		# If we're in attack range, start fighting
-		if distance_to_target <= (attack_range * 10.0 + 20.0):
+		# If we're in attack range AND have line of sight, start fighting
+		# (Ranged units need LOS to shoot, melee just need to be in range)
+		var can_attack := distance_to_target <= (attack_range * 10.0 + 20.0)
+		if attack_range < 100:  # Melee unit
+			can_attack = can_attack  # Just needs range, not LOS
+		else:  # Ranged unit
+			can_attack = can_attack and has_line_of_sight_to_target
+		
+		if can_attack:
 			set_state("fighting")
 			
 			# Only set initial attack timing on FIRST combat entry in this battle
@@ -360,6 +398,9 @@ func _check_for_targets() -> void:
 					time_since_attack = 999.0  # Large value = attack immediately
 			# After first combat entry, time_since_attack continues tracking naturally
 		# Otherwise, we'll keep moving towards them (state stays "moving")
+	else:
+		# No target, clear LOS flag
+		has_line_of_sight_to_target = false
 
 
 func _do_fighting() -> void:
@@ -490,13 +531,42 @@ func _is_combat_active() -> bool:
 	return game.phase == "battle"
 
 
-func _get_level_bounds() -> Dictionary:
-	"""Get level bounds from the current level. Returns empty dict if not available."""
-	var game: Game = get_tree().get_first_node_in_group("game") as Game
-	if game == null or game.current_level == null:
-		return {}
+func has_clear_line_of_sight_to(target_unit: Unit) -> bool:
+	"""Check if there's a clear line of sight to the target unit.
+	Uses raycasting on Layer 1 (TotalBlockers) only.
+	Ground and flying units can shoot over Layer 2 (MovementBlockers)."""
+	if target_unit == null or not is_instance_valid(target_unit):
+		return false
 	
-	return game.current_level.get_level_bounds()
+	var space_state := get_world_2d().direct_space_state
+	var query := PhysicsRayQueryParameters2D.create(global_position, target_unit.global_position)
+	query.collision_mask = 1  # Layer 1 only (TotalBlockers)
+	query.exclude = [self]  # Don't hit ourselves
+	
+	var result := space_state.intersect_ray(query)
+	return result.is_empty()  # Clear if no collision
+
+
+func _get_navigation_target() -> Vector2:
+	"""Determine where the unit should move toward.
+	Returns either: enemy position (for melee) or end zone (default/ranged)."""
+	
+	# If we have a target with line of sight
+	if target != null and is_instance_valid(target) and has_line_of_sight_to_target:
+		# Melee units move toward the enemy
+		# We don't have a specific "melee" flag, so use attack_range as proxy
+		# Units with short range (< 100) are melee, move toward enemy
+		if attack_range < 100:
+			return target.global_position
+	
+	# Default: move toward end zone at our starting Y
+	var game: Game = get_tree().get_first_node_in_group("game") as Game
+	if game != null and game.current_level != null:
+		return game.current_level.get_end_zone_position(is_enemy, initial_y_position)
+	
+	# Fallback: move in default direction
+	var direction := 1.0 if not is_enemy else -1.0
+	return global_position + Vector2(direction * 1000.0, 0)
 
 
 func take_damage(amount: int, attacker_armor_piercing: bool = false) -> void:

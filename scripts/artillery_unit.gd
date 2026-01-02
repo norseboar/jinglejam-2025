@@ -39,10 +39,6 @@ func _check_for_targets() -> void:
 			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
 				continue
 			
-			# Filter out targets outside level bounds
-			if not _is_position_within_bounds(unit_enemy.global_position):
-				continue
-			
 			var distance := position.distance_to(enemy.position)
 			if distance >= detection_range:
 				continue
@@ -59,10 +55,6 @@ func _check_for_targets() -> void:
 			
 			var unit_enemy := enemy as Unit
 			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
-				continue
-			
-			# Filter out targets outside level bounds
-			if not _is_position_within_bounds(unit_enemy.global_position):
 				continue
 			
 			var distance := position.distance_to(enemy.position)
@@ -91,10 +83,6 @@ func _check_for_targets() -> void:
 			if unit_enemy.current_hp <= 0 or unit_enemy.state == "dying":
 				continue  # Skip dead or dying units
 
-			# Filter out targets outside level bounds
-			if not _is_position_within_bounds(unit_enemy.global_position):
-				continue
-
 			var distance := position.distance_to(enemy.position)
 			
 			# Check if enemy is within detection range
@@ -114,18 +102,6 @@ func _check_for_targets() -> void:
 			# Artillery units get random delay for first attack to stagger them
 			time_since_attack = randf() * effective_cooldown
 		# Otherwise, we'll keep moving towards them (state stays "moving")
-
-
-func _is_position_within_bounds(pos: Vector2) -> bool:
-	"""Check if a global position is within the level bounds."""
-	var bounds := _get_level_bounds()
-	if bounds.is_empty():
-		return true  # If no bounds set, allow all targets
-	
-	var min_y: float = bounds.get("min_y", 0.0) as float
-	var max_y: float = bounds.get("max_y", 360.0) as float
-	
-	return pos.y >= min_y and pos.y <= max_y
 
 
 ## Override to play fire sound and spawn target marker on attack frame

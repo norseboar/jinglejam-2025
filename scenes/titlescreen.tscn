@@ -179,6 +179,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_ybki2")
+reference_size = Vector2(640, 360)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="LogoContainer"]
 texture_filter = 1
