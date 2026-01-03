@@ -5,6 +5,7 @@
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_40h0h"]
 texture = ExtResource("1_eiodg")
+margins = Vector2i(384, 0)
 6:0/0 = 0
 6:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, -1.6187286, 0.8122053, -1.1506228, -3.4173164, 8, 8, 8)
 7:0/0 = 0
