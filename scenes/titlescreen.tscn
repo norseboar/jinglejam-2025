@@ -9,11 +9,11 @@
 [ext_resource type="Texture2D" uid="uid://l8cgt1m3s036" path="res://assets/sprites/ui/buttons/start_button/start_button_highlight.png" id="5_hcbn3"]
 [ext_resource type="Texture2D" uid="uid://dget5nnbnp0b4" path="res://assets/sprites/ui/buttons/quit_button/quit_button.png" id="9_ybki2"]
 [ext_resource type="Script" uid="uid://gfq4k1nlmm6l" path="res://scripts/sound_toggle_button.gd" id="10_8or72"]
-[ext_resource type="Texture2D" uid="uid://qpuxv3d6ifma" path="res://assets/sprites/ui/sound3.png" id="10_hcbn3"]
+[ext_resource type="Texture2D" uid="uid://qpuxv3d6ifma" path="res://assets/sprites/ui/buttons/sound_button/sound3.png" id="10_hcbn3"]
 [ext_resource type="Texture2D" uid="uid://djifl7loku358" path="res://assets/sprites/ui/buttons/quit_button/quit_button_pressed.png" id="10_lsij0"]
 [ext_resource type="Texture2D" uid="uid://dsresxld07fmo" path="res://assets/sprites/ui/buttons/quit_button/quit_button_highlight.png" id="11_y7yat"]
-[ext_resource type="Texture2D" uid="uid://c2e2rntjvj64l" path="res://assets/sprites/ui/sound2.png" id="11_ybki2"]
-[ext_resource type="Texture2D" uid="uid://dfw3054d00mvj" path="res://assets/sprites/ui/sound1.png" id="13_lsij0"]
+[ext_resource type="Texture2D" uid="uid://c2e2rntjvj64l" path="res://assets/sprites/ui/buttons/sound_button/sound2.png" id="11_ybki2"]
+[ext_resource type="Texture2D" uid="uid://dfw3054d00mvj" path="res://assets/sprites/ui/buttons/sound_button/sound1.png" id="13_lsij0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hcbn3"]
 atlas = ExtResource("3_8or72")

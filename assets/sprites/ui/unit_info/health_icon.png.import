@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cv8ss3kp7yyis"
-path="res://.godot/imported/button_80x40.png-61f52b3985a26aee0aee10f55ac8fa87.ctex"
+uid="uid://2b8q6hd1xwql"
+path="res://.godot/imported/health_icon.png-b64f6d36751499f800aef607afce1aa2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/buttons/button_80x40.png"
-dest_files=["res://.godot/imported/button_80x40.png-61f52b3985a26aee0aee10f55ac8fa87.ctex"]
+source_file="res://assets/sprites/ui/unit_info/health_icon.png"
+dest_files=["res://.godot/imported/health_icon.png-b64f6d36751499f800aef607afce1aa2.ctex"]
 
 [params]
 

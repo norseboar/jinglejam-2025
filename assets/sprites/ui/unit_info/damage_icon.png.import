@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxlm5mvj448e5"
-path="res://.godot/imported/button_80x28.png-c0921f56913fe4828bff4f53473c0d74.ctex"
+uid="uid://cmh38px710shj"
+path="res://.godot/imported/damage_icon.png-4fc846fc4f91094934f8d0ef15b55ecd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/buttons/button_80x28.png"
-dest_files=["res://.godot/imported/button_80x28.png-c0921f56913fe4828bff4f53473c0d74.ctex"]
+source_file="res://assets/sprites/ui/unit_info/damage_icon.png"
+dest_files=["res://.godot/imported/damage_icon.png-4fc846fc4f91094934f8d0ef15b55ecd.ctex"]
 
 [params]
 
