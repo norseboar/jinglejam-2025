@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://cg53b4gbp6rni"]
+[gd_scene load_steps=46 format=3 uid="uid://cg53b4gbp6rni"]
 
 [ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="1_ca42v"]
 [ext_resource type="Script" uid="uid://chgenhlxknc" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -25,9 +25,10 @@
 [ext_resource type="Resource" uid="uid://dma1pro3drmpe" path="res://levels/level6_9.tres" id="17_pf7vy"]
 [ext_resource type="Texture2D" uid="uid://domaspt406cjf" path="res://assets/sprites/ui/buttons/buy_button/buy_button.png" id="18_37s47"]
 [ext_resource type="Resource" uid="uid://q7vi0odeibft" path="res://levels/level_10.tres" id="18_o8ni1"]
+[ext_resource type="Texture2D" uid="uid://coyoqfg27en0l" path="res://assets/sprites/ui/ui_v2/ui_9patch.png" id="18_pr1ej"]
 [ext_resource type="Texture2D" uid="uid://belfmhbyw1w1s" path="res://assets/sprites/ui/buttons/buy_button/buy_button_pressed.png" id="19_bt5mj"]
 [ext_resource type="Texture2D" uid="uid://cadwb1i3siefs" path="res://assets/sprites/ui/buttons/buy_button/buy_button_highlight.png" id="20_e1j6l"]
-[ext_resource type="Script" path="res://scripts/tinted_button.gd" id="23_pl11u"]
+[ext_resource type="Script" uid="uid://d4eh8dp6lwy7d" path="res://scripts/tinted_button.gd" id="23_pl11u"]
 [ext_resource type="Texture2D" uid="uid://do3fnx1lc1ppm" path="res://assets/sprites/ui/map.png" id="27_v2yb1"]
 [ext_resource type="Script" uid="uid://ba8mk545ccyla" path="res://scripts/faction_select_screen.gd" id="27_wljb1"]
 [ext_resource type="Resource" uid="uid://cptdpd3b8m1h0" path="res://units/rosters/starting_rosters/dwarves.tres" id="28_v2yb1"]
@@ -93,6 +94,98 @@ offset_bottom = 0.0
 upgrade_screen = NodePath("UpgradeScreen")
 battle_select_screen = NodePath("BattleSelectScreen")
 
+[node name="BattleSelectScreen" type="Control" parent="UI/HUD" node_paths=PackedStringArray("options_container", "advance_button", "player_army_slot_group")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("13_kvuet")
+options_container = NodePath("Panel/HBoxContainer")
+advance_button = NodePath("Panel/PanelContainer/VBoxContainer/Button")
+player_army_slot_group = NodePath("Panel/PanelContainer/VBoxContainer/UnitSlotGroup")
+battle_option_scene = ExtResource("14_trtic")
+background_texture = ExtResource("27_v2yb1")
+
+[node name="TextureRect" type="TextureRect" parent="UI/HUD/BattleSelectScreen"]
+texture_filter = 1
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("27_v2yb1")
+
+[node name="Panel" type="Control" parent="UI/HUD/BattleSelectScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.5
+offset_right = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="UI/HUD/BattleSelectScreen/Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -41.0
+offset_top = 19.5
+offset_right = 41.0
+offset_bottom = 96.5
+grow_horizontal = 2
+
+[node name="Label2" type="Label" parent="UI/HUD/BattleSelectScreen/Panel/PanelContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Challenge
+an army"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/HUD/BattleSelectScreen/Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 18.0
+offset_top = 4.0
+offset_right = -22.0
+offset_bottom = 204.0
+grow_horizontal = 2
+theme_override_constants/separation = 120
+alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="UI/HUD/BattleSelectScreen/Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -104.0
+offset_top = -162.0
+offset_right = 104.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/HUD/BattleSelectScreen/Panel/PanelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="UnitSlotGroup" parent="UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
+layout_mode = 2
+selection_mode = 0
+
+[node name="Button" type="TextureButton" parent="UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("13_264po")
+texture_pressed = ExtResource("14_1kice")
+texture_hover = ExtResource("15_5newe")
+script = ExtResource("23_pl11u")
+
 [node name="UpgradeScreen" type="Control" parent="UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "start_battle_button", "editor_background", "upgrade_instructions", "upgrade_data", "upgrade_button_1", "upgrade_button_2", "upgrade_button_3", "upgrade_label_1", "upgrade_label_2", "upgrade_label_3", "upgrade_price_label", "sell_button", "sell_price_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_price_label", "gold_label", "draft_label", "recruit_label")]
 layout_mode = 1
 anchors_preset = 15
@@ -106,7 +199,7 @@ army_slot_group = NodePath("Control/PlayerArmy/MarginContainer/VBoxContainer/Pla
 enemy_slot_group = NodePath("Control/EnemyArmy/MarginContainer/VBoxContainer/EnemyGroup")
 continue_button = NodePath("CenterPanel/VBoxContainer/NextBattleButton")
 start_battle_button = NodePath("CenterPanel/VBoxContainer/FirstBattleButton")
-editor_background = NodePath("DebugBackground")
+editor_background = NodePath("")
 upgrade_instructions = NodePath("Control/UpgradePane/MarginContainer/UpgradeInstructions")
 upgrade_data = NodePath("Control/UpgradePane/MarginContainer/UpgradeData")
 upgrade_button_1 = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup/Upgrade1")
@@ -126,23 +219,31 @@ gold_label = NodePath("CenterPanel/VBoxContainer/GoldLabel")
 draft_label = NodePath("Control/EnemyArmy/MarginContainer/VBoxContainer/RecruitStartTeamLabel")
 recruit_label = NodePath("Control/EnemyArmy/MarginContainer/VBoxContainer/RecruitEnemyLabel")
 
-[node name="DebugBackground" type="TextureRect" parent="UI/HUD/UpgradeScreen"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("7_gee14")
-expand_mode = 3
-
 [node name="Control" type="Control" parent="UI/HUD/UpgradeScreen"]
 anchors_preset = 0
 offset_left = -7.25
 offset_top = -161.0
 offset_right = 32.75
 offset_bottom = -121.0
+
+[node name="NinePatchRect" type="NinePatchRect" parent="UI/HUD/UpgradeScreen/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 3.25
+offset_top = 157.0
+offset_right = 611.25
+offset_bottom = 485.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("18_pr1ej")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
 
 [node name="EnemyArmy" type="Panel" parent="UI/HUD/UpgradeScreen/Control"]
 layout_mode = 1
@@ -151,10 +252,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = 12.125
-offset_top = 129.0
-offset_right = 212.125
-offset_bottom = 249.0
+offset_left = 12.25
+offset_top = 149.0
+offset_right = 212.25
+offset_bottom = 269.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -191,10 +292,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = 380.125
-offset_top = 129.0
-offset_right = 580.125
-offset_bottom = 249.0
+offset_left = 401.25
+offset_top = 149.0
+offset_right = 601.25
+offset_bottom = 269.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -221,10 +322,10 @@ size_flags_horizontal = 4
 
 [node name="UpgradePane" type="Panel" parent="UI/HUD/UpgradeScreen/Control"]
 layout_mode = 0
-offset_left = 390.0
-offset_top = 297.75
-offset_right = 640.0
-offset_bottom = 467.75
+offset_left = 372.25
+offset_top = 318.0
+offset_right = 622.25
+offset_bottom = 488.0
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/HUD/UpgradeScreen/Control/UpgradePane"]
 layout_mode = 1
@@ -364,10 +465,10 @@ horizontal_alignment = 2
 
 [node name="RecruitPane" type="Panel" parent="UI/HUD/UpgradeScreen/Control"]
 layout_mode = 0
-offset_left = 32.1875
-offset_top = 297.75
-offset_right = 232.1875
-offset_bottom = 467.75
+offset_left = 32.3125
+offset_top = 317.75
+offset_right = 282.3125
+offset_bottom = 487.75
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/HUD/UpgradeScreen/Control/RecruitPane"]
 layout_mode = 1
@@ -439,9 +540,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -64.0
-offset_top = -130.5
+offset_top = -332.0
 offset_right = 48.0
-offset_bottom = 10.5
+offset_bottom = -191.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -463,98 +564,6 @@ script = ExtResource("23_pl11u")
 
 [node name="FirstBattleButton" type="TextureButton" parent="UI/HUD/UpgradeScreen/CenterPanel/VBoxContainer"]
 layout_mode = 2
-texture_normal = ExtResource("13_264po")
-texture_pressed = ExtResource("14_1kice")
-texture_hover = ExtResource("15_5newe")
-script = ExtResource("23_pl11u")
-
-[node name="BattleSelectScreen" type="Control" parent="UI/HUD" node_paths=PackedStringArray("options_container", "advance_button", "player_army_slot_group")]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("13_kvuet")
-options_container = NodePath("Panel/HBoxContainer")
-advance_button = NodePath("Panel/PanelContainer/VBoxContainer/Button")
-player_army_slot_group = NodePath("Panel/PanelContainer/VBoxContainer/UnitSlotGroup")
-battle_option_scene = ExtResource("14_trtic")
-background_texture = ExtResource("27_v2yb1")
-
-[node name="TextureRect" type="TextureRect" parent="UI/HUD/BattleSelectScreen"]
-texture_filter = 1
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("27_v2yb1")
-
-[node name="Panel" type="Control" parent="UI/HUD/BattleSelectScreen"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 0.5
-offset_right = 0.5
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="PanelContainer2" type="PanelContainer" parent="UI/HUD/BattleSelectScreen/Panel"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -41.0
-offset_top = 19.5
-offset_right = 41.0
-offset_bottom = 96.5
-grow_horizontal = 2
-
-[node name="Label2" type="Label" parent="UI/HUD/BattleSelectScreen/Panel/PanelContainer2"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Challenge
-an army"
-horizontal_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/HUD/BattleSelectScreen/Panel"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 18.0
-offset_top = 4.0
-offset_right = -22.0
-offset_bottom = 204.0
-grow_horizontal = 2
-theme_override_constants/separation = 120
-alignment = 1
-
-[node name="PanelContainer" type="PanelContainer" parent="UI/HUD/BattleSelectScreen/Panel"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -104.0
-offset_top = -162.0
-offset_right = 104.0
-offset_bottom = -18.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/HUD/BattleSelectScreen/Panel/PanelContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="UnitSlotGroup" parent="UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer" instance=ExtResource("13_ca42v")]
-layout_mode = 2
-selection_mode = 0
-
-[node name="Button" type="TextureButton" parent="UI/HUD/BattleSelectScreen/Panel/PanelContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
 texture_normal = ExtResource("13_264po")
 texture_pressed = ExtResource("14_1kice")
 texture_hover = ExtResource("15_5newe")

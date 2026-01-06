@@ -37,8 +37,15 @@ signal draft_complete()
 @export var draft_label: Label
 @export var recruit_label: Label
 
+# Animation settings
+@export_group("Animation")
+@export var transition_duration: float = 0.45
+@export var transition_ease: Tween.EaseType = Tween.EASE_IN_OUT
+@export var transition_trans: Tween.TransitionType = Tween.TRANS_CUBIC
+
 # State
 var current_victory_state: bool = false
+var active_tween: Tween = null
 
 # Selection state
 var selected_army_index: int = -1
@@ -136,8 +143,8 @@ func show_upgrade_screen(victory: bool, player_army: Array, enemies_faced: Array
 	is_draft_mode = false
 	_update_mode_display()
 
-	# Show upgrade screen
-	visible = true
+	# Animate screen sliding down from top
+	_slide_in()
 	
 	# Play shop music (post-battle upgrade screen only, not draft)
 	MusicManager.play_track(MusicManager.shop_music)
@@ -189,8 +196,8 @@ func show_draft_screen(roster: Roster) -> void:
 	# Update label and buttons for draft mode
 	_update_mode_display()
 
-	# Show screen
-	visible = true
+	# Animate screen sliding down from top
+	_slide_in()
 	# Note: Draft screen does NOT play shop music - title music continues
 
 
@@ -272,8 +279,53 @@ func _force_panel_resize(panel: PanelContainer) -> void:
 
 
 func hide_upgrade_screen() -> void:
-	"""Hide the upgrade screen."""
-	visible = false
+	"""Hide the upgrade screen with animation."""
+	_slide_out()
+
+
+func _slide_in() -> void:
+	"""Animate the upgrade screen sliding down from the top."""
+	# Cancel any existing tween
+	if active_tween:
+		active_tween.kill()
+	
+	# Get viewport height for positioning
+	var viewport_height := get_viewport_rect().size.y
+	
+	# Position above the viewport using anchors
+	anchor_top = -1.0
+	anchor_bottom = 0.0
+	visible = true
+	
+	# Create and configure tween
+	active_tween = create_tween()
+	active_tween.set_ease(transition_ease)
+	active_tween.set_trans(transition_trans)
+	active_tween.set_parallel(true)
+	
+	# Animate anchors to slide into view
+	active_tween.tween_property(self, "anchor_top", 0.0, transition_duration)
+	active_tween.tween_property(self, "anchor_bottom", 1.0, transition_duration)
+
+
+func _slide_out() -> void:
+	"""Animate the upgrade screen sliding up off the top."""
+	# Cancel any existing tween
+	if active_tween:
+		active_tween.kill()
+	
+	# Create and configure tween
+	active_tween = create_tween()
+	active_tween.set_ease(transition_ease)
+	active_tween.set_trans(transition_trans)
+	active_tween.set_parallel(true)
+	
+	# Animate anchors to slide out of view
+	active_tween.tween_property(self, "anchor_top", -1.0, transition_duration)
+	active_tween.tween_property(self, "anchor_bottom", 0.0, transition_duration)
+	
+	# Hide after animation completes
+	active_tween.chain().tween_callback(func(): visible = false)
 
 
 func _populate_army_tray(slot_group: UnitSlotGroup, units: Array) -> void:

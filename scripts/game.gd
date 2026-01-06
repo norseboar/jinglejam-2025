@@ -92,10 +92,6 @@ func _ready() -> void:
 
 func _show_draft_screen() -> void:
 	"""Show the draft screen at game start."""
-	# Set upgrade background
-	if background_rect and upgrade_background:
-		background_rect.texture = upgrade_background
-	
 	# Initialize empty army
 	army.clear()
 	
@@ -775,16 +771,11 @@ func _on_show_upgrade_screen_requested() -> void:
 	if hud:
 		hud.set_phase(phase, current_level_index + 1)
 	
-	# Swap to upgrade background
-	if background_rect and upgrade_background:
-		background_rect.texture = upgrade_background
-	
 	# Clear leftover units from the battle
 	_clear_all_units()
 	
-	# Hide the level (if present)
-	if current_level:
-		current_level.visible = false
+	# Keep the level visible - upgrade screen will slide over it
+	# (Level will be hidden later when transitioning to battle select)
 	
 	# Show upgrade screen with army and enemy data
 	hud.show_upgrade_screen(true, army, enemies_faced)  # Only called on victory
@@ -935,13 +926,11 @@ func _play_battle_music() -> void:
 
 
 func _on_upgrade_confirmed(victory: bool) -> void:
-	# Hide upgrade screen
-	hud.hide_upgrade_screen()
-	
 	if victory:
 		# Check if all levels completed
 		if current_level_index >= levels.size() - 1:
-			# All levels completed - return to title screen
+			# All levels completed - hide upgrade screen and return to title
+			hud.hide_upgrade_screen()
 			_return_to_title_screen()
 			return
 		
@@ -951,7 +940,9 @@ func _on_upgrade_confirmed(victory: bool) -> void:
 		# Advance level index (used for tracking progress)
 		current_level_index += 1
 
-		# Clear old level and units before showing battle select
+		# Hide the battlefield and clear units before showing battle select
+		if current_level:
+			current_level.visible = false
 		_clear_all_units()
 		if current_level:
 			current_level.queue_free()
@@ -960,9 +951,14 @@ func _on_upgrade_confirmed(victory: bool) -> void:
 		# Generate new battle options
 		var options := generate_battle_options()
 		if options.size() >= 2:
+			# Show battle select screen FIRST (it will be behind the upgrade screen)
 			hud.show_battle_select_generated(options)
+			# Then hide upgrade screen (which animates up, revealing battle select)
+			hud.hide_upgrade_screen()
 		else:
 			push_error("Failed to generate battle options!")
+			hud.hide_upgrade_screen()
 	else:
-		# On defeat, return to title screen
+		# On defeat, hide upgrade screen and return to title screen
+		hud.hide_upgrade_screen()
 		_return_to_title_screen()
