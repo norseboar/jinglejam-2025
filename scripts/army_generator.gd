@@ -43,6 +43,7 @@ static func generate_army(
 		army_unit.unit_scene = unit_scene
 		army_unit.unit_type = unit_scene.resource_path.get_file().get_basename()
 		army_unit.upgrades = {}
+		army_unit.squad_count = _get_squad_count(unit_scene)
 		army_unit.placed = false
 		army.append(army_unit)
 		remaining_gold -= _get_base_cost(unit_scene)
@@ -137,6 +138,7 @@ static func generate_army(
 			army_unit.unit_scene = unit_scene
 			army_unit.unit_type = unit_scene.resource_path.get_file().get_basename()
 			army_unit.upgrades = {}
+			army_unit.squad_count = _get_squad_count(unit_scene)
 			army_unit.placed = false
 			army.append(army_unit)
 			remaining_gold -= _get_base_cost(unit_scene)
@@ -154,6 +156,7 @@ static func generate_army(
 			army_unit.unit_scene = cheapest_faction_unit
 			army_unit.unit_type = cheapest_faction_unit.resource_path.get_file().get_basename()
 			army_unit.upgrades = {}
+			army_unit.squad_count = _get_squad_count(cheapest_faction_unit)
 			army_unit.placed = false
 			army.append(army_unit)
 			remaining_gold -= _get_base_cost(cheapest_faction_unit)
@@ -224,6 +227,18 @@ static func _get_unit_priority(unit_scene: PackedScene) -> int:
 	var p := instance.priority
 	instance.queue_free()
 	return p
+
+
+static func _get_squad_count(unit_scene: PackedScene) -> int:
+	"""Get the squad_count from a unit scene."""
+	if unit_scene == null:
+		return 1
+	var instance := unit_scene.instantiate() as Unit
+	if instance == null:
+		return 1
+	var count := instance.squad_count
+	instance.queue_free()
+	return count
 
 
 static func _get_random_upgrade_slot(unit_scene: PackedScene) -> int:

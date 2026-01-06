@@ -171,6 +171,15 @@ func show_draft_screen(roster: Roster) -> void:
 			army_unit.unit_type = unit_scene.resource_path.get_file().get_basename()
 			army_unit.placed = false
 			army_unit.upgrades = {}
+			
+			# Get squad_count from unit scene
+			var temp_unit := unit_scene.instantiate() as Unit
+			if temp_unit:
+				army_unit.squad_count = temp_unit.squad_count
+				temp_unit.queue_free()
+			else:
+				army_unit.squad_count = 1
+			
 			draft_roster.append(army_unit)
 
 	# Use draft_roster as the "enemies" to recruit from
@@ -639,8 +648,8 @@ func _refresh_recruit_pane() -> void:
 func _get_total_upgrades(upgrades: Dictionary) -> int:
 	"""Count total upgrades from an upgrades dictionary."""
 	var total := 0
-	for count in upgrades.values():
-		total += count
+	for upgrade_count in upgrades.values():
+		total += upgrade_count
 	return total
 
 

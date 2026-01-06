@@ -19,4 +19,5 @@ armor = 5
 display_name = "Knight"
 description = "Heavily armored warrior"
 base_recruit_cost = 20
+squad_count = 3
 available_upgrades = Array[ExtResource("3_srxh6")]([ExtResource("4_6ixyc"), ExtResource("5_5hdjj"), ExtResource("6_icd2w")])

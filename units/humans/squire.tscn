@@ -19,6 +19,7 @@ display_name = "Squire"
 description = "Lightly-armored soldier"
 base_recruit_cost = 5
 upgrade_cost = 1
+squad_count = 6
 available_upgrades = Array[ExtResource("3_e42qj")]([ExtResource("4_5673y"), ExtResource("5_2k6kh"), ExtResource("6_e42qj")])
 
 [node name="AnimatedSprite2D" parent="." index="2"]

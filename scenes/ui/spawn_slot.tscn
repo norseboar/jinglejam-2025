@@ -6,8 +6,8 @@
 [node name="SpawnSlot" type="Control" node_paths=PackedStringArray("visual") groups=["spawn_slots"]]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 32.0
-offset_bottom = 32.0
+offset_right = 64.0
+offset_bottom = 64.0
 script = ExtResource("1_bxigs")
 center_offset = Vector2(0, -8)
 visual = NodePath("Sprite")
@@ -15,7 +15,8 @@ idle_color = Color(0.54509807, 0.69411767, 0.8235294, 1)
 hovered_color = Color(1, 1, 1, 1)
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(16, 16)
+position = Vector2(32, 32)
+scale = Vector2(2, 2)
 sprite_frames = ExtResource("2_pjkox")
 animation = &"pulse"
 autoplay = "pulse"

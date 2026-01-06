@@ -18,9 +18,10 @@ priority = 0
 display_name = "Dwarf Spearman"
 description = "Dwarven infantry"
 upgrade_cost = 2
+squad_count = 6
 available_upgrades = Array[ExtResource("3_jryk5")]([ExtResource("4_ubojj"), ExtResource("5_vwamq"), ExtResource("6_jryk5")])
 damage_sounds = Array[AudioStream]([])
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="." index="2"]
 sprite_frames = ExtResource("3_u18bb")
 autoplay = "idle"

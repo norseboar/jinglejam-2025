@@ -23,17 +23,18 @@ display_name = "Ogre Elite"
 description = "The best of the best"
 base_recruit_cost = 80
 upgrade_cost = 10
+squad_count = 3
 available_upgrades = Array[ExtResource("2_djdsy")]([ExtResource("3_djdsy"), ExtResource("4_djdsy"), ExtResource("4_jryw3")])
 damage_sounds = Array[AudioStream]([ExtResource("2_umbpk")])
 
-[node name="Shadow" parent="." index="0"]
+[node name="Shadow" parent="." index="1"]
 texture = ExtResource("8_1ne5f")
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="." index="2"]
 sprite_frames = ExtResource("2_8sn7d")
 
-[node name="UpgradeMarkers" parent="." index="3"]
+[node name="UpgradeMarkers" parent="." index="4"]
 position = Vector2(4, -7)
 
-[node name="Healthbar" parent="." index="4"]
+[node name="Healthbar" parent="." index="5"]
 position = Vector2(4, -15)

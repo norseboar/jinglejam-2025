@@ -19,8 +19,9 @@ fly_height = 95
 display_name = "Imp"
 description = "Flies to dangerous units"
 upgrade_cost = 2
+squad_count = 5
 available_upgrades = Array[ExtResource("2_4w8yq")]([ExtResource("3_ofls6"), ExtResource("4_u3kg2"), ExtResource("5_4w8yq")])
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="." index="2"]
 sprite_frames = ExtResource("2_ndutp")
 animation = &"idle"

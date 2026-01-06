@@ -76,20 +76,20 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 			# Free up the source slot
 			source_slot.set_occupied(false)
 		
-		# Find the unit in the player_units container
+		# Find the squad in the player_units container
 		if game.current_level and game.current_level.player_units:
 			for child in game.current_level.player_units.get_children():
-				if child is Unit:
-					var unit := child as Unit
-					if unit.army_index == army_index:
-						# Move the unit to new position
-						unit.global_position = get_slot_center()
-						unit.spawn_slot = self
-						
+				if child is Squad:
+					var squad := child as Squad
+					if squad.army_index == army_index:
+						# Move the squad to new position
+						squad.global_position = get_slot_center()
+						squad.spawn_slot = self
+
 						# Update drag handle reference
-						if unit.drag_handle:
-							unit.drag_handle.spawn_slot = self
-						
+						if squad.drag_handle:
+							squad.drag_handle.spawn_slot = self
+
 						# Mark new slot as occupied
 						set_occupied(true)
 						break

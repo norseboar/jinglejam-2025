@@ -38,23 +38,24 @@ armor_piercing = true
 display_name = "Dwarf Mortarman"
 description = "Slow but powerful artillery"
 base_recruit_cost = 20
+squad_count = 2
 available_upgrades = Array[ExtResource("6_8sdwu")]([ExtResource("7_yrhmx"), ExtResource("8_ieb6r"), ExtResource("9_wql2e")])
 damage_sounds = Array[AudioStream]([])
 fire_sounds = Array[AudioStream]([ExtResource("6_knwlj"), ExtResource("7_mb7iv"), ExtResource("8_c2pl7"), ExtResource("9_pm737")])
 impact_sounds = Array[AudioStream]([ExtResource("10_pm737"), ExtResource("11_3j3g5"), ExtResource("12_wijnf")])
 
-[node name="Shadow" parent="." index="0"]
+[node name="Shadow" parent="." index="1"]
 position = Vector2(4, 1)
 texture = ExtResource("17_yrhmx")
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="." index="2"]
 sprite_frames = ExtResource("3_ccyet")
 autoplay = "idle"
 frame = 5
 frame_progress = 0.0063604116
 
-[node name="UpgradeMarkers" parent="." index="3"]
+[node name="UpgradeMarkers" parent="." index="4"]
 position = Vector2(0, 0)
 
-[node name="Healthbar" parent="." index="4"]
+[node name="Healthbar" parent="." index="5"]
 position = Vector2(0, -8)

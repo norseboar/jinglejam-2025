@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://ba4wflfakla8"]
+
+[ext_resource type="Script" uid="uid://b1s82sjbiaglc" path="res://scripts/unit_drag_handle.gd" id="1_cjpso"]
+[ext_resource type="Script" uid="uid://23qed6punkxa" path="res://scripts/squad.gd" id="1_wx6re"]
+[ext_resource type="PackedScene" uid="uid://s7jjret7o6yr" path="res://scenes/ui/drag_preview.tscn" id="2_wx6re"]
+
+[node name="Squad" type="Node2D" node_paths=PackedStringArray("position_markers")]
+y_sort_enabled = true
+script = ExtResource("1_wx6re")
+position_markers = [NodePath("UnitPositions/Marker2D"), NodePath("UnitPositions/Marker2D2"), NodePath("UnitPositions/Marker2D3"), NodePath("UnitPositions/Marker2D4"), NodePath("UnitPositions/Marker2D5"), NodePath("UnitPositions/Marker2D6")]
+
+[node name="DragHandle" type="Control" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 3
+anchors_preset = 0
+offset_left = -32.0
+offset_top = -24.0
+offset_right = 32.0
+offset_bottom = 40.0
+script = ExtResource("1_cjpso")
+drag_preview_scene = ExtResource("2_wx6re")
+
+[node name="UnitPositions" type="Node" parent="."]
+
+[node name="Marker2D" type="Marker2D" parent="UnitPositions"]
+position = Vector2(6, 12)
+
+[node name="Marker2D2" type="Marker2D" parent="UnitPositions"]
+position = Vector2(-21, -3)
+
+[node name="Marker2D3" type="Marker2D" parent="UnitPositions"]
+position = Vector2(16, -12)
+
+[node name="Marker2D4" type="Marker2D" parent="UnitPositions"]
+position = Vector2(14, 29)
+
+[node name="Marker2D5" type="Marker2D" parent="UnitPositions"]
+position = Vector2(-14, 24)
+
+[node name="Marker2D6" type="Marker2D" parent="UnitPositions"]
+position = Vector2(-2, -15)

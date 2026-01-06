@@ -74,17 +74,18 @@ func show_unit_from_scene(unit_scene: PackedScene, upgrades: Dictionary = {}) ->
 		var is_healer := unit is Healer
 		
 		if stats_label:
+			var squad_size: int = unit.squad_count
 			if is_healer:
 				var heal: int = unit.heal_amount + stat_bonuses.heal_amount
-				stats_label.text = "HP: %d  HEAL: %d  CAST SPD: %d\nDEF: %d   SPD: %d  RNG: %d" % [hp, heal, atk_spd, def, spd, rng]
+				stats_label.text = "COUNT: %d  HP: %d  HEAL: %d  CAST SPD: %d\nDEF: %d   SPD: %d  RNG: %d" % [squad_size, hp, heal, atk_spd, def, spd, rng]
 			else:
 				var dmg: int = unit.damage + stat_bonuses.damage
-				stats_label.text = "HP: %d  DMG: %d  ATK SPD: %d\nDEF: %d   SPD: %d  RNG: %d" % [hp, dmg, atk_spd, def, spd, rng]
+				stats_label.text = "COUNT: %d  HP: %d  DMG: %d  ATK SPD: %d\nDEF: %d   SPD: %d  RNG: %d" % [squad_size, hp, dmg, atk_spd, def, spd, rng]
 
 		# Calculate and display upgrade fraction
 		var total_upgrades: int = 0
-		for count in upgrades.values():
-			total_upgrades += count as int
+		for upgrade_count in upgrades.values():
+			total_upgrades += upgrade_count as int
 		if upgrade_fraction_label:
 			upgrade_fraction_label.text = "%d/3 upgrades" % total_upgrades
 	else:
@@ -124,17 +125,18 @@ func update_stats(upgrades: Dictionary) -> void:
 		var is_healer := unit is Healer
 		
 		if stats_label:
+			var squad_size: int = unit.squad_count
 			if is_healer:
 				var heal: int = unit.heal_amount + stat_bonuses.heal_amount
-				stats_label.text = "HP: %d  HEAL: %d  CAST SPD: %d\nDEF: %d  SPD: %d  RNG: %d" % [hp, heal, atk_spd, def, spd, rng]
+				stats_label.text = "COUNT: %d  HP: %d  HEAL: %d  CAST SPD: %d\nDEF: %d  SPD: %d  RNG: %d" % [squad_size, hp, heal, atk_spd, def, spd, rng]
 			else:
 				var dmg: int = unit.damage + stat_bonuses.damage
-				stats_label.text = "HP: %d  DMG: %d  ATK SPD: %d\nDEF: %d   SPD: %d  RNG: %d" % [hp, dmg, atk_spd, def, spd, rng]
+				stats_label.text = "COUNT: %d  HP: %d  DMG: %d  ATK SPD: %d\nDEF: %d   SPD: %d  RNG: %d" % [squad_size, hp, dmg, atk_spd, def, spd, rng]
 
 		# Update upgrade fraction
 		var total_upgrades: int = 0
-		for count in upgrades.values():
-			total_upgrades += count as int
+		for upgrade_count in upgrades.values():
+			total_upgrades += upgrade_count as int
 		if upgrade_fraction_label:
 			upgrade_fraction_label.text = "%d/3 upgrades" % total_upgrades
 

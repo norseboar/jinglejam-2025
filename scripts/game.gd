@@ -69,6 +69,9 @@ var is_draft_mode: bool = true
 ## Coin scene for gold collection animation
 @export var coin_scene: PackedScene = preload("res://scenes/ui/coin.tscn")
 
+## Squad scene for spawning multiple units
+@export var squad_scene: PackedScene = preload("res://scenes/squad.tscn")
+
 
 func _ready() -> void:
 	hud.start_battle_requested.connect(_on_start_battle_requested)
@@ -421,29 +424,37 @@ func _spawn_enemies_from_level() -> void:
 			push_error("EnemyMarker at position %s has no unit_scene assigned!" % enemy_marker.global_position)
 			return  # Stop spawning if any marker is misconfigured
 		
-		var enemy: Unit = enemy_marker.unit_scene.instantiate() as Unit
-		if enemy == null:
+		# Instantiate unit temporarily to get squad_count
+		var temp_unit := enemy_marker.unit_scene.instantiate() as Unit
+		if temp_unit == null:
 			push_error("Failed to instantiate enemy unit from scene at marker %s!" % enemy_marker.global_position)
-			return  # Stop spawning on instantiation failure
+			return
+		var unit_squad_count := temp_unit.squad_count
+		temp_unit.queue_free()
 		
-		# Configure enemy properties BEFORE adding to scene tree (so _ready() sees correct values)
-		enemy.is_enemy = true
-		enemy.enemy_container = current_level.player_units
-		enemy.friendly_container = current_level.enemy_units
-		enemy.upgrades = enemy_marker.upgrades.duplicate()  # Copy upgrades
+		# Spawn squad instead of individual unit
+		var squad: Squad = squad_scene.instantiate() as Squad
+		if squad == null:
+			push_error("Failed to instantiate enemy squad")
+			return
 		
-		current_level.enemy_units.add_child(enemy)
+		current_level.enemy_units.add_child(squad)
+		squad.global_position = enemy_marker.global_position
 		
-		# Set position directly - all in same coordinate space now
-		enemy.global_position = enemy_marker.global_position
+		# Setup squad (spawns units)
+		squad.setup(
+			enemy_marker.unit_scene,
+			unit_squad_count,
+			enemy_marker.upgrades,
+			true,  # is_enemy
+			current_level.player_units,
+			current_level.enemy_units
+		)
 		
-		# Store initial Y position for end zone calculation
-		enemy.initial_y_position = enemy.global_position.y
-		
-		enemy.apply_upgrades()  # Apply after added to tree
-		
-		# Connect death signal to award gold
-		enemy.enemy_unit_died.connect(_on_enemy_unit_died)
+		# Connect death signals for gold rewards
+		for child in squad.get_children():
+			if child is Unit:
+				child.enemy_unit_died.connect(_on_enemy_unit_died)
 
 
 func _spawn_enemies_from_generated_army() -> void:
@@ -481,29 +492,29 @@ func _spawn_enemies_from_generated_army() -> void:
 			push_error("Generated army unit at index %d has no unit_scene!" % i)
 			continue
 
-		var enemy: Unit = army_unit.unit_scene.instantiate() as Unit
-		if enemy == null:
-			push_error("Failed to instantiate enemy unit at index %d!" % i)
+		# Spawn squad instead of individual unit
+		var squad: Squad = squad_scene.instantiate() as Squad
+		if squad == null:
+			push_error("Failed to instantiate enemy squad at index %d" % i)
 			continue
 
-		# Configure enemy
-		enemy.is_enemy = true
-		enemy.enemy_container = current_level.player_units
-		enemy.friendly_container = current_level.enemy_units
-		enemy.upgrades = army_unit.upgrades.duplicate()
+		current_level.enemy_units.add_child(squad)
+		squad.global_position = slot.global_position
 
-		current_level.enemy_units.add_child(enemy)
-		
-		# Set position directly - all in same coordinate space now
-		enemy.global_position = slot.global_position
-		
-		# Store initial Y position for end zone calculation
-		enemy.initial_y_position = enemy.global_position.y
-		
-		enemy.apply_upgrades()
+		# Setup squad (spawns units)
+		squad.setup(
+			army_unit.unit_scene,
+			army_unit.squad_count,
+			army_unit.upgrades,
+			true,  # is_enemy
+			current_level.player_units,
+			current_level.enemy_units
+		)
 
-		# Connect death signal
-		enemy.enemy_unit_died.connect(_on_enemy_unit_died)
+		# Connect death signals for gold rewards
+		for child in squad.get_children():
+			if child is Unit:
+				child.enemy_unit_died.connect(_on_enemy_unit_died)
 
 
 func _capture_enemies_faced() -> void:
@@ -575,58 +586,62 @@ func _on_army_unit_placed(slot_index: int) -> void:
 
 
 func place_unit_from_army(army_index: int, slot: SpawnSlot) -> void:
-	"""Place a unit from the army array onto a spawn slot."""
+	"""Place a squad from the army array onto a spawn slot."""
 	if slot.is_occupied:
 		return
-	
+
 	if army_index < 0 or army_index >= army.size():
 		push_error("Invalid army index: %d (army size: %d)" % [army_index, army.size()])
 		return
-	
+
 	var army_unit: ArmyUnit = army[army_index]
 	if army_unit.placed:
 		push_warning("Army unit at index %d already placed" % army_index)
 		return
-	
+
 	if army_unit.unit_scene == null:
 		push_error("Army unit at index %d has no unit_scene" % army_index)
 		return
-	
-	var unit: Unit = army_unit.unit_scene.instantiate() as Unit
-	if unit == null:
-		push_error("Failed to instantiate unit from scene at army index %d" % army_index)
-		return
-	
-	# Add unit to level's player_units container
-	current_level.player_units.add_child(unit)
-	unit.is_enemy = false
-	unit.enemy_container = current_level.enemy_units
-	unit.friendly_container = current_level.player_units
-	
-	# Set position directly - spawn slots and units are now in the same coordinate space
-	unit.global_position = slot.get_slot_center()
-	
-	# Store initial Y position for end zone calculation
-	unit.initial_y_position = unit.global_position.y
-	
-	unit.upgrades = army_unit.upgrades.duplicate()  # Copy upgrades
-	unit.army_index = army_index  # Track which army slot this unit came from
-	unit.spawn_slot = slot  # Store slot reference for re-dragging
-	unit.apply_upgrades()  # Apply after positioning
-	
-	# Update drag handle's spawn slot reference (if it exists)
-	if unit.drag_handle:
-		unit.drag_handle.spawn_slot = slot
-	
-	# Connect player unit death signal
-	unit.player_unit_died.connect(_on_player_unit_died)
 
+	# Load squad scene
+	var squad: Squad = squad_scene.instantiate() as Squad
+	if squad == null:
+		push_error("Failed to instantiate squad")
+		return
+
+	# Add squad to level's player_units container
+	current_level.player_units.add_child(squad)
+
+	# Set squad position to slot center
+	squad.global_position = slot.get_slot_center()
+
+	# Store references
+	squad.army_index = army_index
+	squad.spawn_slot = slot
+
+	# Update drag handle's spawn slot reference
+	if squad.drag_handle:
+		squad.drag_handle.spawn_slot = slot
+
+	# Setup squad (spawns units)
+	squad.setup(
+		army_unit.unit_scene,
+		army_unit.squad_count,
+		army_unit.upgrades,
+		false,  # is_enemy
+		current_level.enemy_units,
+		current_level.player_units
+	)
+
+	# Note: We no longer remove dead units from army - they persist for upgrade screen
+
+	# Mark slot as occupied
 	slot.set_occupied(true)
-	
+
 	# Mark army slot as placed
 	army_unit.placed = true
 	army_unit_placed.emit(army_index)
-	
+
 	# Notify HUD that a unit was placed
 	unit_placed.emit(army_unit.unit_type)
 
@@ -638,20 +653,80 @@ func recruit_enemy(enemy_data) -> void:
 		return
 
 	var new_unit := ArmyUnit.new()
+	var unit_scene: PackedScene = null
 	if enemy_data is Dictionary:
 		new_unit.unit_scene = enemy_data.get("unit_scene")
 		new_unit.unit_type = enemy_data.get("unit_type", "unknown")
 		new_unit.upgrades = enemy_data.get("upgrades", {}).duplicate()
+		new_unit.squad_count = enemy_data.get("squad_count", 1)  # Copy squad_count if present
+		unit_scene = new_unit.unit_scene
 	elif enemy_data is ArmyUnit:
 		new_unit.unit_scene = enemy_data.unit_scene
 		new_unit.unit_type = enemy_data.unit_type
 		new_unit.upgrades = enemy_data.upgrades.duplicate()
+		new_unit.squad_count = enemy_data.squad_count  # Copy squad_count
+		unit_scene = new_unit.unit_scene
 	else:
 		push_error("recruit_enemy: unexpected type %s" % typeof(enemy_data))
 		return
 	
+	# If squad_count wasn't set, get it from unit scene
+	if new_unit.squad_count == 1 and unit_scene != null:
+		var temp_unit := unit_scene.instantiate() as Unit
+		if temp_unit:
+			new_unit.squad_count = temp_unit.squad_count
+			temp_unit.queue_free()
+	
 	new_unit.placed = false
 	army.append(new_unit)
+
+
+func _unpack_squads() -> void:
+	"""Move units out of Squad containers to be direct children of their containers.
+	Called at battle start so all existing battle logic works with units."""
+	if not current_level:
+		return
+	
+	# Unpack player squads
+	if current_level.player_units:
+		_unpack_squads_in_container(current_level.player_units)
+	
+	# Unpack enemy squads
+	if current_level.enemy_units:
+		_unpack_squads_in_container(current_level.enemy_units)
+
+
+func _unpack_squads_in_container(container: Node2D) -> void:
+	"""Helper to unpack all squads in a given container."""
+	var squads_to_remove: Array[Squad] = []
+	
+	for child in container.get_children():
+		if child is Squad:
+			var squad := child as Squad
+			
+			# Move all units from squad to container
+			for squad_child in squad.get_children():
+				if squad_child is Unit:
+					var unit := squad_child as Unit
+					
+					# Store the unit's current global position before reparenting
+					var saved_global_pos := unit.global_position
+					
+					# Remove from squad (without freeing)
+					squad.remove_child(unit)
+					
+					# Add to container
+					container.add_child(unit)
+					
+					# Restore the exact global position
+					unit.global_position = saved_global_pos
+			
+			# Mark squad for removal
+			squads_to_remove.append(squad)
+	
+	# Remove empty squad containers
+	for squad in squads_to_remove:
+		squad.queue_free()
 
 
 func _count_living_units(container: Node2D) -> int:
@@ -709,25 +784,11 @@ func _spawn_coin_animation(start_position: Vector2) -> void:
 	coin.animate_to_target(start_position, target_position)
 
 
-func _on_player_unit_died(army_index: int) -> void:
-	"""Handle player unit death and remove from army."""
-	if army_index < 0 or army_index >= army.size():
-		return
-	
-	# Remove from army array
-	army.remove_at(army_index)
-	
-	# Update army indices for remaining units (since array shifted)
-	if current_level and current_level.player_units:
-		for child in current_level.player_units.get_children():
-			if child is Unit:
-				var unit := child as Unit
-				if unit.army_index > army_index:
-					unit.army_index -= 1
-	
-	# Update HUD tray
-	if hud:
-		hud.set_tray_from_army(army)
+func _on_player_unit_died(_army_index: int) -> void:
+	"""Handle player unit death (currently no-op - units persist in army for upgrade screen)."""
+	# Previously removed unit from army array, but now we keep all units
+	# so they show up on the upgrade screen even if they died
+	pass
 
 
 func _on_start_battle_requested() -> void:
@@ -748,6 +809,9 @@ func _on_start_battle_requested() -> void:
 	phase = "battle"
 	hud.set_phase(phase, current_level_index + 1)
 	_set_spawn_slots_visible(false)
+
+	# Unpack squads - move units out of Squad containers and make them direct children
+	_unpack_squads()
 
 	# Set all units to moving
 	if current_level.player_units:

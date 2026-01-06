@@ -186,7 +186,7 @@ texture_pressed = ExtResource("14_1kice")
 texture_hover = ExtResource("15_5newe")
 script = ExtResource("23_pl11u")
 
-[node name="UpgradeScreen" type="Control" parent="UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "start_battle_button", "editor_background", "upgrade_instructions", "upgrade_data", "upgrade_button_1", "upgrade_button_2", "upgrade_button_3", "upgrade_label_1", "upgrade_label_2", "upgrade_label_3", "upgrade_price_label", "sell_button", "sell_price_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_price_label", "gold_label", "draft_label", "recruit_label")]
+[node name="UpgradeScreen" type="Control" parent="UI/HUD" node_paths=PackedStringArray("army_slot_group", "enemy_slot_group", "continue_button", "start_battle_button", "upgrade_instructions", "upgrade_data", "upgrade_button_1", "upgrade_button_2", "upgrade_button_3", "upgrade_label_1", "upgrade_label_2", "upgrade_label_3", "upgrade_price_label", "sell_button", "sell_price_label", "recruit_instructions", "recruit_data", "recruit_button", "recruit_price_label", "gold_label", "draft_label", "recruit_label")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -199,7 +199,6 @@ army_slot_group = NodePath("Control/PlayerArmy/MarginContainer/VBoxContainer/Pla
 enemy_slot_group = NodePath("Control/EnemyArmy/MarginContainer/VBoxContainer/EnemyGroup")
 continue_button = NodePath("CenterPanel/VBoxContainer/NextBattleButton")
 start_battle_button = NodePath("CenterPanel/VBoxContainer/FirstBattleButton")
-editor_background = NodePath("")
 upgrade_instructions = NodePath("Control/UpgradePane/MarginContainer/UpgradeInstructions")
 upgrade_data = NodePath("Control/UpgradePane/MarginContainer/UpgradeData")
 upgrade_button_1 = NodePath("Control/UpgradePane/MarginContainer/UpgradeData/VBoxContainer2/HBoxContainer/UpgradeGroup/Upgrade1")

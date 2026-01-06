@@ -37,6 +37,7 @@ var heal_armor := 0                  # Temporary armor from healing (reduces dam
 # Gold system properties
 @export var base_recruit_cost := 10  # Base cost to recruit this unit type
 @export var upgrade_cost := 5  # Cost per upgrade (HP or Damage)
+@export var squad_count := 1  # How many units spawn in a squad (default 1 for backwards compatibility)
 
 # Upgrade system
 @export var available_upgrades: Array[UnitUpgrade] = []
