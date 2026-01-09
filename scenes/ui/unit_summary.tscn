@@ -1,8 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://qu7tcqixa2mi"]
+[gd_scene load_steps=12 format=3 uid="uid://qu7tcqixa2mi"]
 
 [ext_resource type="Script" uid="uid://c3k5vte8o8tcl" path="res://scripts/unit_summary.gd" id="1_pox6m"]
+[ext_resource type="PackedScene" uid="uid://djmq3yj08nxkx" path="res://scenes/stat_display.tscn" id="2_hncnk"]
+[ext_resource type="Texture2D" uid="uid://c5uhhmk4i1au4" path="res://assets/sprites/ui/unit_info/unit_info_panel_empty.png" id="3_jgps6"]
+[ext_resource type="Texture2D" uid="uid://dsernrajb6iji" path="res://assets/sprites/ui/unit_info/squad_size_icon.png" id="3_n3lit"]
+[ext_resource type="Texture2D" uid="uid://2b8q6hd1xwql" path="res://assets/sprites/ui/unit_info/health_icon.png" id="4_7sgpo"]
+[ext_resource type="Texture2D" uid="uid://cmh38px710shj" path="res://assets/sprites/ui/unit_info/damage_icon.png" id="5_lbg28"]
+[ext_resource type="Texture2D" uid="uid://cdm6u8ctc6kwn" path="res://assets/sprites/ui/unit_info/magic_icon.png" id="6_cnuhd"]
+[ext_resource type="Texture2D" uid="uid://cqsq8wfe8w7w2" path="res://assets/sprites/ui/unit_info/attackspeed_icon.png" id="7_qgwmp"]
+[ext_resource type="Texture2D" uid="uid://vdv0c8mh5t7o" path="res://assets/sprites/ui/unit_info/defense_icon.png" id="8_s4va3"]
+[ext_resource type="Texture2D" uid="uid://b80814f0dynv1" path="res://assets/sprites/ui/unit_info/speed_icon.png" id="9_ta4gg"]
+[ext_resource type="Texture2D" uid="uid://i0brgrir8ma1" path="res://assets/sprites/ui/unit_info/range_icon.png" id="10_70ajt"]
 
-[node name="UnitSummary" type="Control" node_paths=PackedStringArray("unit_name_label", "unit_description_label", "stats_label", "upgrade_fraction_label")]
+[node name="UnitSummary" type="Control" node_paths=PackedStringArray("unit_name_label", "unit_description_label", "stats_grid", "upgrade_fraction_label")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,8 +24,17 @@ grow_vertical = 2
 script = ExtResource("1_pox6m")
 unit_name_label = NodePath("HBoxContainer/Info/HBoxContainer/Name")
 unit_description_label = NodePath("HBoxContainer/Info/Description")
-stats_label = NodePath("HBoxContainer/Info/Stats")
+stat_display_scene = ExtResource("2_hncnk")
+stats_grid = NodePath("HBoxContainer/Info/TextureRect/GridContainer")
 upgrade_fraction_label = NodePath("HBoxContainer/Info/HBoxContainer/UpgradeCount")
+count_icon = ExtResource("3_n3lit")
+hp_icon = ExtResource("4_7sgpo")
+dmg_icon = ExtResource("5_lbg28")
+heal_icon = ExtResource("6_cnuhd")
+atk_spd_icon = ExtResource("7_qgwmp")
+def_icon = ExtResource("8_s4va3")
+spd_icon = ExtResource("9_ta4gg")
+rng_icon = ExtResource("10_70ajt")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -45,10 +64,20 @@ text = "2/3 upgrades"
 horizontal_alignment = 2
 
 [node name="Description" type="Label" parent="HBoxContainer/Info"]
+visible = false
 layout_mode = 2
 text = "Description"
 
-[node name="Stats" type="Label" parent="HBoxContainer/Info"]
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/Info"]
 layout_mode = 2
-text = "HP: 3 DMG: 1 ATK SPD: 3
-DEF: 0  SPD: 10 RNG: 5"
+texture = ExtResource("3_jgps6")
+
+[node name="GridContainer" type="GridContainer" parent="HBoxContainer/Info/TextureRect"]
+layout_mode = 0
+offset_left = 38.5
+offset_top = 8.0
+offset_right = 175.5
+offset_bottom = 49.0
+theme_override_constants/h_separation = 36
+theme_override_constants/v_separation = 24
+columns = 4

@@ -11,6 +11,7 @@ signal draft_complete()
 
 # Node references (assign in inspector)
 @export var phase_label: Label
+@export var phase_panel: PanelContainer  # The panel containing the phase label (for animation)
 @export var tray_panel: TrayPanel
 @export var unit_tray: GridContainer
 @export var go_button: BaseButton
@@ -28,6 +29,15 @@ signal draft_complete()
 @export var upgrade_screen: UpgradeScreen
 @export var battle_select_screen: BattleSelectScreen
 
+# Phase label animation settings
+@export_group("Phase Label Animation")
+## How long the phase label takes to tween down from off-screen (in seconds)
+@export var phase_tween_in_duration: float = 0.5
+## How long the phase label stays visible on screen (in seconds)
+@export var phase_display_duration: float = 2.0
+## How long the phase label takes to tween back up off-screen (in seconds)
+@export var phase_tween_out_duration: float = 0.5
+
 # State
 var current_phase: String = ""
 var current_level: int = 0
@@ -36,6 +46,11 @@ var placed_unit_count: int = 0
 var max_units: int = 10
 var last_victory_state: bool = false  # Store victory state for upgrade screen
 var is_last_level: bool = false  # Track if current battle was the last level
+
+# Phase label animation state
+var phase_animation_active: bool = false
+var phase_animation_queue: Array[Dictionary] = []  # Queue of {level: int}
+var phase_panel_rest_position: Vector2  # Store the original position of the panel
 
 func _ready() -> void:
 	# Connect Go button
@@ -77,27 +92,20 @@ func _ready() -> void:
 		game.gold_changed.connect(update_gold_display)
 		# Initialize display with current gold
 		update_gold_display(game.gold)
+	
+	# Store phase panel's rest position and hide it initially
+	if phase_panel:
+		phase_panel_rest_position = phase_panel.position
+		phase_panel.visible = false
 
 
 func set_phase(phase: String, level: int) -> void:
 	current_phase = phase
 	current_level = level
 	
-	if phase_label:
-		var phase_text := ""
-		match phase:
-			"preparation":
-				phase_text = "Level %d – Preparation Phase" % level
-			"battle":
-				phase_text = "Level %d – Battle Phase" % level
-			"battle_end":
-				phase_text = "Level %d – Battle End" % level
-			"upgrade":
-				phase_text = "Level %d – Upgrade Phase" % level
-			_:
-				phase_text = "Level %d – %s" % [level, phase.capitalize()]
-		
-		phase_label.text = phase_text
+	# Only animate for preparation phase
+	if phase == "preparation":
+		_queue_phase_animation(phase, level)
 	
 	# Enable/disable Go button based on phase and placed units
 	if go_button:
@@ -111,6 +119,81 @@ func set_phase(phase: String, level: int) -> void:
 	
 	# Update visibility/animations based on phase
 	_update_phase_visibility()
+
+
+func _queue_phase_animation(_phase: String, level: int) -> void:
+	"""Queue a phase animation. If no animation is active, start immediately."""
+	phase_animation_queue.append({"level": level})
+	
+	# If no animation is currently playing, start the next one
+	if not phase_animation_active:
+		_process_phase_animation_queue()
+
+
+func _process_phase_animation_queue() -> void:
+	"""Process the next phase animation in the queue."""
+	if phase_animation_queue.is_empty():
+		return
+	
+	if phase_animation_active:
+		return  # Wait for current animation to finish
+	
+	var data: Dictionary = phase_animation_queue.pop_front()
+	_animate_phase_label(data["level"])
+
+
+func _get_level_name(level: int) -> String:
+	"""Convert level number to word form (e.g., 1 -> "Level One")."""
+	var level_words := [
+		"One", "Two", "Three", "Four", "Five",
+		"Six", "Seven", "Eight", "Nine", "Ten",
+		"Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen",
+		"Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty"
+	]
+	
+	if level > 0 and level <= level_words.size():
+		return "Level %s" % level_words[level - 1]
+	else:
+		return "Level %d" % level  # Fallback to number if out of range
+
+
+func _animate_phase_label(level: int) -> void:
+	"""Animate the phase panel: tween in from top, stay, then tween out."""
+	if not phase_panel or not phase_label:
+		return
+	
+	phase_animation_active = true
+	
+	# Set the text to just show level name (e.g., "Level One")
+	var level_name := _get_level_name(level)
+	phase_label.text = level_name
+	
+	# Calculate off-screen position (above the screen)
+	var off_screen_position := phase_panel_rest_position
+	off_screen_position.y = -phase_panel.size.y - 100  # Start above screen
+	
+	# Set initial position and make visible
+	phase_panel.position = off_screen_position
+	phase_panel.visible = true
+	
+	# Create tween for the entire animation sequence
+	var tween := create_tween()
+	
+	# Tween in (down to rest position)
+	tween.tween_property(phase_panel, "position", phase_panel_rest_position, phase_tween_in_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	
+	# Stay at rest position
+	tween.tween_interval(phase_display_duration)
+	
+	# Tween out (up off screen)
+	tween.tween_property(phase_panel, "position", off_screen_position, phase_tween_out_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	
+	# Hide and mark animation as complete
+	tween.tween_callback(func():
+		phase_panel.visible = false
+		phase_animation_active = false
+		_process_phase_animation_queue()  # Process next animation in queue
+	)
 
 
 func set_tray_unit_scenes(unit_scenes: Array[PackedScene]) -> void:

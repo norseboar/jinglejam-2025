@@ -1,14 +1,84 @@
 extends Control
 class_name UnitSummary
 
-@export var unit_sprite: TextureRect
+@export var unit_sprite: TextureRect  # Existing TextureRect node in the scene
 @export var unit_name_label: Label
 @export var unit_description_label: Label
-@export var stats_label: Label
+@export var stat_display_scene: PackedScene  # Assign scenes/ui/stat_display.tscn
+@export var stats_grid: GridContainer  # GridContainer for stat displays (set columns to 4)
 @export var upgrade_fraction_label: Label
+
+@export_group("Stat Icons")
+@export var count_icon: Texture2D
+@export var hp_icon: Texture2D
+@export var dmg_icon: Texture2D
+@export var heal_icon: Texture2D
+@export var atk_spd_icon: Texture2D
+@export var def_icon: Texture2D
+@export var spd_icon: Texture2D
+@export var rng_icon: Texture2D
 
 # Cached unit data for stat updates
 var current_unit_scene: PackedScene = null
+
+# Map stat names to icon textures
+var stat_icons: Dictionary = {}
+
+
+func _ready() -> void:
+	"""Populate stat icons dictionary from exported textures."""
+	stat_icons["count"] = count_icon
+	stat_icons["hp"] = hp_icon
+	stat_icons["dmg"] = dmg_icon
+	stat_icons["heal"] = heal_icon
+	stat_icons["atk_spd"] = atk_spd_icon
+	stat_icons["def"] = def_icon
+	stat_icons["spd"] = spd_icon
+	stat_icons["rng"] = rng_icon
+
+
+func _clear_stat_rows() -> void:
+	"""Clear all stat displays from the grid."""
+	if stats_grid:
+		for child in stats_grid.get_children():
+			child.queue_free()
+
+
+func _add_stat_display(icon_key: String, value: int) -> void:
+	"""Add a stat display to the grid."""
+	if stat_display_scene == null:
+		push_warning("stat_display_scene is not assigned!")
+		return
+	if stats_grid == null:
+		push_warning("stats_grid is not assigned!")
+		return
+	
+	var stat_display := stat_display_scene.instantiate()
+	stats_grid.add_child(stat_display)
+	
+	# Set the stat using the StatDisplay script
+	if stat_display.has_method("set_stat"):
+		if not stat_icons.has(icon_key):
+			push_warning("No icon texture assigned for stat: " + icon_key)
+		elif stat_icons[icon_key] == null:
+			push_warning("Icon texture is null for stat: " + icon_key)
+		else:
+			stat_display.set_stat(stat_icons[icon_key], value)
+	else:
+		push_warning("stat_display_scene doesn't have set_stat method! Make sure the StatDisplay script is attached.")
+
+
+func _populate_stats(stats_data: Array) -> void:
+	"""Populate stat displays from an array of stat data.
+	stats_data format: [{icon: String, value: int}, ...]
+	GridContainer automatically handles layout based on columns setting.
+	"""
+	_clear_stat_rows()
+	
+	# Add each stat to the grid (GridContainer handles row wrapping)
+	for i in range(stats_data.size()):
+		var stat: Dictionary = stats_data[i]
+		_add_stat_display(stat.icon, stat.value)
 
 
 func show_placeholder(text: String) -> void:
@@ -19,8 +89,7 @@ func show_placeholder(text: String) -> void:
 		unit_name_label.text = text
 	if unit_description_label:
 		unit_description_label.text = ""
-	if stats_label:
-		stats_label.text = ""
+	_clear_stat_rows()
 	if upgrade_fraction_label:
 		upgrade_fraction_label.text = ""
 
@@ -73,14 +142,33 @@ func show_unit_from_scene(unit_scene: PackedScene, upgrades: Dictionary = {}) ->
 		# Check if unit is a healer
 		var is_healer := unit is Healer
 		
-		if stats_label:
-			var squad_size: int = unit.squad_count
-			if is_healer:
-				var heal: int = unit.heal_amount + stat_bonuses.heal_amount
-				stats_label.text = "COUNT: %d  HP: %d  HEAL: %d  CAST SPD: %d\nDEF: %d   SPD: %d  RNG: %d" % [squad_size, hp, heal, atk_spd, def, spd, rng]
-			else:
-				var dmg: int = unit.damage + stat_bonuses.damage
-				stats_label.text = "COUNT: %d  HP: %d  DMG: %d  ATK SPD: %d\nDEF: %d   SPD: %d  RNG: %d" % [squad_size, hp, dmg, atk_spd, def, spd, rng]
+		# Build stats array and populate displays
+		var stats_data := []
+		var squad_size: int = unit.squad_count
+		if is_healer:
+			var heal: int = unit.heal_amount + stat_bonuses.heal_amount
+			stats_data = [
+				{icon = "count", value = squad_size},
+				{icon = "hp", value = hp},
+				{icon = "heal", value = heal},
+				{icon = "atk_spd", value = atk_spd},
+				{icon = "def", value = def},
+				{icon = "spd", value = spd},
+				{icon = "rng", value = rng}
+			]
+		else:
+			var dmg: int = unit.damage + stat_bonuses.damage
+			stats_data = [
+				{icon = "count", value = squad_size},
+				{icon = "hp", value = hp},
+				{icon = "dmg", value = dmg},
+				{icon = "atk_spd", value = atk_spd},
+				{icon = "def", value = def},
+				{icon = "spd", value = spd},
+				{icon = "rng", value = rng}
+			]
+		
+		_populate_stats(stats_data)
 
 		# Calculate and display upgrade fraction
 		var total_upgrades: int = 0
@@ -94,8 +182,7 @@ func show_unit_from_scene(unit_scene: PackedScene, upgrades: Dictionary = {}) ->
 			unit_name_label.text = "Unknown"
 		if unit_description_label:
 			unit_description_label.text = ""
-		if stats_label:
-			stats_label.text = ""
+		_clear_stat_rows()
 		if upgrade_fraction_label:
 			upgrade_fraction_label.text = ""
 
@@ -124,14 +211,33 @@ func update_stats(upgrades: Dictionary) -> void:
 		# Check if unit is a healer
 		var is_healer := unit is Healer
 		
-		if stats_label:
-			var squad_size: int = unit.squad_count
-			if is_healer:
-				var heal: int = unit.heal_amount + stat_bonuses.heal_amount
-				stats_label.text = "COUNT: %d  HP: %d  HEAL: %d  CAST SPD: %d\nDEF: %d  SPD: %d  RNG: %d" % [squad_size, hp, heal, atk_spd, def, spd, rng]
-			else:
-				var dmg: int = unit.damage + stat_bonuses.damage
-				stats_label.text = "COUNT: %d  HP: %d  DMG: %d  ATK SPD: %d\nDEF: %d   SPD: %d  RNG: %d" % [squad_size, hp, dmg, atk_spd, def, spd, rng]
+		# Build stats array and populate displays
+		var stats_data := []
+		var squad_size: int = unit.squad_count
+		if is_healer:
+			var heal: int = unit.heal_amount + stat_bonuses.heal_amount
+			stats_data = [
+				{icon = "count", value = squad_size},
+				{icon = "hp", value = hp},
+				{icon = "heal", value = heal},
+				{icon = "atk_spd", value = atk_spd},
+				{icon = "def", value = def},
+				{icon = "spd", value = spd},
+				{icon = "rng", value = rng}
+			]
+		else:
+			var dmg: int = unit.damage + stat_bonuses.damage
+			stats_data = [
+				{icon = "count", value = squad_size},
+				{icon = "hp", value = hp},
+				{icon = "dmg", value = dmg},
+				{icon = "atk_spd", value = atk_spd},
+				{icon = "def", value = def},
+				{icon = "spd", value = spd},
+				{icon = "rng", value = rng}
+			]
+		
+		_populate_stats(stats_data)
 
 		# Update upgrade fraction
 		var total_upgrades: int = 0

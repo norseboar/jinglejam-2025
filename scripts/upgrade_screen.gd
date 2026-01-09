@@ -763,12 +763,8 @@ func _on_sell_button_pressed() -> void:
 	if game == null:
 		return
 	
-	# Remove unit from army_ref
+	# Remove unit from army_ref (which is the same reference as game.army)
 	army_ref.remove_at(selected_army_index)
-	
-	# Also remove from game's army array (they should be the same reference)
-	if game.army.size() > selected_army_index:
-		game.army.remove_at(selected_army_index)
 	
 	# Give gold
 	game.add_gold(sell_price)

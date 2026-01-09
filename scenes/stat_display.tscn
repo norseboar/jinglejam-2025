@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://djmq3yj08nxkx"]
+
+[ext_resource type="Texture2D" uid="uid://cqsq8wfe8w7w2" path="res://assets/sprites/ui/unit_info/attackspeed_icon.png" id="1_cafen"]
+[ext_resource type="Script" uid="uid://kp1c0neb6af7" path="res://scripts/stat_display.gd" id="1_h7lvp"]
+[ext_resource type="Theme" uid="uid://cyl07x3ea7dvx" path="res://themes/base.tres" id="2_h7lvp"]
+
+[sub_resource type="FontVariation" id="FontVariation_cafen"]
+spacing_bottom = -6
+
+[node name="StatDisplay" type="Control" node_paths=PackedStringArray("icon", "value_label")]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_h7lvp")
+icon = NodePath("HBoxContainer/Icon")
+value_label = NodePath("HBoxContainer/Value")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 26.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="HBoxContainer"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("1_cafen")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Value" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_h7lvp")
+theme_override_fonts/font = SubResource("FontVariation_cafen")
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1

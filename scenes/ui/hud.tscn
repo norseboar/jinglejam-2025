@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://224hb5iqorv7" path="res://assets/sprites/ui/buttons/fight_button/fight_button_80x42.png" id="5_gss2c"]
 [ext_resource type="Texture2D" uid="uid://cr0jj48q2688x" path="res://assets/sprites/ui/buttons/deploy_button/deploy_button_highlight.png" id="6_erw67"]
 [ext_resource type="Texture2D" uid="uid://hp0p6bqlua4x" path="res://assets/sprites/ui/buttons/fight_button/fight_button_80x41.png" id="6_h022r"]
-[ext_resource type="Script" path="res://scripts/tinted_button.gd" id="7_4d46k"]
+[ext_resource type="Script" uid="uid://d4eh8dp6lwy7d" path="res://scripts/tinted_button.gd" id="7_4d46k"]
 [ext_resource type="Texture2D" uid="uid://c6eydxw58l61v" path="res://assets/sprites/ui/buttons/next_button/next_button_80x40.png" id="7_4jqwt"]
 [ext_resource type="Texture2D" uid="uid://boqvm3pbcc2x6" path="res://assets/sprites/ui/buttons/next_button/next_button_pressed.png" id="8_kicr4"]
 [ext_resource type="Texture2D" uid="uid://2rhn2jh2rt6r" path="res://assets/sprites/ui/buttons/next_button/next_button_highlight.png" id="9_mj13f"]
@@ -17,7 +17,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0mwgc"]
 
-[node name="HUD" type="Control" node_paths=PackedStringArray("phase_label", "tray_panel", "unit_tray", "go_button", "auto_deploy_button", "gold_label", "gold_container", "battle_group", "battle_end_modal", "battle_end_label", "battle_end_button")]
+[node name="HUD" type="Control" node_paths=PackedStringArray("phase_label", "phase_panel", "tray_panel", "unit_tray", "go_button", "auto_deploy_button", "gold_label", "gold_container", "battle_group", "battle_end_modal", "battle_end_label", "battle_end_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,6 +29,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_hqnrr")
 phase_label = NodePath("BattleGroup/PanelContainer/PhaseLabel")
+phase_panel = NodePath("BattleGroup/PanelContainer")
 tray_panel = NodePath("BattleGroup/TrayPanel")
 unit_tray = NodePath("BattleGroup/TrayPanel/Control/HBoxContainer/UnitSlotGroup")
 go_button = NodePath("BattleGroup/TrayPanel/Control/HBoxContainer/GoButton")
@@ -39,6 +40,9 @@ battle_group = NodePath("BattleGroup")
 battle_end_modal = NodePath("BattleEndModal")
 battle_end_label = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/BattleEndLabel")
 battle_end_button = NodePath("BattleEndModal/Panel/PanelContainer/VBoxContainer/ConfirmButton")
+phase_tween_in_duration = 0.33
+phase_display_duration = 1.0
+phase_tween_out_duration = 0.33
 
 [node name="BattleGroup" type="Control" parent="."]
 layout_mode = 1
